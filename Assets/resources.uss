@@ -1,3 +1,7 @@
 UIDocumentRootElement {
   -unity-font-definition: resource("Assets/Resources/julius.ttf")
 }
+
+.icon {
+  -unity-font-definition: resource("Assets/Resources/rpgawesome.ttf")
+}

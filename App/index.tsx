@@ -5,6 +5,7 @@ import { h, render } from 'preact'
 import { Panel } from './src/components/panel'
 import { Heroes } from './src/components/heroes'
 import { MiniMap } from './src/components/MiniMap'
+import { IconButton } from './src/components/Icon'
  
 function App() {
   return (
@@ -17,7 +18,7 @@ function App() {
       <div class="w-full h-[142px] flex flex-row justify-center">
         <div class="w-[850px]">
           <Panel title='Budynki'>
-            {"Example text"}
+            <IconButton icon="" />
           </Panel>
         </div>
       </div>

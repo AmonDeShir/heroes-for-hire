@@ -18,6 +18,9 @@
 .root .flex {
     display: flex
 }
+.root .h-_lb_133px_rb_ {
+    height: 133px
+}
 .root .h-_lb_142px_rb_ {
     height: 142px
 }
@@ -30,11 +33,11 @@
 .root .h-full {
     height: 100%
 }
-.root .h-_lb_133px_rb_ {
-    height: 133px
+.root .h-7 {
+    height: 28px
 }
-.root .min-h-_lb_200px_rb_ {
-    min-height: 200px
+.root .w-_lb_133px_rb_ {
+    width: 133px
 }
 .root .w-_lb_36px_rb_ {
     width: 36px
@@ -45,14 +48,11 @@
 .root .w-full {
     width: 100%
 }
-.root .w-_lb_133px_rb_ {
-    width: 133px
+.root .w-7 {
+    width: 28px
 }
 .root .flex-row {
     flex-direction: row
-}
-.root .flex-col {
-    flex-direction: column
 }
 .root .items-center {
     align-items: center
@@ -69,23 +69,23 @@
 .root .border {
     border-width: 1px
 }
+.root .border-2 {
+    border-width: 2px
+}
 .root .border-main {
     border-color: #6B0D05
 }
 .root .bg-main {
     background-color: #6B0D05
 }
-.root .bg-red-300 {
-    background-color: #fca5a5
+.root .bg-cover {
+    background-size: cover
 }
-.root .bg-red-900 {
-    background-color: #7f1d1d
+.root .bg-center {
+    background-position: center
 }
-.root .p-4 {
-    padding: 16px
-}
-.root .p-2 {
-    padding: 8px
+.root .bg-no-repeat {
+    background-repeat: no-repeat
 }
 .root .p-1 {
     padding: 4px

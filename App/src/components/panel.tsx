@@ -5,7 +5,7 @@ import { Blur } from './blur';
 
 type Props = {
   title: string,
-	children?: ComponentChildren;
+	children?: ComponentChildren,
 }
 
 export function Panel({title, children}: Props) {
