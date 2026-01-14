@@ -18,17 +18,27 @@ public class BuildMode : MonoBehaviour
 
     public void Update()
     {
-        if (!_clickAction.triggered || !Selected)
+        if (!IsUserBuilding() || !Selected)
         {
             return;
         }
-        
-        var ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+
+        var ray = GetCursorPositionInWord();
 
         if (Physics.Raycast(ray, out var hit, 100, LayerMask.GetMask("Terrain")))
         {
             SpawnBuilding(hit.point);
         }
+    }
+    
+    private bool IsUserBuilding()
+    {
+        return _clickAction.triggered;
+    }
+
+    private Ray GetCursorPositionInWord()
+    {
+        return Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
     }
 
     private void SpawnBuilding(Vector3 position)

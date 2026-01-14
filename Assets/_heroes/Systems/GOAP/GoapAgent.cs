@@ -182,12 +182,12 @@ namespace GOAP
                     .Build());
 
                 actions.Add(new AgentAction.Builder(Consts.Actions.WORK_FOR_GOLD)
-                    .WithCost(6)
+                    .WithCost(10)
                     .WithStrategy(new EarnGoldStrategy(
                         this,
                         5f,
-                        () => Mathf.RoundToInt(workGoldPerTick * (HasPickaxe ? pickaxeGoldMultiplier : 1f)),
-                        () => workStaminaCost * (HasPickaxe ? pickaxeStaminaMultiplier : 1f)
+                        () => Mathf.RoundToInt(workGoldPerTick),
+                        () => workStaminaCost
                     ))
                     .WithPrecondition(Beliefs[Consts.Beliefs.AGENT_AT_WORK])
                     .WithEffect(Beliefs[Consts.Beliefs.HAS_ENOUGH_GOLD_FOR_SWORD])
@@ -317,6 +317,7 @@ namespace GOAP
                 {
                     _navMeshAgent.ResetPath();
                     CurrentGoal = ActionPlan.AgentGoal;
+                    
                     CurrentAction = ActionPlan.Actions.Pop();
                     CurrentAction.Start();
                 }

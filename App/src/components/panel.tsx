@@ -1,5 +1,4 @@
 import { ComponentChildren, h } from 'preact'
-import { Detail } from './detail'
 import { Bar } from './bar'
 import { Blur } from './blur';
 

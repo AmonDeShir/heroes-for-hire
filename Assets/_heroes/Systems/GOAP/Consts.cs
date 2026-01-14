@@ -45,8 +45,8 @@
             public const string REST_AT_HOME = "Rest At Home";
 
             public const string GO_WORK = "Go Work";
+            public const string GO_WORK_FOR_HALF_TIME = "Go Work 1/2 Time";
             public const string WORK_FOR_GOLD = "Work For Gold";
-
             public const string GO_TO_SHOP = "Go To Shop";
             public const string BUY_SWORD = "Buy Sword";
         }
