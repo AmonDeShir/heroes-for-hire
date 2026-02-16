@@ -48,7 +48,6 @@ namespace Heroes.Goap.Editor.Nodes
                 .WithConnectorUI(PortConnectorUI.Circle)
                 .Build();
 
-            Heroes.Goap.Editor.Utilities.GoapPortCapacityHelper.SetNoEmbeddedConstant(valuePort);
         }
     }
 
@@ -64,7 +63,6 @@ namespace Heroes.Goap.Editor.Nodes
                 .WithConnectorUI(PortConnectorUI.Circle)
                 .Build();
 
-            Heroes.Goap.Editor.Utilities.GoapPortCapacityHelper.SetNoEmbeddedConstant(valuePort);
         }
     }
 
@@ -80,7 +78,6 @@ namespace Heroes.Goap.Editor.Nodes
                 .WithConnectorUI(PortConnectorUI.Circle)
                 .Build();
 
-            Heroes.Goap.Editor.Utilities.GoapPortCapacityHelper.SetNoEmbeddedConstant(valuePort);
         }
     }
 }

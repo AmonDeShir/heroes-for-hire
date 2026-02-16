@@ -71,12 +71,12 @@ namespace Heroes.Goap.Editor.Graphs
                 }
 
                 var namePort = action.GetInputPortByName(Action_Node.NamePortName);
-                if (!TryGetStringFromPort(namePort, out var actionName, out var nameConnected) || string.IsNullOrWhiteSpace(actionName))
+                if (!TryGetStringFromPort(namePort, out var actionName, out var nameConnected))
                 {
                     if (nameConnected)
                         graphLogger.LogWarning("Action Name must connect to Value_String.", action);
                     else
-                        graphLogger.LogWarning("Action Name is not connected.", action);
+                        graphLogger.LogWarning("Action Name is empty.", action);
                 }
                 else if (!actionNames.Add(actionName))
                 {
@@ -135,7 +135,7 @@ namespace Heroes.Goap.Editor.Graphs
                 {
                     var valueConnections = new List<IPort>();
                     valuePort.GetConnectedPorts(valueConnections);
-                    if (valueConnections.Count == 0)
+                    if (valueConnections.Count == 0 && !HasEmbeddedValue(valuePort, GetConditionValueType(condition)))
                         graphLogger.LogWarning("Condition Value is not connected.", condition);
                 }
 
@@ -286,17 +286,43 @@ namespace Heroes.Goap.Editor.Graphs
             var connected = new List<IPort>();
             port.GetConnectedPorts(connected);
             if (connected.Count == 0)
+            {
+                if (port.TryGetValue(out string embedded) && !string.IsNullOrWhiteSpace(embedded))
+                {
+                    value = embedded;
+                    return true;
+                }
+
                 return false;
+            }
 
             hasConnection = true;
             var node = connected[0].GetNode();
             if (node is Value_String stringNode)
             {
                 value = GoapNodeOptionReader.GetOption(stringNode, Value_String.OptionValue, string.Empty);
-                return true;
+                return !string.IsNullOrWhiteSpace(value);
             }
 
             return false;
+        }
+
+        static bool HasEmbeddedValue(IPort port, GoapValueType type)
+        {
+            if (port == null)
+                return false;
+
+            switch (type)
+            {
+                case GoapValueType.Float:
+                    return port.TryGetValue(out float _);
+                case GoapValueType.Bool:
+                    return port.TryGetValue(out bool _);
+                case GoapValueType.Location:
+                    return port.TryGetValue(out LocationSO _);
+                default:
+                    return false;
+            }
         }
 
         static Strategy_Start FindStrategyStart(INode node)

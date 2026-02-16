@@ -13,7 +13,7 @@ public static class HierarchyColorizer
 
     private static void OnHierarchyGUI(int instanceID, Rect selectionRect)
     {
-        var obj = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
+        var obj = EditorUtility.EntityIdToObject(instanceID) as GameObject;
         
         if (obj == null)
         {

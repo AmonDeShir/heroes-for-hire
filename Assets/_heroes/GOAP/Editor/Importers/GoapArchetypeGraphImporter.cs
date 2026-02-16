@@ -67,19 +67,20 @@ namespace Heroes.Goap.Editor.Importers
 
         static void BuildActions(ArchetypeRoot_Node root, GoapGraphAsset runtime, AssetImportContext ctx)
         {
-            var nodes = GetConnectedNodes(root.GetInputPortByName(ArchetypeRoot_Node.ActionsPortName))
-                .OfType<Action_Node>();
+            var allConnected = GetConnectedNodes(root.GetInputPortByName(ArchetypeRoot_Node.ActionsPortName));
 
             var actionIndex = 0;
-            foreach (var node in nodes)
+
+            // Process direct Action_Node connections
+            foreach (var node in allConnected.OfType<Action_Node>())
             {
                 var name = ReadStringValue(node.GetInputPortByName(Action_Node.NamePortName), "Action");
-                var cost = ReadPortValueStrict(node.GetInputPortByName(Action_Node.CostPortName), GoapValueType.Float, 1f);
+                var cost = ReadFloatValueFromPort(node.GetInputPortByName(Action_Node.CostPortName), 1f);
                 var action = new GoapActionDefinition
                 {
                     Id = name,
                     Name = name,
-                    BaseCost = cost.FloatValue,
+                    BaseCost = cost,
                     Strategy = BuildStrategy(node, ctx, actionIndex, name)
                 };
 
@@ -89,7 +90,113 @@ namespace Heroes.Goap.Editor.Importers
                 runtime.Actions.Add(action);
                 actionIndex++;
             }
+
+            // Process subgraph nodes connected to Actions port
+            foreach (var subgraphNode in allConnected.OfType<ISubgraphNode>())
+            {
+                var action = BuildActionFromSubgraph(subgraphNode, ctx, actionIndex);
+                if (action != null)
+                {
+                    runtime.Actions.Add(action);
+                    actionIndex++;
+                }
+            }
         }
+
+        static GoapActionDefinition BuildActionFromSubgraph(ISubgraphNode subgraphNode, AssetImportContext ctx, int index)
+        {
+            var subgraph = subgraphNode.GetSubgraph();
+            if (subgraph == null)
+                return null;
+
+            // Find the Action_Node inside the subgraph
+            var innerActionNode = subgraph.GetNodes().OfType<Action_Node>().FirstOrDefault();
+            if (innerActionNode == null)
+                return null;
+
+            // Read Name and Cost from the subgraph node's input ports (per-instance inline values)
+            // These ports expose the subgraph's blackboard variables with instance-specific overrides
+            var name = ReadSubgraphPortString(subgraphNode, "Name",
+                ReadStringValue(innerActionNode.GetInputPortByName(Action_Node.NamePortName), "Action"));
+            var cost = ReadSubgraphPortFloat(subgraphNode, "Cost",
+                ReadFloatValueFromPort(innerActionNode.GetInputPortByName(Action_Node.CostPortName), 1f));
+
+            var action = new GoapActionDefinition
+            {
+                Id = name,
+                Name = name,
+                BaseCost = cost,
+                Strategy = BuildStrategy(innerActionNode, ctx, index, name)
+            };
+
+            action.Preconditions.AddRange(ReadConditions(innerActionNode.GetInputPortByName(Action_Node.PreconditionsPortName)));
+            action.Effects.AddRange(ReadEffects(innerActionNode.GetInputPortByName(Action_Node.EffectsPortName)));
+
+            return action;
+        }
+
+        static string ReadSubgraphPortString(ISubgraphNode subgraphNode, string variableName, string fallback)
+        {
+            var node = subgraphNode as INode;
+            if (node == null)
+                return fallback;
+
+            foreach (var port in node.GetInputPorts())
+            {
+                if (string.Equals(port.displayName, variableName, System.StringComparison.OrdinalIgnoreCase))
+                {
+                    // Check for connected Value_String nodes first
+                    var connected = new List<IPort>();
+                    port.GetConnectedPorts(connected);
+                    if (connected.Count > 0)
+                    {
+                        var connectedNode = connected[0].GetNode();
+                        if (connectedNode is Value_String stringNode)
+                            return GoapNodeOptionReader.GetOption(stringNode, Value_String.OptionValue, fallback);
+                    }
+
+                    // Read embedded inline value
+                    if (port.TryGetValue(out string embedded) && !string.IsNullOrWhiteSpace(embedded))
+                        return embedded;
+
+                    return fallback;
+                }
+            }
+
+            return fallback;
+        }
+
+        static float ReadSubgraphPortFloat(ISubgraphNode subgraphNode, string variableName, float fallback)
+        {
+            var node = subgraphNode as INode;
+            if (node == null)
+                return fallback;
+
+            foreach (var port in node.GetInputPorts())
+            {
+                if (string.Equals(port.displayName, variableName, System.StringComparison.OrdinalIgnoreCase))
+                {
+                    // Check for connected Value_Float nodes first
+                    var connected = new List<IPort>();
+                    port.GetConnectedPorts(connected);
+                    if (connected.Count > 0)
+                    {
+                        var connectedNode = connected[0].GetNode();
+                        if (connectedNode is Value_Float floatNode)
+                            return GoapNodeOptionReader.GetOption(floatNode, Value_Float.OptionValue, fallback);
+                    }
+
+                    // Read embedded inline value
+                    if (port.TryGetValue(out float embedded))
+                        return embedded;
+
+                    return fallback;
+                }
+            }
+
+            return fallback;
+        }
+
 
         static void BuildGoals(ArchetypeRoot_Node root, GoapGraphAsset runtime)
         {
@@ -529,7 +636,12 @@ namespace Heroes.Goap.Editor.Importers
             var connected = new List<IPort>();
             port?.GetConnectedPorts(connected);
             if (connected.Count == 0)
+            {
+                if (TryReadEmbeddedValue(port, type, out var embeddedValue))
+                    return new GoapValueConstant { Value = embeddedValue };
+
                 return new GoapValueConstant { Value = DefaultValue(type) };
+            }
 
             var visited = new HashSet<INode>();
             return BuildValueExpression(connected[0].GetNode(), type, visited) ?? new GoapValueConstant { Value = DefaultValue(type) };
@@ -612,6 +724,60 @@ namespace Heroes.Goap.Editor.Importers
             };
         }
 
+        static bool TryReadEmbeddedValue(IPort port, GoapValueType type, out GoapValue value)
+        {
+            value = default;
+            if (port == null)
+                return false;
+
+            switch (type)
+            {
+                case GoapValueType.Float:
+                    if (port.TryGetValue(out float floatValue))
+                    {
+                        value = GoapValue.FromFloat(floatValue);
+                        return true;
+                    }
+                    break;
+                case GoapValueType.Bool:
+                    if (port.TryGetValue(out bool boolValue))
+                    {
+                        value = GoapValue.FromBool(boolValue);
+                        return true;
+                    }
+                    break;
+                case GoapValueType.Location:
+                    if (port.TryGetValue(out LocationSO locationValue))
+                    {
+                        value = GoapValue.FromLocation(locationValue);
+                        return true;
+                    }
+                    break;
+            }
+
+            return false;
+        }
+
+        static float ReadFloatValueFromPort(IPort port, float fallback)
+        {
+            if (port == null)
+                return fallback;
+
+            var connected = new List<IPort>();
+            port.GetConnectedPorts(connected);
+            if (connected.Count > 0)
+            {
+                var node = connected[0].GetNode();
+                if (node is Value_Float floatNode)
+                    return GoapNodeOptionReader.GetOption(floatNode, Value_Float.OptionValue, fallback);
+            }
+
+            if (port.TryGetValue(out float embedded))
+                return embedded;
+
+            return fallback;
+        }
+
         static GoapValueType GetConditionValueType(Condition_Base node)
         {
             if (node is Condition_Bool)
@@ -687,6 +853,9 @@ namespace Heroes.Goap.Editor.Importers
                     if (node is Value_String stringNode)
                         return GoapNodeOptionReader.GetOption(stringNode, Value_String.OptionValue, fallback);
                 }
+
+                if (port.TryGetValue(out string embedded) && !string.IsNullOrWhiteSpace(embedded))
+                    return embedded;
             }
 
             return fallback;

@@ -781,7 +781,7 @@ MonoBehaviour:
           serializedVersion: 2
           Hash: 2ca60995b2008446554ccad0ded648ec
         m_Version: 2
-        m_Position: {x: 2204.304, y: -2531.9685}
+        m_Position: {x: 2204.304, y: -2533.4185}
         m_Title: 
         m_Tooltip: 
         m_NodePreviewModel:
@@ -930,7 +930,7 @@ MonoBehaviour:
           serializedVersion: 2
           Hash: f883c8d34180709fac7b2349bb158d37
         m_Version: 2
-        m_Position: {x: 1131.2771, y: -4669.2466}
+        m_Position: {x: 1131.2771, y: -4670.9854}
         m_Title: Go To Home
         m_Tooltip: Go To Home
         m_NodePreviewModel:
@@ -938,15 +938,15 @@ MonoBehaviour:
         m_State: 0
         m_InputConstantsById:
           m_KeyList:
-          - 1f407d868ef4aab68f455ebfffb1029f
-          - 305684f88450fa34e0cfe0e479380a5e
-          - 6ece741d30a8d01c649177fa518b7767
           - 990d2100b5c7c32fed66e02adf99d35a
+          - 1f407d868ef4aab68f455ebfffb1029f
+          - 6ece741d30a8d01c649177fa518b7767
+          - 305684f88450fa34e0cfe0e479380a5e
           m_ValueList:
-          - rid: 7822768290487337932
-          - rid: 7822768290487337933
-          - rid: 7822768290487337934
-          - rid: 7822768290487337935
+          - rid: 7822768311482712166
+          - rid: 7822768311482712167
+          - rid: 7822768311482712168
+          - rid: 7822768311482712169
         m_InputPortInfos:
           expandedPortsById:
             m_KeyList: []
@@ -984,23 +984,6 @@ MonoBehaviour:
             m_GraphObjectInstanceID: 0
         m_CopyPasteLocalSubgraphModelReference:
           rid: -2
-    - rid: 7822768290487337932
-      type: {class: 'Constant`1[[Heroes.Goap.Runtime.World.LocationSO, Assembly-CSharp]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value: {fileID: 11400000, guid: 39d52e1622f62524d9b3535c38cbea54, type: 2}
-    - rid: 7822768290487337933
-      type: {class: 'Constant`1[[System.String, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value: Go to Home
-    - rid: 7822768290487337934
-      type: {class: 'Constant`1[[System.Single, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value: 3
-    - rid: 7822768290487337935
-      type: {class: 'Constant`1[[Heroes.Goap.Runtime.Values.GoapVariableRef, Assembly-CSharp]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value:
-          Name: Location
     - rid: 7822768304999628813
       type: {class: WireModel, ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
       data:
@@ -1051,15 +1034,15 @@ MonoBehaviour:
         m_State: 0
         m_InputConstantsById:
           m_KeyList:
-          - 305684f88450fa34e0cfe0e479380a5e
-          - 6ece741d30a8d01c649177fa518b7767
-          - 1f407d868ef4aab68f455ebfffb1029f
           - 990d2100b5c7c32fed66e02adf99d35a
+          - 1f407d868ef4aab68f455ebfffb1029f
+          - 6ece741d30a8d01c649177fa518b7767
+          - 305684f88450fa34e0cfe0e479380a5e
           m_ValueList:
-          - rid: 7822768304999628846
-          - rid: 7822768304999628847
-          - rid: 7822768304999628848
-          - rid: 7822768304999628849
+          - rid: 7822768311482712170
+          - rid: 7822768311482712171
+          - rid: 7822768311482712172
+          - rid: 7822768311482712173
         m_InputPortInfos:
           expandedPortsById:
             m_KeyList: []
@@ -1097,23 +1080,6 @@ MonoBehaviour:
             m_GraphObjectInstanceID: 0
         m_CopyPasteLocalSubgraphModelReference:
           rid: -2
-    - rid: 7822768304999628846
-      type: {class: 'Constant`1[[System.String, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value: Go to Mine
-    - rid: 7822768304999628847
-      type: {class: 'Constant`1[[System.Single, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value: 3
-    - rid: 7822768304999628848
-      type: {class: 'Constant`1[[Heroes.Goap.Runtime.World.LocationSO, Assembly-CSharp]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value: {fileID: 11400000, guid: e0964bd30c016cf4a9b16eafa80bbba1, type: 2}
-    - rid: 7822768304999628849
-      type: {class: 'Constant`1[[Heroes.Goap.Runtime.Values.GoapVariableRef, Assembly-CSharp]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value:
-          Name: Location
     - rid: 7822768304999628850
       type: {class: SubgraphNodeModelImp, ns: Unity.GraphToolkit.Editor.Implementation, asm: Unity.GraphToolkit.Editor}
       data:
@@ -1124,7 +1090,7 @@ MonoBehaviour:
           serializedVersion: 2
           Hash: d3e19b84a7d043b5f61c98482b0cb50f
         m_Version: 2
-        m_Position: {x: 1135.1967, y: -4080.569}
+        m_Position: {x: 1137.327, y: -4077.6997}
         m_Title: Go To Work
         m_Tooltip: Go To Work
         m_NodePreviewModel:
@@ -1132,15 +1098,15 @@ MonoBehaviour:
         m_State: 0
         m_InputConstantsById:
           m_KeyList:
-          - 305684f88450fa34e0cfe0e479380a5e
-          - 6ece741d30a8d01c649177fa518b7767
-          - 1f407d868ef4aab68f455ebfffb1029f
           - 990d2100b5c7c32fed66e02adf99d35a
+          - 1f407d868ef4aab68f455ebfffb1029f
+          - 6ece741d30a8d01c649177fa518b7767
+          - 305684f88450fa34e0cfe0e479380a5e
           m_ValueList:
-          - rid: 7822768304999628851
-          - rid: 7822768304999628852
-          - rid: 7822768304999628853
-          - rid: 7822768304999628854
+          - rid: 7822768311482712174
+          - rid: 7822768311482712175
+          - rid: 7822768311482712176
+          - rid: 7822768311482712177
         m_InputPortInfos:
           expandedPortsById:
             m_KeyList: []
@@ -1178,23 +1144,6 @@ MonoBehaviour:
             m_GraphObjectInstanceID: 0
         m_CopyPasteLocalSubgraphModelReference:
           rid: -2
-    - rid: 7822768304999628851
-      type: {class: 'Constant`1[[System.String, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value: Go to Work
-    - rid: 7822768304999628852
-      type: {class: 'Constant`1[[System.Single, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value: 3
-    - rid: 7822768304999628853
-      type: {class: 'Constant`1[[Heroes.Goap.Runtime.World.LocationSO, Assembly-CSharp]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value: {fileID: 11400000, guid: 59749981680b9dd4387d7ac5fc1306b2, type: 2}
-    - rid: 7822768304999628854
-      type: {class: 'Constant`1[[Heroes.Goap.Runtime.Values.GoapVariableRef, Assembly-CSharp]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value:
-          Name: Location
     - rid: 7822768304999628855
       type: {class: SubgraphNodeModelImp, ns: Unity.GraphToolkit.Editor.Implementation, asm: Unity.GraphToolkit.Editor}
       data:
@@ -1213,15 +1162,15 @@ MonoBehaviour:
         m_State: 0
         m_InputConstantsById:
           m_KeyList:
-          - 305684f88450fa34e0cfe0e479380a5e
-          - 6ece741d30a8d01c649177fa518b7767
-          - 1f407d868ef4aab68f455ebfffb1029f
           - 990d2100b5c7c32fed66e02adf99d35a
+          - 1f407d868ef4aab68f455ebfffb1029f
+          - 6ece741d30a8d01c649177fa518b7767
+          - 305684f88450fa34e0cfe0e479380a5e
           m_ValueList:
-          - rid: 7822768304999628856
-          - rid: 7822768304999628857
-          - rid: 7822768304999628858
-          - rid: 7822768304999628859
+          - rid: 7822768311482712178
+          - rid: 7822768311482712179
+          - rid: 7822768311482712180
+          - rid: 7822768311482712181
         m_InputPortInfos:
           expandedPortsById:
             m_KeyList: []
@@ -1259,23 +1208,6 @@ MonoBehaviour:
             m_GraphObjectInstanceID: 0
         m_CopyPasteLocalSubgraphModelReference:
           rid: -2
-    - rid: 7822768304999628856
-      type: {class: 'Constant`1[[System.String, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value: Go to Shop
-    - rid: 7822768304999628857
-      type: {class: 'Constant`1[[System.Single, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value: 3
-    - rid: 7822768304999628858
-      type: {class: 'Constant`1[[Heroes.Goap.Runtime.World.LocationSO, Assembly-CSharp]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value: {fileID: 11400000, guid: 082b67106ef0e4a4ba573da3cdd3e931, type: 2}
-    - rid: 7822768304999628859
-      type: {class: 'Constant`1[[Heroes.Goap.Runtime.Values.GoapVariableRef, Assembly-CSharp]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value:
-          Name: Location
     - rid: 7822768304999628860
       type: {class: WireModel, ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
       data:
@@ -1413,7 +1345,7 @@ MonoBehaviour:
           serializedVersion: 2
           Hash: 90f72152ddc4af152c7c4d7c3e0bcce9
         m_Version: 2
-        m_Position: {x: 1137.3733, y: -1636.2903}
+        m_Position: {x: 1138.3733, y: -1636.2903}
         m_Title: 
         m_Tooltip: 
         m_NodePreviewModel:
@@ -1516,19 +1448,19 @@ MonoBehaviour:
         m_State: 0
         m_InputConstantsById:
           m_KeyList:
-          - 25db9e461a2a2e06e17834664c3a9534
-          - b7e0f3b1cf6704938f2ef6c203a7fd9d
-          - 92bde5775acceac135f16a9b0cdaa0dc
-          - 29912d2c58782c3c2278a0b719625e08
-          - 03108d580282e3a3073ea78163e8a4c8
           - 318f03541d4b9ae09b022d3090280f12
+          - 03108d580282e3a3073ea78163e8a4c8
+          - 29912d2c58782c3c2278a0b719625e08
+          - 92bde5775acceac135f16a9b0cdaa0dc
+          - b7e0f3b1cf6704938f2ef6c203a7fd9d
+          - 25db9e461a2a2e06e17834664c3a9534
           m_ValueList:
-          - rid: 7822768304999629107
-          - rid: 7822768304999629108
-          - rid: 7822768304999629109
-          - rid: 7822768304999629110
-          - rid: 7822768304999629426
-          - rid: 7822768304999629627
+          - rid: 7822768311482712182
+          - rid: 7822768311482712183
+          - rid: 7822768311482712184
+          - rid: 7822768311482712185
+          - rid: 7822768311482712186
+          - rid: 7822768311482712187
         m_InputPortInfos:
           expandedPortsById:
             m_KeyList: []
@@ -1598,23 +1530,6 @@ MonoBehaviour:
           m_PortDirection: 1
           m_PortOrientation: 0
           m_Title: Actions
-    - rid: 7822768304999629107
-      type: {class: 'Constant`1[[System.String, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value: Buy Sword
-    - rid: 7822768304999629108
-      type: {class: 'Constant`1[[System.Single, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value: 1
-    - rid: 7822768304999629109
-      type: {class: 'Constant`1[[System.Single, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value: 20
-    - rid: 7822768304999629110
-      type: {class: 'Constant`1[[Heroes.Goap.Runtime.Values.GoapVariableRef, Assembly-CSharp]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value:
-          Name: Have Sword
     - rid: 7822768304999629295
       type: {class: SubgraphNodeModelImp, ns: Unity.GraphToolkit.Editor.Implementation, asm: Unity.GraphToolkit.Editor}
       data:
@@ -1625,7 +1540,7 @@ MonoBehaviour:
           serializedVersion: 2
           Hash: bff1d612481c050ec517f9cebd0625d7
         m_Version: 2
-        m_Position: {x: 1158.8511, y: -3662.2202}
+        m_Position: {x: 1157.8511, y: -3656.2202}
         m_Title: Buy Pickaxe
         m_Tooltip: Buy Pickaxe
         m_NodePreviewModel:
@@ -1633,19 +1548,19 @@ MonoBehaviour:
         m_State: 0
         m_InputConstantsById:
           m_KeyList:
-          - 25db9e461a2a2e06e17834664c3a9534
-          - b7e0f3b1cf6704938f2ef6c203a7fd9d
-          - 92bde5775acceac135f16a9b0cdaa0dc
-          - 29912d2c58782c3c2278a0b719625e08
-          - 03108d580282e3a3073ea78163e8a4c8
           - 318f03541d4b9ae09b022d3090280f12
+          - 03108d580282e3a3073ea78163e8a4c8
+          - 29912d2c58782c3c2278a0b719625e08
+          - 92bde5775acceac135f16a9b0cdaa0dc
+          - b7e0f3b1cf6704938f2ef6c203a7fd9d
+          - 25db9e461a2a2e06e17834664c3a9534
           m_ValueList:
-          - rid: 7822768304999629296
-          - rid: 7822768304999629297
-          - rid: 7822768304999629298
-          - rid: 7822768304999629299
-          - rid: 7822768304999629427
-          - rid: 7822768304999629628
+          - rid: 7822768311482712188
+          - rid: 7822768311482712189
+          - rid: 7822768311482712190
+          - rid: 7822768311482712191
+          - rid: 7822768311482712192
+          - rid: 7822768311482712193
         m_InputPortInfos:
           expandedPortsById:
             m_KeyList: []
@@ -1683,23 +1598,6 @@ MonoBehaviour:
             m_GraphObjectInstanceID: 0
         m_CopyPasteLocalSubgraphModelReference:
           rid: -2
-    - rid: 7822768304999629296
-      type: {class: 'Constant`1[[System.String, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value: Buy Pickaxe
-    - rid: 7822768304999629297
-      type: {class: 'Constant`1[[System.Single, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value: 1
-    - rid: 7822768304999629298
-      type: {class: 'Constant`1[[System.Single, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value: 5
-    - rid: 7822768304999629299
-      type: {class: 'Constant`1[[Heroes.Goap.Runtime.Values.GoapVariableRef, Assembly-CSharp]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value:
-          Name: Have Pickaxe
     - rid: 7822768304999629300
       type: {class: WireModel, ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
       data:
@@ -1735,16 +1633,6 @@ MonoBehaviour:
     - rid: 7822768304999629394
       type: {class: 'Constant`1[[Heroes.Goap.Runtime.Values.GoapConditionNode, Assembly-CSharp]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
       data: 
-    - rid: 7822768304999629426
-      type: {class: 'Constant`1[[Heroes.Goap.Runtime.Values.GoapVariableRef, Assembly-CSharp]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value:
-          Name: Gold
-    - rid: 7822768304999629427
-      type: {class: 'Constant`1[[Heroes.Goap.Runtime.Values.GoapVariableRef, Assembly-CSharp]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
-      data:
-        m_Value:
-          Name: Gold
     - rid: 7822768304999629435
       type: {class: UserNodeModelImp, ns: Unity.GraphToolkit.Editor.Implementation, asm: Unity.GraphToolkit.Editor}
       data:
@@ -2557,7 +2445,7 @@ MonoBehaviour:
     - rid: 7822768304999629496
       type: {class: 'Constant`1[[System.String, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
       data:
-        m_Value: Work
+        m_Value: Mine
     - rid: 7822768304999629497
       type: {class: 'Constant`1[[System.Single, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
       data:
@@ -3882,13 +3770,125 @@ MonoBehaviour:
         m_ElementColor:
           m_Color: {r: 0.20784314, g: 0.22745098, b: 0.2784314, a: 1}
           m_HasUserColor: 0
-    - rid: 7822768304999629627
+    - rid: 7822768311482712166
       type: {class: 'Constant`1[[Heroes.Goap.Runtime.Values.GoapVariableRef, Assembly-CSharp]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
       data:
         m_Value:
           Name: Location
-    - rid: 7822768304999629628
+    - rid: 7822768311482712167
+      type: {class: 'Constant`1[[Heroes.Goap.Runtime.World.LocationSO, Assembly-CSharp]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value: {fileID: 11400000, guid: 39d52e1622f62524d9b3535c38cbea54, type: 2}
+    - rid: 7822768311482712168
+      type: {class: 'Constant`1[[System.Single, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value: 3
+    - rid: 7822768311482712169
+      type: {class: 'Constant`1[[System.String, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value: Go to Home
+    - rid: 7822768311482712170
       type: {class: 'Constant`1[[Heroes.Goap.Runtime.Values.GoapVariableRef, Assembly-CSharp]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
       data:
         m_Value:
           Name: Location
+    - rid: 7822768311482712171
+      type: {class: 'Constant`1[[Heroes.Goap.Runtime.World.LocationSO, Assembly-CSharp]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value: {fileID: 11400000, guid: e0964bd30c016cf4a9b16eafa80bbba1, type: 2}
+    - rid: 7822768311482712172
+      type: {class: 'Constant`1[[System.Single, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value: 3
+    - rid: 7822768311482712173
+      type: {class: 'Constant`1[[System.String, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value: Go to Mine
+    - rid: 7822768311482712174
+      type: {class: 'Constant`1[[Heroes.Goap.Runtime.Values.GoapVariableRef, Assembly-CSharp]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value:
+          Name: Location
+    - rid: 7822768311482712175
+      type: {class: 'Constant`1[[Heroes.Goap.Runtime.World.LocationSO, Assembly-CSharp]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value: {fileID: 11400000, guid: 59749981680b9dd4387d7ac5fc1306b2, type: 2}
+    - rid: 7822768311482712176
+      type: {class: 'Constant`1[[System.Single, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value: 3
+    - rid: 7822768311482712177
+      type: {class: 'Constant`1[[System.String, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value: Go to Work
+    - rid: 7822768311482712178
+      type: {class: 'Constant`1[[Heroes.Goap.Runtime.Values.GoapVariableRef, Assembly-CSharp]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value:
+          Name: Location
+    - rid: 7822768311482712179
+      type: {class: 'Constant`1[[Heroes.Goap.Runtime.World.LocationSO, Assembly-CSharp]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value: {fileID: 11400000, guid: 082b67106ef0e4a4ba573da3cdd3e931, type: 2}
+    - rid: 7822768311482712180
+      type: {class: 'Constant`1[[System.Single, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value: 3
+    - rid: 7822768311482712181
+      type: {class: 'Constant`1[[System.String, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value: Go to Shop
+    - rid: 7822768311482712182
+      type: {class: 'Constant`1[[Heroes.Goap.Runtime.Values.GoapVariableRef, Assembly-CSharp]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value:
+          Name: Location
+    - rid: 7822768311482712183
+      type: {class: 'Constant`1[[Heroes.Goap.Runtime.Values.GoapVariableRef, Assembly-CSharp]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value:
+          Name: Gold
+    - rid: 7822768311482712184
+      type: {class: 'Constant`1[[Heroes.Goap.Runtime.Values.GoapVariableRef, Assembly-CSharp]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value:
+          Name: Have Sword
+    - rid: 7822768311482712185
+      type: {class: 'Constant`1[[System.Single, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value: 10
+    - rid: 7822768311482712186
+      type: {class: 'Constant`1[[System.Single, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value: 1
+    - rid: 7822768311482712187
+      type: {class: 'Constant`1[[System.String, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value: Buy Sword
+    - rid: 7822768311482712188
+      type: {class: 'Constant`1[[Heroes.Goap.Runtime.Values.GoapVariableRef, Assembly-CSharp]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value:
+          Name: Location
+    - rid: 7822768311482712189
+      type: {class: 'Constant`1[[Heroes.Goap.Runtime.Values.GoapVariableRef, Assembly-CSharp]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value:
+          Name: Gold
+    - rid: 7822768311482712190
+      type: {class: 'Constant`1[[Heroes.Goap.Runtime.Values.GoapVariableRef, Assembly-CSharp]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value:
+          Name: Have Pickaxe
+    - rid: 7822768311482712191
+      type: {class: 'Constant`1[[System.Single, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value: 3
+    - rid: 7822768311482712192
+      type: {class: 'Constant`1[[System.Single, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value: 1
+    - rid: 7822768311482712193
+      type: {class: 'Constant`1[[System.String, mscorlib]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Value: Buy Pickaxe

@@ -507,6 +507,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 388070234}
+  - component: {fileID: 388070235}
   m_Layer: 0
   m_Name: Shop
   m_TagString: Untagged
@@ -529,6 +530,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &388070235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 388070233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0b46bb48e8b3754c91c5011e11c3366, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Heroes.Goap.Runtime.World.GoapLocationMarker
+  LocationType: {fileID: 11400000, guid: 082b67106ef0e4a4ba573da3cdd3e931, type: 2}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -829,6 +843,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 525294970}
+  - component: {fileID: 525294971}
   m_Layer: 0
   m_Name: Work
   m_TagString: Untagged
@@ -851,6 +866,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &525294971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 525294969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0b46bb48e8b3754c91c5011e11c3366, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Heroes.Goap.Runtime.World.GoapLocationMarker
+  LocationType: {fileID: 11400000, guid: 59749981680b9dd4387d7ac5fc1306b2, type: 2}
 --- !u!1 &550524063
 GameObject:
   m_ObjectHideFlags: 0
@@ -1149,10 +1177,16 @@ PrefabInstance:
       addedObject: {fileID: 598344426}
     - targetCorrespondingSourceObject: {fileID: 8771091787928289351, guid: 6cf09d1b8b83e29429d44f0b8f6c1d08, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 598344430}
+      addedObject: {fileID: 598344432}
     - targetCorrespondingSourceObject: {fileID: 8771091787928289351, guid: 6cf09d1b8b83e29429d44f0b8f6c1d08, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 598344432}
+      addedObject: {fileID: 598344435}
+    - targetCorrespondingSourceObject: {fileID: 8771091787928289351, guid: 6cf09d1b8b83e29429d44f0b8f6c1d08, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 598344434}
+    - targetCorrespondingSourceObject: {fileID: 8771091787928289351, guid: 6cf09d1b8b83e29429d44f0b8f6c1d08, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 598344433}
   m_SourcePrefab: {fileID: -4161369568681901532, guid: 6cf09d1b8b83e29429d44f0b8f6c1d08, type: 3}
 --- !u!1 &598344425 stripped
 GameObject:
@@ -1224,40 +1258,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -3910990755373119420, guid: 6cf09d1b8b83e29429d44f0b8f6c1d08, type: 3}
   m_PrefabInstance: {fileID: 598344424}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &598344430
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 598344425}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30e09b0528b540cfa9da64eedeed2a6b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GOAP.GoapAgent
-  homePosition: {fileID: 797273499}
-  workPosition: {fileID: 525294970}
-  minePosition: {fileID: 1540004977}
-  shopPosition: {fileID: 388070234}
-  startingGold: 0
-  swordCost: 30
-  pickaxeCost: 25
-  coffeeCost: 8
-  workGoldPerTick: 10
-  mineGoldPerTick: 14
-  workStaminaCost: 18
-  mineStaminaCost: 26
-  pickaxeGoldMultiplier: 1.6
-  pickaxeStaminaMultiplier: 0.85
-  coffeeStaminaGain: 22
-  coffeeMaxCap: 55
-  Health: 30
-  Stamina: 100
-  Gold: 0
-  HasSword: 0
-  HasPickaxe: 0
-  Coffee: 0
 --- !u!54 &598344432
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1285,6 +1285,48 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &598344433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 598344425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc6efa3c0821575428da8720b27a903a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Heroes.Goap.Runtime.Strategies.GoapStrategyRunner
+--- !u!114 &598344434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 598344425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 924727e044d517846a84f934e4a1c86f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Heroes.Goap.Runtime.Strategies.GoapNavMeshExecutor
+  agent: {fileID: 598344428}
+  animationController: {fileID: 598344426}
+  arrivalDistance: 2
+--- !u!114 &598344435
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 598344425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29639caaa41055b4dbdc2e775147ae0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Heroes.Goap.Runtime.Agents.GoapAgent
+  Archetype: {fileID: 4283139526234383416, guid: 7d4b7f0b844601b4baf434864a0291a6, type: 3}
+  StrategyRunner: {fileID: 598344433}
+  NavMeshExecutor: {fileID: 598344434}
 --- !u!1 &632386419
 GameObject:
   m_ObjectHideFlags: 0
@@ -1389,6 +1431,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 797273499}
+  - component: {fileID: 797273500}
   m_Layer: 0
   m_Name: Home
   m_TagString: Untagged
@@ -1411,6 +1454,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &797273500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 797273498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0b46bb48e8b3754c91c5011e11c3366, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Heroes.Goap.Runtime.World.GoapLocationMarker
+  LocationType: {fileID: 11400000, guid: 39d52e1622f62524d9b3535c38cbea54, type: 2}
 --- !u!1 &821769147
 GameObject:
   m_ObjectHideFlags: 0
@@ -2306,6 +2362,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1540004977}
+  - component: {fileID: 1540004978}
   m_Layer: 0
   m_Name: Mine
   m_TagString: Untagged
@@ -2328,6 +2385,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1540004978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1540004976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0b46bb48e8b3754c91c5011e11c3366, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Heroes.Goap.Runtime.World.GoapLocationMarker
+  LocationType: {fileID: 11400000, guid: e0964bd30c016cf4a9b16eafa80bbba1, type: 2}
 --- !u!1 &1553798260
 GameObject:
   m_ObjectHideFlags: 0

@@ -27,14 +27,12 @@ namespace Heroes.Goap.Editor.Nodes
                 .WithConnectorUI(PortConnectorUI.Circle)
                 .Build();
 
-            Heroes.Goap.Editor.Utilities.GoapPortCapacityHelper.SetNoEmbeddedConstant(namePort);
 
             var costPort = context.AddInputPort<float>(CostPortName)
                 .WithDisplayName("Cost")
                 .WithConnectorUI(PortConnectorUI.Circle)
                 .Build();
 
-            Heroes.Goap.Editor.Utilities.GoapPortCapacityHelper.SetNoEmbeddedConstant(costPort);
 
             context.AddInputPort(StrategyPortName)
                 .WithDisplayName("Strategy")
