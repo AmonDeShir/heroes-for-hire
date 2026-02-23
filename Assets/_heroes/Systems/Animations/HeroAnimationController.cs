@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace _heroes.Systems.Animations
+namespace Heroes.Animations
 {
-    public class HeroAnimationController : AnimationController
+    public class HeroAnimationController : CharacterAnimationController
     {
         protected override void SetLocomotionClip() {
             LocomotionClip = Animator.StringToHash("Run");

@@ -1,67 +1,54 @@
 ﻿using UnityEngine;
 
-public abstract class AnimationController : MonoBehaviour 
+namespace Heroes.Animations
 {
-    private const float _crossfadeDuration = 0.1f;
-    
-    private Animator _animator;
-    private Timer _timer;
-    
-    private float _animationLength;
-    
-    [HideInInspector] 
-    public int LocomotionClip = Animator.StringToHash("Locomotion");
-    
-    [HideInInspector] 
-    public int SpeedHash = Animator.StringToHash("Speed");
-    
-    [HideInInspector] 
-    public int AttackClip = Animator.StringToHash("Attack");
-    
-    void Awake() 
+    public abstract class AnimationController : MonoBehaviour
     {
-        _animator = GetComponentInChildren<Animator>();
+        protected const float _crossfadeDuration = 0.1f;
+
+        protected Animator _animator;
+        protected Timer _timer;
+
+        protected float _animationLength;
         
-        SetLocomotionClip();
-        SetAttackClip();
-        SetSpeedHash();
-    }
-
-    public void SetSpeed(float speed) => _animator.SetFloat(SpeedHash, speed);
-    public void Attack() => PlayAnimationUsingTimer(AttackClip);
-
-    private void Update()
-    {
-        _timer?.Tick(Time.deltaTime);   
-    }
-
-    private void PlayAnimationUsingTimer(int clipHash) 
-    {
-        _timer = new Timer(GetAnimationLength(clipHash));
-        _timer.OnStart += () => _animator.CrossFade(clipHash, _crossfadeDuration);
-        _timer.OnTimeOut += () => _animator.CrossFade(LocomotionClip, _crossfadeDuration);
-        _timer.Start();
-    }
-
-    public float GetAnimationLength(int hash) {
-        if (_animationLength > 0)
+        protected void Awake()
         {
-            return _animationLength;
+            _animator = GetComponentInChildren<Animator>();
+            LoadAnimationHashes();
         }
 
-        foreach (AnimationClip clip in _animator.runtimeAnimatorController.animationClips) 
+        protected abstract void LoadAnimationHashes(); 
+        
+        protected void Update()
         {
-            if (Animator.StringToHash(clip.name) == hash) 
+            _timer?.Tick(Time.deltaTime);
+        }
+
+        protected void PlayAnimationUsingTimer(int clipHash, int exitHash)
+        {
+            _timer = new Timer(GetAnimationLength(clipHash));
+            _timer.OnStart += () => _animator.CrossFade(clipHash, _crossfadeDuration);
+            _timer.OnTimeOut += () => _animator.CrossFade(exitHash, _crossfadeDuration);
+            _timer.Start();
+        }
+
+        public float GetAnimationLength(int hash)
+        {
+            if (_animationLength > 0)
             {
-                _animationLength = clip.length;
-                return clip.length;
+                return _animationLength;
             }
+
+            foreach (AnimationClip clip in _animator.runtimeAnimatorController.animationClips)
+            {
+                if (Animator.StringToHash(clip.name) == hash)
+                {
+                    _animationLength = clip.length;
+                    return clip.length;
+                }
+            }
+
+            return -1f;
         }
-
-        return -1f;
     }
-
-    protected abstract void SetLocomotionClip();
-    protected abstract void SetAttackClip();
-    protected abstract void SetSpeedHash();
 }
