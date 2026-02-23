@@ -3,12 +3,12 @@ using System.Linq;
 
 namespace Heroes.GOAP.Core
 {
-    public class PlanExecutor<T>
+    public class PlanExecutor<T> : IPlanExecutor
     {
         protected T agent;
         protected Archetype<T> archetype;
         protected AgentContext context;
-        protected Planner<T> planner;
+        protected IPlanner<T> planner;
         
         protected Plan<T> plan;
         public Goal Goal => plan.Goal;

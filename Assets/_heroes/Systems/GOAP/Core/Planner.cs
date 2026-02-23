@@ -4,13 +4,8 @@ using UnityEngine;
 
 namespace Heroes.GOAP.Core
 {
-    public class Planner<T>
+    public class Planner<T> : IPlanner<T>
     {
-        public Plan<T> Plan(Archetype<T> archetype, AgentContext ctx, int maxDepth)
-        {
-            return Plan(archetype.Actions, archetype.Goals, ctx, maxDepth);
-        }
-
         public Plan<T> Plan(List<Action<T>> actions, List<Goal> goals, AgentContext ctx, int maxDepth)
         {
             var orderedGoals = goals

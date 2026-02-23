@@ -1,15 +1,14 @@
 using NUnit.Framework;
+using GoapAction = Heroes.GOAP.Core.Action<object>;
 
 namespace Heroes.GOAP.Core.Tests
 {
     public class StrategyHandler : IActionStrategy
     {
-        private Agent agent;
-        private System.Action<Agent> impl;
+        private readonly System.Action impl;
 
-        public StrategyHandler(Agent agent, System.Action<Agent> impl)
+        public StrategyHandler(System.Action impl)
         {
-            this.agent = agent;
             this.impl = impl;
         }
 
@@ -18,7 +17,7 @@ namespace Heroes.GOAP.Core.Tests
 
         public void Update(float deltaTime)
         {
-            impl(ctx);
+            impl?.Invoke();
             Complete = true;
         }
     }
@@ -28,7 +27,7 @@ namespace Heroes.GOAP.Core.Tests
         [Test]
         public void Builder_Defaults_AreSet()
         {
-            var action = new Action.Builder().Build();
+            var action = new GoapAction.Builder().Build();
 
             var ctx = new AgentContext(new AgentState(1));
 
@@ -40,7 +39,7 @@ namespace Heroes.GOAP.Core.Tests
             Assert.AreEqual(1f, action.Time(ctx));
 
             Assert.DoesNotThrow(() => action.Effect(ctx));
-            Assert.DoesNotThrow(() => action.Implementation(new AgentState(1)));
+            Assert.DoesNotThrow(() => action.Implementation(new object()));
         }
 
         [Test]
@@ -48,7 +47,7 @@ namespace Heroes.GOAP.Core.Tests
         {
             var didRun = false;
             
-            var action = new Action.Builder()
+            var action = new GoapAction.Builder()
                 .WithName("Test")
                 .WithDescription("Desc")
                 .WithPreCondition(ctx => ctx.state.GetBelieve(0) > 0f)
@@ -59,7 +58,7 @@ namespace Heroes.GOAP.Core.Tests
                     next.SetBelieve(0, 1f);
                     return next;
                 })
-                .WithImplementation(ctx => new StrategyHandler(ctx, _ => didRun = true) )
+                .WithImplementation(_ => new StrategyHandler(() => didRun = true))
                 .Build();
 
             var ctx = new AgentContext(new AgentState(1));
@@ -75,14 +74,15 @@ namespace Heroes.GOAP.Core.Tests
 
             Assert.IsTrue(action.PreConditions(new AgentContext(result)));
 
-            action.Implementation(result);
+            var strategy = action.Implementation(new object());
+            strategy.Update(0f);
             Assert.IsTrue(didRun);
         }
 
         [Test]
         public void Effect_UsesMutateToReturnUpdatedState()
         {
-            var action = new Action.Builder()
+            var action = new GoapAction.Builder()
                 .WithEffect(ctx =>
                     ctx.state.Clone().Mutate((ref AgentState s) =>
                     {
@@ -104,7 +104,7 @@ namespace Heroes.GOAP.Core.Tests
         [Test]
         public void Effect_MustNotMutate_Input_State()
         {
-            var action = new Action.Builder()
+            var action = new GoapAction.Builder()
                 .WithEffect(ctx =>
                     ctx.state.Clone().Mutate((ref AgentState s) =>
                     {

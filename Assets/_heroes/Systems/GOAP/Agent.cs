@@ -22,7 +22,7 @@ namespace Heroes.GOAP
         
         protected abstract Archetype<Agent> CreateArchetype();
         protected Archetype<Agent> archetype;
-        protected PlanExecutor<Agent> executor;
+        protected IPlanExecutor executor;
         
         protected void Awake()
         {

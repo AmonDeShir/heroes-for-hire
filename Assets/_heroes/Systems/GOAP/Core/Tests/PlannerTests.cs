@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
-using Heroes.GOAP;
+using GoapAction = Heroes.GOAP.Core.Action<object>;
+using GoapPlan = Heroes.GOAP.Core.Plan<object>;
+using GoapPlanner = Heroes.GOAP.Core.Planner<object>;
 
 namespace Heroes.GOAP.Core.Tests
 {
@@ -31,9 +33,9 @@ namespace Heroes.GOAP.Core.Tests
         private static bool HasPickaxeOf(AgentContext ctx) => ctx.state.GetBelieve(Beliefs.HasPickaxe) >= 0.5f;
         private static bool HasSwordOf(AgentContext ctx) => ctx.state.GetBelieve(Beliefs.HasSword) >= 0.5f;
 
-        private static Action Work()
+        private static GoapAction Work()
         {
-            return new Action.Builder()
+            return new GoapAction.Builder()
                 .WithName("Work")
                 .WithPreCondition(_ => true)
                 .WithTime(_ => 1f)
@@ -48,9 +50,9 @@ namespace Heroes.GOAP.Core.Tests
                 .Build();
         }
 
-        private static Action BuyPickaxe()
+        private static GoapAction BuyPickaxe()
         {
-            return new Action.Builder()
+            return new GoapAction.Builder()
                 .WithName("BuyPickaxe")
                 .WithPreCondition(ctx =>
                 {
@@ -70,9 +72,9 @@ namespace Heroes.GOAP.Core.Tests
                 .Build();
         }
 
-        private static Action Mine()
+        private static GoapAction Mine()
         {
-            return new Action.Builder()
+            return new GoapAction.Builder()
                 .WithName("Mine")
                 .WithPreCondition(ctx => HasPickaxeOf(ctx))
                 .WithTime(_ => 1f)
@@ -87,9 +89,9 @@ namespace Heroes.GOAP.Core.Tests
                 .Build();
         }
 
-        private static Action BuySword()
+        private static GoapAction BuySword()
         {
-            return new Action.Builder()
+            return new GoapAction.Builder()
                 .WithName("BuySword")
                 .WithPreCondition(ctx =>
                 {
@@ -131,7 +133,7 @@ namespace Heroes.GOAP.Core.Tests
                 .Build();
         }
 
-        private static AgentState ApplyPlan(AgentContext start, List<Action> plan)
+        private static AgentState ApplyPlan(AgentContext start, List<GoapAction> plan)
         {
             var current = start.state.Clone();
 
@@ -147,13 +149,33 @@ namespace Heroes.GOAP.Core.Tests
             return current;
         }
 
+        private static List<GoapAction> ExtractPlanSteps(GoapPlan plan, AgentContext start)
+        {
+            var steps = new List<GoapAction>();
+            var ctx = new AgentContext(start);
+            var agent = new object();
+
+            while (plan.StartNextStep(ctx, agent))
+            {
+                var step = plan.Step;
+                steps.Add(step);
+
+                var nextState = step.Effect(ctx);
+                ctx = new AgentContext(nextState);
+
+                plan.Update(0f);
+            }
+
+            return steps;
+        }
+
         [Test]
         public void Planner_Chooses_Pickaxe_Path_As_More_Optimal()
         {
             var beliefCount = 3;
             var ctx = MakeStartContext(beliefCount);
 
-            var actions = new List<Action>
+            var actions = new List<GoapAction>
             {
                 Work(),
                 BuyPickaxe(),
@@ -166,32 +188,32 @@ namespace Heroes.GOAP.Core.Tests
                 HaveSwordGoal()
             };
 
-            var planner = new Planner();
-
-            var goal = planner.FindGoal(goals, ctx);
-            var plan = planner.Plan(actions, goal, ctx, maxDepth: 100);
+            var planner = new GoapPlanner();
+            var plan = planner.Plan(actions, goals, ctx, maxDepth: 100);
 
             Assert.IsNotNull(plan);
-            Assert.Greater(plan.Count, 0, "Planner returned empty plan.");
+            var steps = ExtractPlanSteps(plan, ctx);
+
+            Assert.Greater(steps.Count, 0, "Planner returned empty plan.");
             Assert.AreEqual(32,
-                plan.Count,
+                steps.Count,
                 "Expected optimal plan length: 20 Work + BuyPickaxe + 10 Mine + BuySword = 32.");
 
             for (var i = 0; i < 20; i++)
             {
-                Assert.AreEqual("Work", plan[i].Name, $"Expected Work at step {i}.");
+                Assert.AreEqual("Work", steps[i].Name, $"Expected Work at step {i}.");
             }
 
-            Assert.AreEqual("BuyPickaxe", plan[20].Name);
+            Assert.AreEqual("BuyPickaxe", steps[20].Name);
 
             for (var i = 21; i <= 30; i++)
             {
-                Assert.AreEqual("Mine", plan[i].Name, $"Expected Mine at step {i}.");
+                Assert.AreEqual("Mine", steps[i].Name, $"Expected Mine at step {i}.");
             }
 
-            Assert.AreEqual("BuySword", plan[31].Name);
+            Assert.AreEqual("BuySword", steps[31].Name);
 
-            var finalState = ApplyPlan(ctx, plan);
+            var finalState = ApplyPlan(ctx, steps);
             var finalCtx = new AgentContext(finalState);
 
             Assert.IsTrue(HasSwordOf(finalCtx), "Goal should be achieved after executing the plan.");
@@ -208,7 +230,7 @@ namespace Heroes.GOAP.Core.Tests
             var beliefCount = 3;
             var ctx = MakeStartContext(beliefCount);
 
-            var actions = new List<Action>
+            var actions = new List<GoapAction>
             {
                 Work(),
                 BuyPickaxe(),
@@ -220,12 +242,10 @@ namespace Heroes.GOAP.Core.Tests
                 HaveSwordGoal()
             };
 
-            var planner = new Planner();
-            var goal = planner.FindGoal(goals, ctx);
-            var plan = planner.Plan(actions, goal, ctx, maxDepth: 100);
+            var planner = new GoapPlanner();
+            var plan = planner.Plan(actions, goals, ctx, maxDepth: 100);
 
-            Assert.IsNotNull(plan);
-            Assert.AreEqual(0, plan.Count, "Expected empty plan when goal is unreachable.");
+            Assert.IsNull(plan, "Expected null plan when goal is unreachable.");
         }
 
         [Test]
@@ -238,7 +258,7 @@ namespace Heroes.GOAP.Core.Tests
 
             Assert.IsFalse(mine.PreConditions(ctx), "Mine should not be executable at the start (no pickaxe).");
 
-            var actions = new List<Action>
+            var actions = new List<GoapAction>
             {
                 Work(),
                 BuyPickaxe(),
@@ -251,16 +271,63 @@ namespace Heroes.GOAP.Core.Tests
                 HaveSwordGoal()
             };
             
-            var planner = new Planner();
-            var goal = planner.FindGoal(goals, ctx);
-            var plan = planner.Plan(actions, goal, ctx, maxDepth: 100);
+            var planner = new GoapPlanner();
+            var plan = planner.Plan(actions, goals, ctx, maxDepth: 100);
 
-            Assert.Greater(plan.Count, 0);
+            Assert.IsNotNull(plan);
+            var steps = ExtractPlanSteps(plan, ctx);
+            Assert.Greater(steps.Count, 0);
 
-            var idxMine = plan.FindIndex(a => a.Name == "Mine");
-            var idxPickaxe = plan.FindIndex(a => a.Name == "BuyPickaxe");
+            var idxMine = steps.FindIndex(a => a.Name == "Mine");
+            var idxPickaxe = steps.FindIndex(a => a.Name == "BuyPickaxe");
 
             Assert.Greater(idxMine, idxPickaxe, "Mine should only appear after BuyPickaxe in the plan.");
+        }
+
+        [Test]
+        public void Planner_Picks_Most_Important_Goal_When_Multiple_Available()
+        {
+            var ctx = MakeStartContext(3);
+
+            var actionA = new GoapAction.Builder()
+                .WithName("GainGold")
+                .WithPreCondition(_ => true)
+                .WithTime(_ => 1f)
+                .WithEffect(c => c.state.Clone().Mutate((ref AgentState s) => s.SetBelieve(Beliefs.Gold, 10f)))
+                .Build();
+
+            var actionB = new GoapAction.Builder()
+                .WithName("GainPickaxe")
+                .WithPreCondition(_ => true)
+                .WithTime(_ => 1f)
+                .WithEffect(c => c.state.Clone().Mutate((ref AgentState s) => s.SetBelieve(Beliefs.HasPickaxe, 1f)))
+                .Build();
+
+            var goals = new List<Goal>
+            {
+                new Goal.Builder()
+                    .WithName("GetGold")
+                    .WithPriority(1)
+                    .WithImportance(_ => 2f)
+                    .WithAchieved(c => c.state.GetBelieve(Beliefs.Gold) >= 10f)
+                    .WithHeuristic(c => 1f)
+                    .Build(),
+                new Goal.Builder()
+                    .WithName("GetPickaxe")
+                    .WithPriority(1)
+                    .WithImportance(_ => 1f)
+                    .WithAchieved(c => c.state.GetBelieve(Beliefs.HasPickaxe) >= 1f)
+                    .WithHeuristic(c => 1f)
+                    .Build()
+            };
+
+            var actions = new List<GoapAction> { actionA, actionB };
+            var planner = new GoapPlanner();
+
+            var plan = planner.Plan(actions, goals, ctx, maxDepth: 5);
+
+            Assert.IsNotNull(plan);
+            Assert.AreEqual("GetGold", plan.Goal.Name);
         }
     }
 }
