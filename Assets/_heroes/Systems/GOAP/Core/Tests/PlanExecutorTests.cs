@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using GoapAction = Heroes.GOAP.Core.Action<object>;
+using GoapAction = Heroes.GOAP.Core.Action<object, Heroes.GOAP.Core.Tests.TestWorldSnapshot>;
 
 namespace Heroes.GOAP.Core.Tests
 {
@@ -8,7 +8,7 @@ namespace Heroes.GOAP.Core.Tests
     {
         private sealed class ImmediateStrategy : IActionStrategy
         {
-            public bool CanPreform { get; } = true;
+            public bool CanPerform { get; } = true;
             public bool Complete { get; private set; }
 
             public void Update(float deltaTime)
@@ -24,13 +24,13 @@ namespace Heroes.GOAP.Core.Tests
                 .WithPreCondition(_ => true)
                 .WithTime(_ => 1f)
                 .WithEffect(ctx => ctx.state.Clone().Mutate((ref AgentState s) => s.SetBelieve(0, s.GetBelieve(0) + 1f)))
-                .WithImplementation(_ => new ImmediateStrategy())
+                .WithImplementation((_, __) => new ImmediateStrategy())
                 .Build();
         }
 
-        private static Goal MakeGoal()
+        private static Goal<TestWorldSnapshot> MakeGoal()
         {
-            return new Goal.Builder()
+            return new Goal<TestWorldSnapshot>.Builder()
                 .WithName("ReachOne")
                 .WithPriority(1)
                 .WithImportance(_ => 1f)
@@ -43,10 +43,10 @@ namespace Heroes.GOAP.Core.Tests
         public void Update_RaisesNextStepLoaded_ForFirstStep()
         {
             var actions = new List<GoapAction> { MakeAction("Gain") };
-            var goals = new List<Goal> { MakeGoal() };
+            var goals = new List<Goal<TestWorldSnapshot>> { MakeGoal() };
 
-            var archetype = new Archetype<object>(actions, goals, new AgentState(1));
-            var executor = new PlanExecutor<object>(new object(), archetype);
+            var archetype = new Archetype<object, TestWorldSnapshot>(actions, goals, new AgentState(1));
+            var executor = new PlanExecutor<object, TestWorldSnapshot>(new object(), archetype, new TestWorldState());
 
             var events = 0;
             executor.OnNextStepLoaded += () => events++;
@@ -60,9 +60,9 @@ namespace Heroes.GOAP.Core.Tests
         public void Update_RaisesNextStepLoaded_ForEachStep()
         {
             var actions = new List<GoapAction> { MakeAction("Gain") };
-            var goals = new List<Goal>
+            var goals = new List<Goal<TestWorldSnapshot>>
             {
-                new Goal.Builder()
+                new Goal<TestWorldSnapshot>.Builder()
                     .WithName("ReachTwo")
                     .WithPriority(1)
                     .WithImportance(_ => 1f)
@@ -71,8 +71,8 @@ namespace Heroes.GOAP.Core.Tests
                     .Build()
             };
 
-            var archetype = new Archetype<object>(actions, goals, new AgentState(1));
-            var executor = new PlanExecutor<object>(new object(), archetype);
+            var archetype = new Archetype<object, TestWorldSnapshot>(actions, goals, new AgentState(1));
+            var executor = new PlanExecutor<object, TestWorldSnapshot>(new object(), archetype, new TestWorldState());
 
             var events = 0;
             executor.OnNextStepLoaded += () => events++;
@@ -86,8 +86,8 @@ namespace Heroes.GOAP.Core.Tests
         [Test]
         public void Update_DoesNotRaiseEvent_WhenNoPlanAvailable()
         {
-            var archetype = new Archetype<object>(new List<GoapAction>(), new List<Goal>(), new AgentState(1));
-            var executor = new PlanExecutor<object>(new object(), archetype);
+            var archetype = new Archetype<object, TestWorldSnapshot>(new List<GoapAction>(), new List<Goal<TestWorldSnapshot>>(), new AgentState(1));
+            var executor = new PlanExecutor<object, TestWorldSnapshot>(new object(), archetype, new TestWorldState());
 
             var events = 0;
             executor.OnNextStepLoaded += () => events++;

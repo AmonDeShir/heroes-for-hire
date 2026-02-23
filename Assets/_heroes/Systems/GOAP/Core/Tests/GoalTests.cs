@@ -7,8 +7,8 @@ namespace Heroes.GOAP.Core.Tests
         [Test]
         public void Builder_Defaults_AreSet()
         {
-            var goal = new Goal.Builder().Build();
-            var ctx = new AgentContext(new AgentState(1));
+            var goal = new Goal<TestWorldSnapshot>.Builder().Build();
+            var ctx = new AgentContext<TestWorldSnapshot>(new AgentState(1), new TestWorldSnapshot());
 
             Assert.AreEqual(1, goal.Priority);
             Assert.AreEqual(string.Empty, goal.Name);
@@ -21,12 +21,12 @@ namespace Heroes.GOAP.Core.Tests
         [Test]
         public void Execute_MultipliesImportanceByPriority()
         {
-            var goal = new Goal.Builder()
+            var goal = new Goal<TestWorldSnapshot>.Builder()
                 .WithPriority(3)
                 .WithImportance(_ => 2f)
                 .Build();
 
-            var result = goal.Execute(new AgentContext(new AgentState(1)));
+            var result = goal.Execute(new AgentContext<TestWorldSnapshot>(new AgentState(1), new TestWorldSnapshot()));
 
             Assert.AreEqual(6f, result);
         }
@@ -34,7 +34,7 @@ namespace Heroes.GOAP.Core.Tests
         [Test]
         public void Builder_AssignsDelegates()
         {
-            var goal = new Goal.Builder()
+            var goal = new Goal<TestWorldSnapshot>.Builder()
                 .WithName("FindFood")
                 .WithDescription("Reach full")
                 .WithAchieved(ctx => ctx.state.GetBelieve(0) >= 1f)
@@ -43,7 +43,7 @@ namespace Heroes.GOAP.Core.Tests
 
             var state = new AgentState(1);
             state.SetBelieve(0, 0.5f);
-            var ctx = new AgentContext(state);
+            var ctx = new AgentContext<TestWorldSnapshot>(state, new TestWorldSnapshot());
 
             Assert.AreEqual("FindFood", goal.Name);
             Assert.AreEqual("Reach full", goal.Description);
@@ -51,7 +51,7 @@ namespace Heroes.GOAP.Core.Tests
             Assert.AreEqual(0.5f, goal.Heuristic(ctx));
 
             state.SetBelieve(0, 1f);
-            ctx = new AgentContext(state);
+            ctx = new AgentContext<TestWorldSnapshot>(state, new TestWorldSnapshot());
             Assert.IsTrue(goal.IsAchieved(ctx));
         }
     }

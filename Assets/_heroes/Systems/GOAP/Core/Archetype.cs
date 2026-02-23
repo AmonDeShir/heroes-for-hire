@@ -2,14 +2,13 @@ using System.Collections.Generic;
 
 namespace Heroes.GOAP.Core
 {
-    public class Archetype<T>
+    public class Archetype<TAgent, TSnapshot> where TSnapshot : IReadOnlyWorldSnapshot
     {
-        public List<Action<T>> Actions { get; private set; }
-        public List<Goal> Goals { get; private set; }
-
+        public List<Action<TAgent, TSnapshot>> Actions { get; private set; }
+        public List<Goal<TSnapshot>> Goals { get; private set; }
         public AgentState BaseState { get; private set; }
 
-        public Archetype(List<Action<T>> actions, List<Goal> goals, AgentState baseState)
+        public Archetype(List<Action<TAgent, TSnapshot>> actions, List<Goal<TSnapshot>> goals, AgentState baseState)
         {
             Actions = actions;
             Goals = goals;
@@ -19,6 +18,16 @@ namespace Heroes.GOAP.Core
         public AgentState CreateState()
         {
             return BaseState.Clone();
+        }
+
+        public Goal<TSnapshot>.Builder CreateGoal()
+        {
+            return new Goal<TSnapshot>.Builder();
+        }
+        
+        public Action<TAgent, TSnapshot>.Builder CreateAction()
+        {
+            return new Action<TAgent, TSnapshot>.Builder();
         }
     }
 }

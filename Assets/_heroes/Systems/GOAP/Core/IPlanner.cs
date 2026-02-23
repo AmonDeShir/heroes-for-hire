@@ -2,8 +2,8 @@
 
 namespace Heroes.GOAP.Core
 {
-    public interface IPlanner<T>
+    public interface IPlanner<TAgent, TSnapshot> where TSnapshot : IReadOnlyWorldSnapshot
     {
-        public Plan<T> Plan(List<Action<T>> actions, List<Goal> goals, AgentContext ctx, int maxDepth);
+        public Plan<TAgent, TSnapshot> Plan(List<Action<TAgent, TSnapshot>> actions, List<Goal<TSnapshot>> goals, AgentContext<TSnapshot> ctx, int maxDepth);
     }
 }

@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using GoapAction = Heroes.GOAP.Core.Action<object>;
+using GoapAction = Heroes.GOAP.Core.Action<object, Heroes.GOAP.Core.Tests.TestWorldSnapshot>;
 
 namespace Heroes.GOAP.Core.Tests
 {
@@ -12,7 +12,7 @@ namespace Heroes.GOAP.Core.Tests
             this.impl = impl;
         }
 
-        public bool CanPreform { get; } = true;
+        public bool CanPerform { get; } = true;
         public bool Complete { get; private set; } = false;
 
         public void Update(float deltaTime)
@@ -29,7 +29,7 @@ namespace Heroes.GOAP.Core.Tests
         {
             var action = new GoapAction.Builder().Build();
 
-            var ctx = new AgentContext(new AgentState(1));
+            var ctx = new AgentContext<TestWorldSnapshot>(new AgentState(1), new TestWorldSnapshot());
 
             Assert.AreEqual(string.Empty, action.Name);
             Assert.AreEqual(string.Empty, action.Description);
@@ -39,7 +39,7 @@ namespace Heroes.GOAP.Core.Tests
             Assert.AreEqual(1f, action.Time(ctx));
 
             Assert.DoesNotThrow(() => action.Effect(ctx));
-            Assert.DoesNotThrow(() => action.Implementation(new object()));
+            Assert.DoesNotThrow(() => action.Implementation(new object(), ctx));
         }
 
         [Test]
@@ -58,10 +58,10 @@ namespace Heroes.GOAP.Core.Tests
                     next.SetBelieve(0, 1f);
                     return next;
                 })
-                .WithImplementation(_ => new StrategyHandler(() => didRun = true))
+                .WithImplementation((_, __) => new StrategyHandler(() => didRun = true))
                 .Build();
 
-            var ctx = new AgentContext(new AgentState(1));
+            var ctx = new AgentContext<TestWorldSnapshot>(new AgentState(1), new TestWorldSnapshot());
 
             Assert.AreEqual("Test", action.Name);
             Assert.AreEqual("Desc", action.Description);
@@ -72,9 +72,9 @@ namespace Heroes.GOAP.Core.Tests
             var result = action.Effect(ctx);
             Assert.AreEqual(1f, result.GetBelieve(0));
 
-            Assert.IsTrue(action.PreConditions(new AgentContext(result)));
+            Assert.IsTrue(action.PreConditions(new AgentContext<TestWorldSnapshot>(result, new TestWorldSnapshot())));
 
-            var strategy = action.Implementation(new object());
+            var strategy = action.Implementation(new object(), ctx);
             strategy.Update(0f);
             Assert.IsTrue(didRun);
         }
@@ -91,7 +91,7 @@ namespace Heroes.GOAP.Core.Tests
                 )
                 .Build();
 
-            var ctx = new AgentContext(new AgentState(1));
+            var ctx = new AgentContext<TestWorldSnapshot>(new AgentState(1), new TestWorldSnapshot());
             var before = ctx.state.GetBelieve(0);
 
             var result = action.Effect(ctx);
@@ -116,7 +116,7 @@ namespace Heroes.GOAP.Core.Tests
             var originalState = new AgentState(1);
             originalState.SetBelieve(0, 0f);
 
-            var ctx = new AgentContext(originalState);
+            var ctx = new AgentContext<TestWorldSnapshot>(originalState, new TestWorldSnapshot());
             var result = action.Effect(ctx);
 
             Assert.AreEqual(0f, ctx.state.GetBelieve(0), "Effect must not mutate the input context state.");

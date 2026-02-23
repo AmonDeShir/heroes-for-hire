@@ -1,17 +1,20 @@
 ﻿namespace Heroes.GOAP.Core
 {
-    public class AgentContext
+    public class AgentContext<TSnapshot> where TSnapshot : IReadOnlyWorldSnapshot
     {
         public AgentState state { get; private set; }
-        
-        public AgentContext(AgentContext ctx)
+        public TSnapshot world { get; private set; }
+
+        public AgentContext(AgentContext<TSnapshot> ctx)
         {
-            this.state = ctx.state.Clone();
+            state = ctx.state.Clone();
+            world = ctx.world;
         }
-        
-        public AgentContext(AgentState state)
+
+        public AgentContext(AgentState state, TSnapshot world)
         {
             this.state = state.Clone();
+            this.world = world;
         }
     }
 }

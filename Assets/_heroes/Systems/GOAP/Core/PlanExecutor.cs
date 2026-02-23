@@ -3,25 +3,28 @@ using System.Linq;
 
 namespace Heroes.GOAP.Core
 {
-    public class PlanExecutor<T> : IPlanExecutor
+    public class PlanExecutor<TAgent, TSnapshot> : IPlanExecutor where TSnapshot : IReadOnlyWorldSnapshot
     {
-        protected T agent;
-        protected Archetype<T> archetype;
-        protected AgentContext context;
-        protected IPlanner<T> planner;
+        protected TAgent agent;
+        protected Archetype<TAgent, TSnapshot> archetype;
+        protected IWorldState<TSnapshot> worldState;
+        protected AgentContext<TSnapshot> context;
+        protected IPlanner<TAgent, TSnapshot> planner;
         
-        protected Plan<T> plan;
-        public Goal Goal => plan.Goal;
+        protected Plan<TAgent, TSnapshot> plan;
+        public Goal<TSnapshot> Goal => plan.Goal;
         
         public event System.Action OnNextStepLoaded;
 
-        public PlanExecutor(T agent, Archetype<T> archetype)
+        public PlanExecutor(TAgent agent, Archetype<TAgent, TSnapshot> archetype, IWorldState<TSnapshot> worldState)
         {
             this.agent = agent;
             this.archetype = archetype;
+            this.worldState = worldState;
 
-            context = new AgentContext(archetype.CreateState());
-            planner = new Planner<T>();
+            var snapshot = worldState.CreateSnapshot();
+            context = new AgentContext<TSnapshot>(archetype.CreateState(), snapshot);
+            planner = new Planner<TAgent, TSnapshot>();
         }
 
         public void Update(float deltaTime)
@@ -51,9 +54,11 @@ namespace Heroes.GOAP.Core
 
             if (plan?.Goal != null)
             {
-                goalsToCheck = new List<Goal>(archetype.Goals.Where(g => g.Importance(context) > currentLevel));
+                goalsToCheck = new List<Goal<TSnapshot>>(archetype.Goals.Where(g => g.Importance(context) > currentLevel));
             }
 
+            var snapshot = worldState.CreateSnapshot();
+            context = new AgentContext<TSnapshot>(context.state, snapshot);
             var newPlan = planner.Plan(archetype.Actions, goalsToCheck, context, 50);
 
             if (newPlan is { IsEmpty: false })

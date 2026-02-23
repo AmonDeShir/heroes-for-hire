@@ -2,15 +2,15 @@
 
 namespace Heroes.GOAP.Core
 {
-    public class Plan<T>
+    public class Plan<TAgent, TSnapshot> where TSnapshot : IReadOnlyWorldSnapshot
     {
-        public Goal Goal { get; private set; }
-        public Action<T> Step { get; private set; }
+        public Goal<TSnapshot> Goal { get; private set; }
+        public Action<TAgent, TSnapshot> Step { get; private set; }
         
         protected IActionStrategy strategy;
-        private readonly Stack<Action<T>> steps;
+        private readonly Stack<Action<TAgent, TSnapshot>> steps;
 
-        public Plan(Goal goal, Stack<Action<T>> steps)
+        public Plan(Goal<TSnapshot> goal, Stack<Action<TAgent, TSnapshot>> steps)
         {
             this.Goal = goal;
             this.steps = steps;
@@ -19,7 +19,7 @@ namespace Heroes.GOAP.Core
         public int RemainingSteps => steps.Count;
         public bool IsEmpty => steps.Count == 0 && Step == null;
 
-        public bool StartNextStep(AgentContext ctx, T agent)
+        public bool StartNextStep(AgentContext<TSnapshot> ctx, TAgent agent)
         {
             if (steps.Count == 0)
             {
@@ -40,7 +40,7 @@ namespace Heroes.GOAP.Core
                 return false;
             }
 
-            strategy = Step.Implementation(agent);
+            strategy = Step.Implementation(agent, ctx);
             strategy.Start();
             
             return true;

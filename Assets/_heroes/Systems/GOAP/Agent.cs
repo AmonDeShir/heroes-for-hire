@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 namespace Heroes.GOAP
 {
-    public abstract class Agent : MonoBehaviour
+    public abstract class Agent<TSnapshot> : MonoBehaviour where TSnapshot : IReadOnlyWorldSnapshot
     {
         [SerializeField]
         private CharacterAnimationController animator;
@@ -20,18 +20,19 @@ namespace Heroes.GOAP
         public NavMeshAgent NavAgent => navAgent;
         public Rigidbody Rigidbody => rb;
         
-        protected abstract Archetype<Agent> CreateArchetype();
-        protected Archetype<Agent> archetype;
+        protected abstract Archetype<Agent<TSnapshot>, TSnapshot> CreateArchetype();
+        protected abstract IWorldState<TSnapshot> CreateWorldState();
+
+        protected Archetype<Agent<TSnapshot>, TSnapshot> archetype;
+        protected IWorldState<TSnapshot> worldState;
         protected IPlanExecutor executor;
         
-        protected void Awake()
-        {
-            archetype = CreateArchetype();
-            executor = new PlanExecutor<Agent>(this, archetype);
-        }
-
         public void Start()
         {
+            archetype = CreateArchetype();
+            worldState = CreateWorldState();
+            executor = new PlanExecutor<Agent<TSnapshot>, TSnapshot>(this, archetype, worldState);
+            
             executor.OnNextStepLoaded += ResetNavPath;
         }
 

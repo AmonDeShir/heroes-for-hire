@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using GoapAction = Heroes.GOAP.Core.Action<object>;
-using GoapPlan = Heroes.GOAP.Core.Plan<object>;
+using GoapAction = Heroes.GOAP.Core.Action<object, Heroes.GOAP.Core.Tests.TestWorldSnapshot>;
+using GoapPlan = Heroes.GOAP.Core.Plan<object, Heroes.GOAP.Core.Tests.TestWorldSnapshot>;
 
 namespace Heroes.GOAP.Core.Tests
 {
@@ -13,7 +13,7 @@ namespace Heroes.GOAP.Core.Tests
             public bool Updated { get; private set; }
             public bool Stopped { get; private set; }
 
-            public bool CanPreform { get; } = true;
+            public bool CanPerform { get; } = true;
             public bool Complete { get; private set; }
 
             public TestStrategy(bool complete)
@@ -43,16 +43,16 @@ namespace Heroes.GOAP.Core.Tests
                 .WithName(name)
                 .WithPreCondition(_ => preconditions)
                 .WithEffect(ctx => ctx.state.Clone())
-                .WithImplementation(_ => strategy)
+                .WithImplementation((_, __) => strategy)
                 .Build();
         }
 
         [Test]
         public void StartNextStep_ReturnsFalse_WhenNoSteps()
         {
-            var plan = new GoapPlan(new Goal.Builder().Build(), new Stack<GoapAction>());
+            var plan = new GoapPlan(new Goal<TestWorldSnapshot>.Builder().Build(), new Stack<GoapAction>());
 
-            var started = plan.StartNextStep(new AgentContext(new AgentState(1)), new object());
+            var started = plan.StartNextStep(new AgentContext<TestWorldSnapshot>(new AgentState(1), new TestWorldSnapshot()), new object());
 
             Assert.IsFalse(started);
             Assert.IsTrue(plan.IsEmpty);
@@ -62,7 +62,7 @@ namespace Heroes.GOAP.Core.Tests
         [Test]
         public void StartNextStep_Fails_WhenPreconditionsNotMet()
         {
-            var goal = new Goal.Builder().WithName("TestGoal").Build();
+            var goal = new Goal<TestWorldSnapshot>.Builder().WithName("TestGoal").Build();
             var strategy = new TestStrategy(complete: true);
             var action = MakeAction("Blocked", false, strategy);
 
@@ -71,7 +71,7 @@ namespace Heroes.GOAP.Core.Tests
 
             var plan = new GoapPlan(goal, stack);
 
-            var started = plan.StartNextStep(new AgentContext(new AgentState(1)), new object());
+            var started = plan.StartNextStep(new AgentContext<TestWorldSnapshot>(new AgentState(1), new TestWorldSnapshot()), new object());
 
             Assert.IsFalse(started);
             Assert.IsNull(plan.Goal);
@@ -91,8 +91,8 @@ namespace Heroes.GOAP.Core.Tests
             stack.Push(actionB);
             stack.Push(actionA);
 
-            var plan = new GoapPlan(new Goal.Builder().Build(), stack);
-            var ctx = new AgentContext(new AgentState(1));
+            var plan = new GoapPlan(new Goal<TestWorldSnapshot>.Builder().Build(), stack);
+            var ctx = new AgentContext<TestWorldSnapshot>(new AgentState(1), new TestWorldSnapshot());
 
             Assert.IsTrue(plan.StartNextStep(ctx, new object()));
             Assert.AreEqual("A", plan.Step.Name);

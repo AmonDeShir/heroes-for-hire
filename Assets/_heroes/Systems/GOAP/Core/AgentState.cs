@@ -6,15 +6,19 @@ namespace Heroes.GOAP.Core
     public struct AgentState : IEquatable<AgentState>
     {
         private float[] believes;
-
+        private Vector2 location;
+        public Vector2 Location => location;
+        
         public AgentState(int believeCount)
         {
             believes = new float[believeCount];
+            location = new Vector2();
         }
 
         public AgentState(AgentState other)
         {
             believes = (float[])other.believes?.Clone();
+            location = other.Location;
         }
 
         public float GetBelieve(int believe)
@@ -33,11 +37,31 @@ namespace Heroes.GOAP.Core
         {
             believes[believe] = value;
         }
+        
+        public void SetLocation(float x, float z)
+        {
+            location = new Vector2(x, z);
+        }
+        
+        public void SetLocation(Vector2 location)
+        {
+            SetLocation(location.x, location.y);
+        }
+        
+        public void SetLocation(Vector3 location)
+        {
+            SetLocation(location.x, location.z);
+        }
 
         public AgentState Clone() => new AgentState(this);
 
         public bool Equals(AgentState other)
         {
+            if (!Location.Equals(other.Location))
+            {
+                return false;
+            }
+            
             if (believes == other.believes)
             {
                 return true;
@@ -79,6 +103,8 @@ namespace Heroes.GOAP.Core
             {
                 hash.Add(BitConverter.SingleToInt32Bits(believe));
             }
+            
+            hash.Add(Location);
             
             return hash.ToHashCode();
         }

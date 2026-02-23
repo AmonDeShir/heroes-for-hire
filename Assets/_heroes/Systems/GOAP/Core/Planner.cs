@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace Heroes.GOAP.Core
 {
-    public class Planner<T> : IPlanner<T>
+    public class Planner<TAgent, TSnapshot> : IPlanner<TAgent, TSnapshot> where TSnapshot : IReadOnlyWorldSnapshot
     {
-        public Plan<T> Plan(List<Action<T>> actions, List<Goal> goals, AgentContext ctx, int maxDepth)
+        public Plan<TAgent, TSnapshot> Plan(List<Action<TAgent, TSnapshot>> actions, List<Goal<TSnapshot>> goals, AgentContext<TSnapshot> ctx, int maxDepth)
         {
             var orderedGoals = goals
                 .Where(goal => !goal.IsAchieved(ctx))
@@ -15,7 +15,7 @@ namespace Heroes.GOAP.Core
             
             foreach (var goal in orderedGoals)
             {
-                var startWorld = new AgentContext(ctx);
+                var startWorld = new AgentContext<TSnapshot>(ctx);
                 var cutoff = goal.Heuristic(ctx);
                 var transpositionTable = new TranspositionTable(size: 2048);
                 
@@ -33,7 +33,7 @@ namespace Heroes.GOAP.Core
 
                     if (plan.Count > 0)
                     {
-                        return new Plan<T>(goal, plan);
+                        return new Plan<TAgent, TSnapshot>(goal, plan);
                     }
 
                     if (Mathf.Approximately(newCutoff, float.MaxValue))
@@ -48,10 +48,10 @@ namespace Heroes.GOAP.Core
             return null;
         }
 
-        private Stack<Action<T>> DoDepthFirst(AgentContext world, Goal goal, List<Action<T>> actions, TranspositionTable transposition, int maxDepth, float cutoff, out float smallestCutoff)
+        private Stack<Action<TAgent, TSnapshot>> DoDepthFirst(AgentContext<TSnapshot> world, Goal<TSnapshot> goal, List<Action<TAgent, TSnapshot>> actions, TranspositionTable transposition, int maxDepth, float cutoff, out float smallestCutoff)
         {
             var models = new AgentState[maxDepth+1];
-            var plan = new Action<T>[maxDepth];
+            var plan = new Action<TAgent, TSnapshot>[maxDepth];
             var costs = new float[maxDepth + 1];
             
             var actionIndex = new int[maxDepth + 1];
@@ -68,7 +68,7 @@ namespace Heroes.GOAP.Core
             
             while (currentDepth >= 0)
             {
-                var ctx = new AgentContext(models[currentDepth]);
+                var ctx = new AgentContext<TSnapshot>(models[currentDepth], world.world);
                 
                 if (goal.IsAchieved(ctx))
                 {
@@ -131,12 +131,12 @@ namespace Heroes.GOAP.Core
                 currentDepth = nextDepth;
             }
             
-            return new Stack<Action<T>>();
+            return new Stack<Action<TAgent, TSnapshot>>();
         }
         
-        private Stack<Action<T>> PackStack(Action<T>[] actions, int depth)
+        private Stack<Action<TAgent, TSnapshot>> PackStack(Action<TAgent, TSnapshot>[] actions, int depth)
         {
-            var stack = new Stack<Action<T>>();
+            var stack = new Stack<Action<TAgent, TSnapshot>>();
 
             for (var i = depth - 1; i >= 0; i--)
             {

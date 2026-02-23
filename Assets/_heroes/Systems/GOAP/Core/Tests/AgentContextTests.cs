@@ -10,7 +10,7 @@ namespace Heroes.GOAP.Core.Tests
             var state = new AgentState(1);
             state.SetBelieve(0, 0.25f);
 
-            var ctx = new AgentContext(state);
+            var ctx = new AgentContext<TestWorldSnapshot>(state, new TestWorldSnapshot());
             state.SetBelieve(0, 0.75f);
 
             Assert.AreEqual(0.25f, ctx.state.GetBelieve(0));
@@ -22,8 +22,8 @@ namespace Heroes.GOAP.Core.Tests
             var state = new AgentState(1);
             state.SetBelieve(0, 0.25f);
 
-            var ctx = new AgentContext(state);
-            var copy = new AgentContext(ctx);
+            var ctx = new AgentContext<TestWorldSnapshot>(state, new TestWorldSnapshot());
+            var copy = new AgentContext<TestWorldSnapshot>(ctx);
 
             ctx.state.SetBelieve(0, 0.75f);
 

@@ -3,15 +3,15 @@ using UnityEngine;
 
 namespace Heroes.GOAP.Core
 {
-    public sealed class Goal
+    public sealed class Goal<TSnapshot> where TSnapshot : IReadOnlyWorldSnapshot
     {
         public int Priority { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
 
-        public Func<AgentContext, float> Importance { get; private set; }
-        public Func<AgentContext, float> Heuristic { get; private set; }
-        public Func<AgentContext, bool> Achieved { get; private set; }
+        public Func<AgentContext<TSnapshot>, float> Importance { get; private set; }
+        public Func<AgentContext<TSnapshot>, float> Heuristic { get; private set; }
+        public Func<AgentContext<TSnapshot>, bool> Achieved { get; private set; }
 
         private Goal()
         {
@@ -23,26 +23,26 @@ namespace Heroes.GOAP.Core
             Heuristic = (ctx) => IsAchieved(ctx) ? 0f : 1f;
         }
         
-        public float Execute(AgentContext context)
+        public float Execute(AgentContext<TSnapshot> context)
         {
             return Importance(context) * Priority;
         }
 
-        public bool IsAchieved(AgentContext context)
+        public bool IsAchieved(AgentContext<TSnapshot> context)
         {
             return Achieved(context);
         }
 
         public class Builder
         {
-            private Goal goal;
+            private Goal<TSnapshot> goal;
 
             public Builder()
             {
-                goal = new Goal();
+                goal = new Goal<TSnapshot>();
             }
 
-            public Goal Build()
+            public Goal<TSnapshot> Build()
             {
                 return goal;
             }
@@ -59,7 +59,7 @@ namespace Heroes.GOAP.Core
                 return this;
             }
 
-            public Builder WithImportance(Func<AgentContext, float> importance)
+            public Builder WithImportance(Func<AgentContext<TSnapshot>, float> importance)
             {
                 goal.Importance = importance;
                 return this;
@@ -71,13 +71,13 @@ namespace Heroes.GOAP.Core
                 return this;
             }
             
-            public Builder WithHeuristic(Func<AgentContext, float> heuristic)
+            public Builder WithHeuristic(Func<AgentContext<TSnapshot>, float> heuristic)
             {
                 goal.Heuristic = heuristic;
                 return this;
             }
             
-            public Builder WithAchieved(Func<AgentContext, bool> achieved)
+            public Builder WithAchieved(Func<AgentContext<TSnapshot>, bool> achieved)
             {
                 goal.Achieved = achieved;
                 return this;

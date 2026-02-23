@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using GoapAction = Heroes.GOAP.Core.Action<object>;
+using GoapAction = Heroes.GOAP.Core.Action<object, Heroes.GOAP.Core.Tests.TestWorldSnapshot>;
 
 namespace Heroes.GOAP.Core.Tests
 {
@@ -12,7 +12,7 @@ namespace Heroes.GOAP.Core.Tests
             var baseState = new AgentState(1);
             baseState.SetBelieve(0, 0.25f);
 
-            var archetype = new Archetype<object>(new List<GoapAction>(), new List<Goal>(), baseState);
+            var archetype = new Archetype<object, TestWorldSnapshot>(new List<GoapAction>(), new List<Goal<TestWorldSnapshot>>(), baseState);
 
             var created = archetype.CreateState();
             created.SetBelieve(0, 0.75f);

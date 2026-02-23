@@ -2,7 +2,7 @@
 {
     public interface IActionStrategy
     {
-        public bool CanPreform { get; }
+        public bool CanPerform { get; }
 
         public bool Complete { get; }
 
