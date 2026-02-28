@@ -3,6 +3,7 @@ using Heroes.GOAP;
 using Heroes.GOAP.Core;
 using Heroes.Systems.GOAP.Demo;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace GOAP.Demo.Strategies
 {
@@ -25,12 +26,12 @@ namespace GOAP.Demo.Strategies
         public void Stop()
         {
             agent.NavAgent.ResetPath();
-            context.state.SetLocation(destination);
+            context.MutateState((ref AgentState s) => s.SetLocation(agent.transform.position));
         }
 
         public void Update(float deltaTime)
         {
-            context.state.SetLocation(agent.Rigidbody.position);
+            context.MutateState((ref AgentState s) => s.SetLocation(agent.transform.position));
         }
     }
     
@@ -43,9 +44,10 @@ namespace GOAP.Demo.Strategies
         
         private readonly int itemToBuy;
         private readonly float price;
-        
+
         private readonly Timer timer;
         private readonly CharacterAnimationController animations;
+        private const float MinDurationSeconds = 1f;
 
         public BuyStrategy(CharacterAnimationController animations, AgentContext<TSnapshot> context, int itemToBuy, float price) {
             this.animations = animations;
@@ -53,7 +55,7 @@ namespace GOAP.Demo.Strategies
             this.itemToBuy = itemToBuy;
             this.price = price;
             
-            timer = new Timer(animations.GetAnimationLength(animations.AttackClip));
+            timer = new Timer(ResolveDuration(animations), oneShoot: true);
             timer.OnStart += () => Complete = false;
             timer.OnTimeOut += () => Complete = true;
         }
@@ -67,8 +69,17 @@ namespace GOAP.Demo.Strategies
 
         public void Stop()
         {
-            context.state.SetBelieve(DemoConsts.GOLD, context.state.GetBelieve(DemoConsts.GOLD) - price);
-            context.state.SetBelieve(itemToBuy, context.state.GetBelieve(itemToBuy) + 1);
+            context.MutateState((ref AgentState s) =>
+            {
+                s.SetBelieve(DemoConsts.GOLD, s.GetBelieve(DemoConsts.GOLD) - price);
+                s.SetBelieve(itemToBuy, s.GetBelieve(itemToBuy) + 1);
+            });
+        }
+
+        private static float ResolveDuration(CharacterAnimationController animations)
+        {
+            var length = animations.GetAnimationLength(animations.AttackClip);
+            return length > 0f ? length : MinDurationSeconds;
         }
     }
 
@@ -83,6 +94,7 @@ namespace GOAP.Demo.Strategies
 
         private readonly Timer timer;
         private readonly CharacterAnimationController animations;
+        private const float MinDurationSeconds = 1f;
 
         public TimedRewardStrategy(CharacterAnimationController animations, AgentContext<TSnapshot> context, int beliefId, float delta)
         {
@@ -91,7 +103,7 @@ namespace GOAP.Demo.Strategies
             this.beliefId = beliefId;
             this.delta = delta;
 
-            timer = new Timer(animations.GetAnimationLength(animations.AttackClip));
+            timer = new Timer(ResolveDuration(animations), oneShoot: true);
             timer.OnStart += () => Complete = false;
             timer.OnTimeOut += () => Complete = true;
         }
@@ -106,8 +118,87 @@ namespace GOAP.Demo.Strategies
 
         public void Stop()
         {
-            var value = context.state.GetBelieve(beliefId) + delta;
-            context.state.SetBelieve(beliefId, value);
+            context.MutateState((ref AgentState s) =>
+            {
+                var value = s.GetBelieve(beliefId) + delta;
+                s.SetBelieve(beliefId, value);
+            });
+        }
+
+        private static float ResolveDuration(CharacterAnimationController animations)
+        {
+            var length = animations.GetAnimationLength(animations.AttackClip);
+            return length > 0f ? length : MinDurationSeconds;
+        }
+    }
+
+    public class WanderStrategy<TSnapshot> : IActionStrategy where TSnapshot : IReadOnlyWorldSnapshot
+    {
+        private readonly Agent<TSnapshot> agent;
+        private readonly AgentContext<TSnapshot> context;
+        private readonly float radius;
+        private readonly Timer timer;
+        private bool idleOnly;
+
+        public bool CanPerform => true;
+        public bool Complete { get; private set; }
+
+        public WanderStrategy(Agent<TSnapshot> agent, AgentContext<TSnapshot> context, float radius)
+        {
+            this.agent = agent;
+            this.context = context;
+            this.radius = radius;
+
+            timer = new Timer(Random.Range(1.5f, 3.5f), oneShoot: true);
+            timer.OnStart += () => Complete = false;
+            timer.OnTimeOut += () => Complete = true;
+        }
+
+        public void Start()
+        {
+            idleOnly = Random.value < 0.35f;
+            if (!idleOnly)
+            {
+                var destination = GetRandomNavMeshPoint(agent.transform.position, radius);
+                agent.NavAgent.SetDestination(destination);
+            }
+
+            timer.Start();
+        }
+
+        public void Update(float deltaTime)
+        {
+            timer.Tick(deltaTime);
+            context.MutateState((ref AgentState s) => s.SetLocation(agent.transform.position));
+
+            if (!idleOnly && agent.NavAgent.remainingDistance <= 2f && !agent.NavAgent.pathPending)
+            {
+                Complete = true;
+            }
+        }
+
+        public void Stop()
+        {
+            if (!idleOnly)
+            {
+                agent.NavAgent.ResetPath();
+            }
+
+            context.MutateState((ref AgentState s) => s.SetLocation(agent.transform.position));
+        }
+
+        private static Vector3 GetRandomNavMeshPoint(Vector3 origin, float radius)
+        {
+            var randomDirection = Random.insideUnitSphere * radius;
+            randomDirection.y = 0f;
+            var target = origin + randomDirection;
+
+            if (NavMesh.SamplePosition(target, out var hit, radius, NavMesh.AllAreas))
+            {
+                return hit.position;
+            }
+
+            return origin;
         }
     }
 

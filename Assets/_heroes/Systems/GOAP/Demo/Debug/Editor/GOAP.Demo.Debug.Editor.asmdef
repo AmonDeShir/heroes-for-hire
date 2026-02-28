@@ -1,0 +1,19 @@
+{
+    "name": "GOAP.Demo.Debug.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:8d55299b61837304190835ade8e49b9c",
+        "GUID:b8b7c9a3a6f14e1fb46c11c2b58c3f61"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

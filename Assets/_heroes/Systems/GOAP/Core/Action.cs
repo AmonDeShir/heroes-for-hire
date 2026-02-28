@@ -6,6 +6,8 @@ namespace Heroes.GOAP.Core
     {
         public string Name { get; private set; }
         public string Description { get; private set; }
+        public string PreconditionsDescription { get; private set; }
+        public string EffectDescription { get; private set; }
         
         public Func<AgentContext<TSnapshot>, AgentState> Effect { get; private set; }
         public Func<AgentContext<TSnapshot>, bool> PreConditions { get; private set; }
@@ -16,6 +18,8 @@ namespace Heroes.GOAP.Core
         {
             Name = string.Empty;
             Description = string.Empty;
+            PreconditionsDescription = string.Empty;
+            EffectDescription = string.Empty;
             Effect = (_) => new AgentState();
             PreConditions = (_) => true;
             Time = (_) => 1f;
@@ -51,6 +55,18 @@ namespace Heroes.GOAP.Core
             public Builder WithDescription(string description)
             {
                 action.Description = description;
+                return this;
+            }
+
+            public Builder WithPreConditionsDescription(string description)
+            {
+                action.PreconditionsDescription = description;
+                return this;
+            }
+
+            public Builder WithEffectDescription(string description)
+            {
+                action.EffectDescription = description;
                 return this;
             }
 

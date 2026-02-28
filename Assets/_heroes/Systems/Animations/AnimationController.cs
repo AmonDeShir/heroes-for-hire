@@ -26,7 +26,13 @@ namespace Heroes.Animations
 
         protected void PlayAnimationUsingTimer(int clipHash, int exitHash)
         {
-            _timer = new Timer(GetAnimationLength(clipHash));
+            var length = GetAnimationLength(clipHash);
+            if (length <= 0f)
+            {
+                length = 0.1f;
+            }
+
+            _timer = new Timer(length, oneShoot: true);
             _timer.OnStart += () => _animator.CrossFade(clipHash, _crossfadeDuration);
             _timer.OnTimeOut += () => _animator.CrossFade(exitHash, _crossfadeDuration);
             _timer.Start();
@@ -47,6 +53,8 @@ namespace Heroes.Animations
                     return clip.length;
                 }
             }
+
+            Debug.LogWarning($"Animation clip not found for hash {hash} on {name}.");
 
             return -1f;
         }

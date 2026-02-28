@@ -19,6 +19,11 @@ namespace Heroes.GOAP.Core
         public int RemainingSteps => steps.Count;
         public bool IsEmpty => steps.Count == 0 && Step == null;
 
+        public Action<TAgent, TSnapshot>[] GetRemainingSteps()
+        {
+            return steps.ToArray();
+        }
+
         public bool StartNextStep(AgentContext<TSnapshot> ctx, TAgent agent)
         {
             if (steps.Count == 0)

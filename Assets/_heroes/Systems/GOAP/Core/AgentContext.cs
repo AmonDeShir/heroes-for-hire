@@ -16,5 +16,17 @@
             this.state = state.Clone();
             this.world = world;
         }
+
+        public void SetState(AgentState newState)
+        {
+            state = newState;
+        }
+
+        public void MutateState(RefAction<AgentState> mutator)
+        {
+            var current = state;
+            mutator(ref current);
+            state = current;
+        }
     }
 }

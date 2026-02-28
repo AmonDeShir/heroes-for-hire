@@ -8,6 +8,7 @@ namespace Heroes.GOAP.Core
         private float[] believes;
         private Vector2 location;
         public Vector2 Location => location;
+        public int BeliefCount => believes?.Length ?? 0;
         
         public AgentState(int believeCount)
         {
@@ -25,7 +26,7 @@ namespace Heroes.GOAP.Core
         {
             if (believe < 0 || believe >= believes.Length)
             {
-                Debug.LogWarning($"GOAP ERROR: believe id is incorrect. {believe} is not in range (0..{believes.Length-1})");
+                UnityEngine.Debug.LogWarning($"GOAP ERROR: believe id is incorrect. {believe} is not in range (0..{believes.Length-1})");
 
                 return 0f;
             }

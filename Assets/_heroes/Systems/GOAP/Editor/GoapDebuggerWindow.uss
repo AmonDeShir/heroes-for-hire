@@ -1,0 +1,170 @@
+.goap-debugger {
+    flex-grow: 1;
+    background-color: #1e1e1e;
+}
+
+.goap-debugger__toolbar {
+    padding: 6px 8px;
+    background-color: #2b2b2b;
+    height: 40px;
+}
+
+.goap-debugger__toolbar-button {
+    margin-right: 6px;
+}
+
+.goap-debugger__agent-dropdown {
+    min-width: 240px;
+    margin-right: 6px;
+}
+
+.goap-debugger__toolbar-toggle {
+    margin-right: 6px;
+}
+
+.goap-debugger__tab-bar {
+    flex-direction: row;
+    padding: 6px 8px;
+    background-color: #2b2b2b;
+}
+
+.goap-debugger__tab-button {
+    margin-right: 6px;
+    background-color: #3a3a3a;
+    color: #d0d0d0;
+}
+
+.goap-debugger__tab-button--active {
+    background-color: #3b6aa8;
+    color: #ffffff;
+}
+
+.goap-debugger__content {
+    flex-grow: 1;
+    padding: 8px;
+}
+
+.goap-debugger__tab {
+    flex-grow: 1;
+}
+
+.goap-debugger__plan-header {
+    margin-bottom: 6px;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.goap-debugger__plan-goal {
+    unity-font-style: bold;
+}
+
+.goap-debugger__plan-idle {
+    color: #b0c4de;
+}
+
+.goap-debugger__actions-list {
+    flex-grow: 1;
+}
+
+.goap-debugger__plan-split {
+    flex-grow: 1;
+}
+
+.goap-debugger__plan-details {
+    padding-left: 8px;
+    flex-grow: 1;
+    position: relative;
+}
+
+.goap-debugger__step-title {
+    unity-font-style: bold;
+    margin-bottom: 4px;
+}
+
+.goap-debugger__step-line {
+    margin-bottom: 2px;
+}
+
+.goap-debugger__memory-location {
+    unity-font-style: bold;
+    margin-bottom: 4px;
+}
+
+.goap-debugger__plan-graph {
+    margin-top: 10px;
+    height: 160px;
+    background-color: #1f1f1f;
+}
+
+.goap-debugger__plan-graph-scroll {
+    margin-top: 6px;
+    height: 200px;
+}
+
+.goap-debugger__preview-memory {
+    margin-top: 6px;
+    height: 120px;
+}
+
+.goap-debugger__preview-panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 280px;
+    z-index: 10;
+    background-color: rgba(40, 40, 40, 0.95);
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    padding: 6px;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-color: #4a4a4a;
+    border-right-color: #4a4a4a;
+    border-top-color: #4a4a4a;
+    border-bottom-color: #4a4a4a;
+}
+
+.goap-debugger__preview-handle {
+    unity-font-style: bold;
+    margin-bottom: 4px;
+    background-color: #323232;
+    padding: 4px 6px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.goap-debugger__preview-line {
+    margin-bottom: 2px;
+}
+
+.goap-debugger__graph-node {
+    padding: 6px 10px;
+    margin-right: 20px;
+    background-color: #2c2c2c;
+    color: #d0d0d0;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.goap-debugger__graph-node--current {
+    background-color: #3b6aa8;
+    color: #ffffff;
+}
+
+.goap-debugger__goal-cell--current {
+    background-color: #3b6aa8;
+    color: #ffffff;
+}
+
+.goap-debugger__world-details {
+    margin-top: 6px;
+    flex-grow: 1;
+}

@@ -1,0 +1,68 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement name="goap-debugger" class="goap-debugger">
+        <uie:Toolbar name="toolbar" class="goap-debugger__toolbar">
+            <ui:Button name="use-selection-button" text="Use Selection" class="goap-debugger__toolbar-button" />
+            <ui:VisualElement name="agent-dropdown" class="goap-debugger__agent-dropdown" />
+            <ui:Toggle name="auto-toggle" text="Auto" class="goap-debugger__toolbar-toggle" />
+            <ui:Button name="refresh-button" text="Refresh" class="goap-debugger__toolbar-button" />
+        </uie:Toolbar>
+
+        <ui:VisualElement name="tab-bar" class="goap-debugger__tab-bar">
+            <ui:Button name="tab-plan" text="Plan" class="goap-debugger__tab-button goap-debugger__tab-button--active" />
+            <ui:Button name="tab-goals" text="Goals" class="goap-debugger__tab-button" />
+            <ui:Button name="tab-actions" text="Actions" class="goap-debugger__tab-button" />
+            <ui:Button name="tab-memory" text="Memory" class="goap-debugger__tab-button" />
+            <ui:Button name="tab-world" text="World" class="goap-debugger__tab-button" />
+        </ui:VisualElement>
+
+        <ui:VisualElement name="content" class="goap-debugger__content">
+            <ui:VisualElement name="plan-tab" class="goap-debugger__tab">
+                <ui:VisualElement name="plan-header" class="goap-debugger__plan-header">
+                    <ui:Label name="plan-goal" text="Plan: -" class="goap-debugger__plan-goal" />
+                    <ui:Label name="plan-idle" text="Idle: -" class="goap-debugger__plan-idle" />
+                </ui:VisualElement>
+
+                <ui:TwoPaneSplitView name="plan-split" fixed-pane-index="0" fixed-pane-initial-dimension="260" orientation="Horizontal" class="goap-debugger__plan-split">
+                    <ui:ListView name="plan-steps-list" class="goap-debugger__plan-steps" />
+                    <ui:VisualElement name="plan-details" class="goap-debugger__plan-details">
+                        <ui:Label name="step-name" text="Step: -" class="goap-debugger__step-title" />
+                        <ui:Label name="step-description" text="Description: -" class="goap-debugger__step-line" />
+                        <ui:Label name="step-time" text="Time: -" class="goap-debugger__step-line" />
+                        <ui:Label name="step-preconditions" text="Preconditions: -" class="goap-debugger__step-line" />
+                        <ui:Label name="step-effect" text="Effect: -" class="goap-debugger__step-line" />
+                        
+                        <ui:ScrollView name="plan-graph-scroll" class="goap-debugger__plan-graph-scroll" horizontal-scroller-visibility="Auto" vertical-scroller-visibility="Hidden">
+                            <ui:VisualElement name="plan-graph" class="goap-debugger__plan-graph" />
+                        </ui:ScrollView>
+                        
+                        <ui:VisualElement name="preview-panel" class="goap-debugger__preview-panel">
+                            <ui:Label name="preview-handle" text="Preview" class="goap-debugger__preview-handle" />
+                            <ui:Label name="preview-goal" text="Goal: -" class="goap-debugger__preview-line" />
+                            <ui:Label name="preview-location" text="Preview Location: -" class="goap-debugger__preview-line" />
+                            <ui:MultiColumnListView name="preview-memory-list" class="goap-debugger__preview-memory" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:TwoPaneSplitView>
+            </ui:VisualElement>
+
+            <ui:VisualElement name="goals-tab" class="goap-debugger__tab">
+                <ui:MultiColumnListView name="goals-list" class="goap-debugger__goals-list" />
+            </ui:VisualElement>
+
+            <ui:VisualElement name="actions-tab" class="goap-debugger__tab">
+                <ui:MultiColumnListView name="actions-list" class="goap-debugger__actions-list" />
+            </ui:VisualElement>
+
+            <ui:VisualElement name="memory-tab" class="goap-debugger__tab">
+                <ui:Label name="memory-location" text="Location: -" class="goap-debugger__memory-location" />
+                <ui:MultiColumnListView name="memory-list" class="goap-debugger__memory-list" />
+            </ui:VisualElement>
+
+            <ui:VisualElement name="world-tab" class="goap-debugger__tab">
+                <ui:Label name="world-version" text="Version: -" class="goap-debugger__step-line" />
+                <ui:Label name="world-valid" text="IsValid: -" class="goap-debugger__step-line" />
+                <ui:ScrollView name="world-details" class="goap-debugger__world-details" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

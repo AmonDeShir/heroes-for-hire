@@ -9,7 +9,12 @@ namespace GOAP.Demo
 {
     public class DemoArchetype : Archetype<Agent<DemoWorldSnapshot>, DemoWorldSnapshot>
     {
-        public DemoArchetype(Vector2 homeLocation) : base(new List<Action<Agent<DemoWorldSnapshot>, DemoWorldSnapshot>>(), new List<Goal<DemoWorldSnapshot>>(), new AgentState(3))
+        private const float WanderRadius = 6f;
+
+        public DemoArchetype(Vector2 homeLocation) : base(
+            new List<Action<Agent<DemoWorldSnapshot>, DemoWorldSnapshot>>(),
+            new List<Goal<DemoWorldSnapshot>>(),
+            new AgentState(3))
         {
             BaseState.SetBelieve(DemoConsts.GOLD, 0f);
             BaseState.SetBelieve(DemoConsts.PICKAXE, 0f);
@@ -44,6 +49,7 @@ namespace GOAP.Demo
             Actions.Add(CreateAction()
                 .WithName("Work")
                 .WithPreCondition(ctx => IsAt(ctx, DemoConsts.WORK))
+                .WithPreConditionsDescription("At Work")
                 .WithTime(_ => 1f)
                 .WithEffect(ctx =>
                     ctx.state.Clone().Mutate((ref AgentState s) =>
@@ -53,6 +59,7 @@ namespace GOAP.Demo
                         .Bucket(DemoConsts.GOLD, 5f)
                         .Clamp(DemoConsts.GOLD, 300f)
                 )
+                .WithEffectDescription("Gold +5")
                 .WithImplementation((agent, ctx) => new TimedRewardStrategy<DemoWorldSnapshot>(agent.Animator, ctx, DemoConsts.GOLD, 5f))
                 .Build()
             );
@@ -60,6 +67,7 @@ namespace GOAP.Demo
             Actions.Add(CreateAction()
                 .WithName("Mine")
                 .WithPreCondition(ctx => IsAt(ctx, DemoConsts.MINE) && ctx.state.GetBelieve(DemoConsts.PICKAXE) >= 0.5f)
+                .WithPreConditionsDescription("At Mine and Has Pickaxe")
                 .WithTime(_ => 1f)
                 .WithEffect(ctx =>
                     ctx.state.Clone().Mutate((ref AgentState s) =>
@@ -69,6 +77,7 @@ namespace GOAP.Demo
                         .Bucket(DemoConsts.GOLD, 5f)
                         .Clamp(DemoConsts.GOLD, 300f)
                 )
+                .WithEffectDescription("Gold +30")
                 .WithImplementation((agent, ctx) => new TimedRewardStrategy<DemoWorldSnapshot>(agent.Animator, ctx, DemoConsts.GOLD, 30f))
                 .Build()
             );
@@ -78,6 +87,7 @@ namespace GOAP.Demo
                 .WithPreCondition(ctx => IsAt(ctx, DemoConsts.STORE)
                     && ctx.state.GetBelieve(DemoConsts.PICKAXE) < 0.5f
                     && ctx.state.GetBelieve(DemoConsts.GOLD) >= 100f)
+                .WithPreConditionsDescription("At Store, No Pickaxe, Gold >= 100")
                 .WithTime(_ => 1f)
                 .WithEffect(ctx =>
                     ctx.state.Clone().Mutate((ref AgentState s) =>
@@ -87,6 +97,7 @@ namespace GOAP.Demo
                         })
                         .Bucket(DemoConsts.GOLD, 5f)
                 )
+                .WithEffectDescription("Gold -100, Pickaxe = 1")
                 .WithImplementation((agent, ctx) => new BuyStrategy<DemoWorldSnapshot>(agent.Animator, ctx, DemoConsts.PICKAXE, 100f))
                 .Build()
             );
@@ -96,6 +107,7 @@ namespace GOAP.Demo
                 .WithPreCondition(ctx => IsAt(ctx, DemoConsts.STORE)
                     && ctx.state.GetBelieve(DemoConsts.SWORD) < 0.5f
                     && ctx.state.GetBelieve(DemoConsts.GOLD) >= 300f)
+                .WithPreConditionsDescription("At Store, No Sword, Gold >= 300")
                 .WithTime(_ => 1f)
                 .WithEffect(ctx =>
                     ctx.state.Clone().Mutate((ref AgentState s) =>
@@ -105,9 +117,12 @@ namespace GOAP.Demo
                         })
                         .Bucket(DemoConsts.GOLD, 5f)
                 )
+                .WithEffectDescription("Gold -300, Sword = 1")
                 .WithImplementation((agent, ctx) => new BuyStrategy<DemoWorldSnapshot>(agent.Animator, ctx, DemoConsts.SWORD, 300f))
                 .Build()
             );
+
+            IdleActions.Add(CreateWanderIdleAction());
         }
 
         private Action<Agent<DemoWorldSnapshot>, DemoWorldSnapshot> MakeMoveAction(string name, string locationId)
@@ -115,6 +130,7 @@ namespace GOAP.Demo
             return CreateAction()
                 .WithName(name)
                 .WithPreCondition(ctx => !IsAt(ctx, locationId))
+                .WithPreConditionsDescription($"Not at {locationId}")
                 .WithTime(_ => 1f)
                 .WithEffect(ctx =>
                     ctx.state.Clone().Mutate((ref AgentState s) =>
@@ -122,6 +138,7 @@ namespace GOAP.Demo
                         s.SetLocation(ctx.world.Locations[locationId]);
                     })
                 )
+                .WithEffectDescription($"Move to {locationId}")
                 .WithImplementation((agent, ctx) =>
                 {
                     var dest2d = ctx.world.Locations[locationId];
@@ -131,9 +148,17 @@ namespace GOAP.Demo
                 .Build();
         }
 
+        private static IdleAction<Agent<DemoWorldSnapshot>, DemoWorldSnapshot> CreateWanderIdleAction()
+        {
+            return new IdleAction<Agent<DemoWorldSnapshot>, DemoWorldSnapshot>(
+                "Wander",
+                "Idle or wander when no plan",
+                (agent, ctx) => new WanderStrategy<DemoWorldSnapshot>(agent, ctx, WanderRadius));
+        }
+
         private bool IsAt(AgentContext<DemoWorldSnapshot> ctx, string locationId)
         {
-            return Vector2.Distance(ctx.state.Location, ctx.world.Locations[locationId]) <= 0.01f;
+            return Vector2.Distance(ctx.state.Location, ctx.world.Locations[locationId]) <= 2f;
         }
     }
 }
