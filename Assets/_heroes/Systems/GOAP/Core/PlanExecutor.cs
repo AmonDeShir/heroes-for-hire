@@ -32,15 +32,15 @@ namespace Heroes.GOAP.Core
             if (plan == null)
             {
                 CalculatePlan();
-            }
 
-            if (plan is { RemainingSteps: > 0 })
-            {
-                OnNextStepLoaded?.Invoke();
-                
-                if (!plan.StartNextStep(context, agent))
+                if (plan is { RemainingSteps: > 0 })
                 {
-                    plan = null;    
+                    OnNextStepLoaded?.Invoke();
+
+                    if (!plan.StartNextStep(context, agent))
+                    {
+                        plan = null;
+                    }
                 }
             }
 
