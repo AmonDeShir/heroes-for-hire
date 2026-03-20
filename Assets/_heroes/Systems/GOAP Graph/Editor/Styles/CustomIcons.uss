@@ -1,0 +1,15 @@
+.ge-icon--data-type-graph-belief {
+    --unity-image: resource("Assets/_heroes/Systems/GOAP Graph/Editor/Icons/belief.png");
+}
+
+.ge-icon--data-type-graph-action {
+    --unity-image: resource("Assets/_heroes/Systems/GOAP Graph/Editor/Icons/action.png");
+}
+
+.ge-icon--data-type-graph-goal {
+    --unity-image: resource("Assets/_heroes/Systems/GOAP Graph/Editor/Icons/goal.png");
+}
+
+.ge-icon--data-type-graph-idle-action {
+    --unity-image: resource("Assets/_heroes/Systems/GOAP Graph/Editor/Icons/idle.png");
+}

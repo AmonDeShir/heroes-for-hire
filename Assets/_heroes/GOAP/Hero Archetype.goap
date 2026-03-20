@@ -1,0 +1,117 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &1
+MonoBehaviour:
+  m_ObjectHideFlags: 61
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 790b4d75d92f4b0984310a268dbd952f, type: 3}
+  m_Name: Hero Archetype
+  m_EditorClassIdentifier: Unity.GraphToolkit.Editor::Unity.GraphToolkit.Editor.Implementation.GraphObjectImp
+  m_GraphModel:
+    rid: 7822768576257327174
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3659227945745252434
+      type: {class: UserNodeModelImp, ns: Unity.GraphToolkit.Editor.Implementation, asm: Unity.GraphToolkit.Editor}
+      data:
+        m_Guid:
+          m_Value0: 2369760753564218098
+          m_Value1: 15930735144923181631
+        m_HashGuid:
+          serializedVersion: 2
+          Hash: f272db8ed914e3203f32faab355715dd
+        m_Version: 2
+        m_Position: {x: -276.49988, y: -4042.581}
+        m_Title: 
+        m_Tooltip: 
+        m_NodePreviewModel:
+          rid: -2
+        m_State: 0
+        m_InputConstantsById:
+          m_KeyList:
+          - Beliefs
+          m_ValueList:
+          - rid: 3659227945745252435
+        m_InputPortInfos:
+          expandedPortsById:
+            m_KeyList: []
+            m_ValueList: 
+        m_OutputPortInfos:
+          expandedPortsById:
+            m_KeyList: []
+            m_ValueList: 
+        m_Collapsed: 0
+        m_CurrentModeIndex: 0
+        m_ElementColor:
+          m_Color: {r: 0, g: 0, b: 0, a: 0}
+          m_HasUserColor: 0
+        m_Node:
+          rid: 3659227945745252436
+    - rid: 3659227945745252435
+      type: {class: 'Constant`1[[Heroes.Systems.GOAPGraph.Editor.GraphBelief, GOAP.Graph.Editor]]', ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data: 
+    - rid: 3659227945745252436
+      type: {class: ArchetypeNode, ns: Heroes.Systems.GOAPGraph.Editor.Nodes, asm: GOAP.Graph.Editor}
+      data: 
+    - rid: 7822768576257327174
+      type: {class: GraphModelImp, ns: Unity.GraphToolkit.Editor.Implementation, asm: Unity.GraphToolkit.Editor}
+      data:
+        m_Guid:
+          m_Value0: 7459738597399552642
+          m_Value1: 9326854368748779144
+        m_HashGuid:
+          serializedVersion: 2
+          Hash: 8262451fbb508667883612f1a1a46f81
+        m_Name: 
+        m_GraphNodeModels:
+        - rid: 3659227945745252434
+        m_GraphWireModels: []
+        m_GraphStickyNoteModels: []
+        m_GraphPlacematModels: []
+        m_GraphVariableModels: []
+        m_GraphPortalModels: []
+        m_SectionModels:
+        - rid: 7822768576257327175
+        m_LocalSubgraphs: []
+        m_LastKnownBounds:
+          serializedVersion: 2
+          x: -276
+          y: -4043
+          width: 184
+          height: 135
+        m_GraphElementMetaData:
+        - m_Guid:
+            m_Value0: 2369760753564218098
+            m_Value1: 15930735144923181631
+          m_HashGuid:
+            serializedVersion: 2
+            Hash: f272db8ed914e3203f32faab355715dd
+          m_Category: 0
+          m_Index: 0
+        m_EntryPoint:
+          rid: 3659227945745252434
+        m_Graph:
+          rid: 7822768576257327176
+    - rid: 7822768576257327175
+      type: {class: SectionModel, ns: Unity.GraphToolkit.Editor, asm: Unity.GraphToolkit.Internal.Editor}
+      data:
+        m_Guid:
+          m_Value0: 11941451986132475873
+          m_Value1: 13442685746665493647
+        m_HashGuid:
+          serializedVersion: 2
+          Hash: e11fcf17508fb8a58f1434d576038eba
+        m_Version: 2
+        m_Items: []
+        m_Title: 
+    - rid: 7822768576257327176
+      type: {class: GOAPGraph, ns: Heroes.Systems.GOAPGraph.Editor, asm: GOAP.Graph.Editor}
+      data: 
