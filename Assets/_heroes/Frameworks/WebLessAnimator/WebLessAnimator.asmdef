@@ -1,0 +1,16 @@
+{
+    "name": "WebLessAnimator",
+    "rootNamespace": "",
+    "references": [
+        "GUID:ac72f4ffe987c7d45806a65118b763ce"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

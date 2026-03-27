@@ -1,7 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uikit="UiKit">
-    <ui:VisualElement class="bar">
-        <ui:VisualElement class="bar__motifs" name="left" />
-        <ui:Label class="bar__title" name="title" text="TITLE" />
-        <ui:VisualElement class="bar__motifs" name="right" />
-    </ui:VisualElement>
-</ui:UXML>

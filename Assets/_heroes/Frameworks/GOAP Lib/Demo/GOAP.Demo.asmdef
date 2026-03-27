@@ -1,0 +1,19 @@
+{
+    "name": "GOAP.Demo",
+    "rootNamespace": "",
+    "references": [
+        "GUID:9e2839917491f6949aac53b530d3f13b",
+        "GUID:3f5c90d786a188f4293446534b86c498",
+        "GUID:ac72f4ffe987c7d45806a65118b763ce",
+        "GUID:1402d1a9c1f9851489ec335fc3b4f32f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

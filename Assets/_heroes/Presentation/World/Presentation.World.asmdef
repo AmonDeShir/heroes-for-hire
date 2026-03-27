@@ -1,0 +1,19 @@
+{
+    "name": "Presentation.World",
+    "rootNamespace": "",
+    "references": [
+        "GUID:1bfba1e42f9aecb468e88e4e3959fcc8",
+        "GUID:907569a045aa8e04188dca4d70ff322d",
+        "GUID:1402d1a9c1f9851489ec335fc3b4f32f",
+        "GUID:7ad8c45436021c04dabec1d0fa8ded88"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
