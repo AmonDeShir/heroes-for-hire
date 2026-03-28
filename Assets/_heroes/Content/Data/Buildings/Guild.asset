@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3fd9dbeb7dc47aebcffcf42e17950fd, type: 3}
+  m_Name: Guild
+  m_EditorClassIdentifier: Content::Heroes.Content.Definitions.Buildings.BuildingDefinition
+  id: 2
+  displayName: Hero Guild
+  buildingType: 3
+  goldCost: 200
+  prefab: {fileID: 2939499538549582871, guid: 6c941d917ff06fd4d8e881176d0f3d69, type: 3}
+  maxHealth: 200
+  spawnHealth: 10
+  baseRegeneration: 5

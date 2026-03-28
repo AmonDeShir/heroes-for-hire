@@ -1,23 +1,50 @@
-﻿
-using Heroes.Game.Core.Events;
+﻿using Heroes.Game.Core.Events;
 using Heroes.Game.Core.Events.Bus;
+using UnityEngine;
+using VContainer;
 
 namespace Heroes.Presentation.World
 {
-    public class BuildingWorldPresenter
+    public class BuildingWorldPresenter : MonoBehaviour
     {
-        private readonly IGameEventBus _eventBus;
+        [SerializeField] private Transform buildingsRoot;
+        private IGameEventBus _eventBus;
 
-        public BuildingWorldPresenter(IGameEventBus eventBus)
+        [Inject]
+        public void Construct(IGameEventBus eventBus)
         {
             _eventBus = eventBus;
+        }
+
+        private void Start()
+        {
             _eventBus.Subscribe<BuildingPlacedEvent>(OnBuildingPlaced);
+        }
+
+        private void OnDestroy()
+        {
+            if (_eventBus != null)
+            {
+                _eventBus.Unsubscribe<BuildingPlacedEvent>(OnBuildingPlaced);
+            }
         }
 
         private void OnBuildingPlaced(BuildingPlacedEvent evt)
         {
             var prefab = evt.Building.Definition.Prefab;
-            var pos = evt.Building.Position;
+            if (prefab == null)
+            {
+                return;
+            }
+
+            var position = new Vector3(evt.Building.Position.x, 0f, evt.Building.Position.y);
+            if (buildingsRoot == null)
+            {
+                Object.Instantiate(prefab, position, Quaternion.identity);
+                return;
+            }
+
+            Object.Instantiate(prefab, position, Quaternion.identity, buildingsRoot);
         }
     }
 }

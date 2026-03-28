@@ -9,7 +9,7 @@ using EntityId = Heroes.Game.Core.EntityId;
 
 namespace Heroes.Game.Systems.Buildings
 {
-    public class BuildingSystem : IBuildingSystem
+    public class BuildingSystem : IBuildingSystem, IBuildingPlacementService
     {
         private readonly IBuildingCatalog _buildingCatalog;
         private readonly IBuildingPlacementSelectionService _selection;

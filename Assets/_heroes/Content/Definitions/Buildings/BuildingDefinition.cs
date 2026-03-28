@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Heroes.Content.Definitions.Buildings
 {
     [CreateAssetMenu(menuName = "Heroes/Buildings/Building Definition")]
-    public class BuildingDefinition : ScriptableObject, IHealthDefinition
+    public class BuildingDefinition : ScriptableObject, IBuildingDefinition
     {
         [SerializeField] private string id;
         [SerializeField] private string displayName;

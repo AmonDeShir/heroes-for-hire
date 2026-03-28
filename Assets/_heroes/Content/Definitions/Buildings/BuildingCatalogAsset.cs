@@ -8,7 +8,7 @@ namespace Heroes.Content.Definitions.Buildings
     [CreateAssetMenu(menuName = "Heroes/Buildings/Building Catalog")]
     public class BuildingCatalogAsset : ScriptableObject, IBuildingCatalog
     {
-        [SerializeField] private List<IBuildingDefinition> buildings = new();
+        [SerializeField] private List<BuildingDefinition> buildings = new();
 
         public IReadOnlyList<IBuildingDefinition> GetAll() => buildings;
 

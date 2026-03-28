@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Style src="BuildMenuView.uss" />
+    <ui:VisualElement class="build-menu">
+        <ui:VisualElement class="build-menu__header">
+            <ui:Label class="build-menu__title" text="BUDYNKI" />
+            <ui:VisualElement class="build-menu__header-ornaments" />
+        </ui:VisualElement>
+        <ui:VisualElement class="build-menu__body">
+            <ui:VisualElement class="build-menu__tabs">
+                <ui:Button class="build-menu__tab build-menu__tab--active" text="" />
+                <ui:Button class="build-menu__tab" text="" />
+                <ui:Button class="build-menu__tab" text="" />
+            </ui:VisualElement>
+            <ui:VisualElement class="build-menu__content">
+                <ui:VisualElement class="build-menu__summary">
+                    <ui:Label class="build-menu__summary-label" text="Zloto" />
+                    <ui:Label name="build-menu-gold" class="build-menu__gold" text="0" />
+                </ui:VisualElement>
+                <ui:ListView name="build-menu-list" class="build-menu__list" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

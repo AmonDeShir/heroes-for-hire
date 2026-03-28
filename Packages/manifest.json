@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "com.gitamend.unityutils": "https://github.com/adammyhre/Unity-Utils.git",
+    "jp.hadashikick.vcontainer": "https://github.com/hadashiA/VContainer.git?path=VContainer/Assets/VContainer#1.17.0",
     "com.singtaa.onejs": "https://github.com/Singtaa/OneJS.git",
     "com.unity.addressables": "2.8.1",
     "com.unity.ai.navigation": "2.0.12",
