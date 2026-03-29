@@ -7,7 +7,6 @@ namespace Heroes.Presentation.World
 {
     public class BuildingWorldPresenter : MonoBehaviour
     {
-        [SerializeField] private Transform buildingsRoot;
         private IGameEventBus _eventBus;
 
         [Inject]
@@ -38,13 +37,8 @@ namespace Heroes.Presentation.World
             }
 
             var position = new Vector3(evt.Building.Position.x, 0f, evt.Building.Position.y);
-            if (buildingsRoot == null)
-            {
-                Object.Instantiate(prefab, position, Quaternion.identity);
-                return;
-            }
-
-            Object.Instantiate(prefab, position, Quaternion.identity, buildingsRoot);
+            
+            Instantiate(prefab, position, Quaternion.identity);
         }
     }
 }
