@@ -45,13 +45,9 @@ namespace Heroes.Game.Systems.Buildings
 
             var definition = _buildingCatalog.GetById(selectedId);
             
-            if (definition == null)
+            if (definition == null || !_resources.TrySpendGold(definition.GoldCost))
             {
-                return false;
-            }
-
-            if (!_resources.TrySpendGold(definition.GoldCost))
-            {
+                _selection.Clear();
                 return false;
             }
 
@@ -60,11 +56,12 @@ namespace Heroes.Game.Systems.Buildings
                 definition,
                 position,
                 true);
+            
             _buildings.Add(building);
-
+            _selection.Clear();
+            
             _eventBus.Publish(new ResourcesChangedEvent(_resources.Gold));
             _eventBus.Publish(new BuildingPlacedEvent(building));
-
             return true;
         }
 

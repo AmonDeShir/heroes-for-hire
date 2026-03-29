@@ -1,6 +1,7 @@
-﻿using Heroes.Game.Abstractions;
+using Heroes.Game.Abstractions;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 using VContainer;
 
 namespace Heroes.Presentation.World
@@ -10,8 +11,10 @@ namespace Heroes.Presentation.World
         [SerializeField] private Camera placementCamera;
         [SerializeField] private LayerMask placementMask = ~0;
         [SerializeField] private float planeHeight;
+        [SerializeField] private UIDocument uiDocument;
 
         private IBuildingPlacementService _placementService;
+        private bool _overUi;
 
         [Inject]
         public void Construct(IBuildingPlacementService placementService)
@@ -27,9 +30,20 @@ namespace Heroes.Presentation.World
             }
         }
 
+        private void OnEnable()
+        {
+            RegisterUiCallbacks();
+        }
+
+        private void OnDisable()
+        {
+            UnregisterUiCallbacks();
+        }
+
         private void Update()
         {
             var pointer = Pointer.current;
+            
             if (pointer == null || !pointer.press.wasPressedThisFrame)
             {
                 return;
@@ -41,6 +55,12 @@ namespace Heroes.Presentation.World
             }
 
             var screenPosition = pointer.position.ReadValue();
+
+            if (_overUi)
+            {
+                return;
+            }
+
             if (!TryGetPlacementPoint(screenPosition, out var worldPosition))
             {
                 return;
@@ -52,6 +72,7 @@ namespace Heroes.Presentation.World
         private bool TryGetPlacementPoint(Vector2 screenPosition, out Vector2 worldPosition)
         {
             var ray = placementCamera.ScreenPointToRay(screenPosition);
+            
             if (Physics.Raycast(ray, out var hit, float.MaxValue, placementMask))
             {
                 worldPosition = new Vector2(hit.point.x, hit.point.z);
@@ -59,6 +80,7 @@ namespace Heroes.Presentation.World
             }
 
             var plane = new Plane(Vector3.up, new Vector3(0f, planeHeight, 0f));
+            
             if (plane.Raycast(ray, out var distance))
             {
                 var point = ray.GetPoint(distance);
@@ -68,6 +90,42 @@ namespace Heroes.Presentation.World
 
             worldPosition = default;
             return false;
+        }
+
+        private void RegisterUiCallbacks()
+        {
+            var root = uiDocument != null ? uiDocument.rootVisualElement : null;
+
+            if (root == null)
+            {
+                return;
+            }
+
+            root.RegisterCallback<PointerEnterEvent>(OnPointerEnterUi, TrickleDown.TrickleDown);
+            root.RegisterCallback<PointerLeaveEvent>(OnPointerLeaveUi, TrickleDown.TrickleDown);
+        }
+
+        private void UnregisterUiCallbacks()
+        {
+            var root = uiDocument != null ? uiDocument.rootVisualElement : null;
+
+            if (root == null)
+            {
+                return;
+            }
+
+            root.UnregisterCallback<PointerEnterEvent>(OnPointerEnterUi, TrickleDown.TrickleDown);
+            root.UnregisterCallback<PointerLeaveEvent>(OnPointerLeaveUi, TrickleDown.TrickleDown);
+        }
+
+        private void OnPointerEnterUi(PointerEnterEvent evt)
+        {
+            _overUi = true;
+        }
+
+        private void OnPointerLeaveUi(PointerLeaveEvent evt)
+        {
+            _overUi = false;
         }
     }
 }

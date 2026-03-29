@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Buildings Cataloge
   m_EditorClassIdentifier: Content::Heroes.Content.Definitions.Buildings.BuildingCatalogAsset
   buildings:
-  - {fileID: 11400000, guid: 822f8e8e5d2ae7c4e90dbef4247657f5, type: 2}
-  - {fileID: 11400000, guid: 61641382a4ca0a24c87e0e2eb7ddf8c4, type: 2}
+  - {fileID: 11400000, guid: c97a24b279975d248a14ab9a281c23c7, type: 2}
+  - {fileID: 11400000, guid: 5216f633bb8d72748babeb9e686f09d2, type: 2}

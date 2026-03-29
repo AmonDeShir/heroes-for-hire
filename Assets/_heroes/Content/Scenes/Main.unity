@@ -700,7 +700,7 @@ PrefabInstance:
     - target: {fileID: 8930752045537606291, guid: f99b6aec6fc021f4c9572906776c6555, type: 3}
       propertyPath: globalObjects.Array.data[0].obj
       value: 
-      objectReference: {fileID: 1848393717}
+      objectReference: {fileID: 1848393719}
     - target: {fileID: 8930752045537606291, guid: f99b6aec6fc021f4c9572906776c6555, type: 3}
       propertyPath: globalObjects.Array.data[0].name
       value: buildingPanelVM
@@ -715,6 +715,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5391669799819843152, guid: f99b6aec6fc021f4c9572906776c6555, type: 3}
   m_PrefabInstance: {fileID: 940440256}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &940440258 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3466507238892977760, guid: f99b6aec6fc021f4c9572906776c6555, type: 3}
+  m_PrefabInstance: {fileID: 940440256}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &951727804
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -955,6 +966,11 @@ PrefabInstance:
       addedObject: {fileID: 821769148}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 91f977ea227a9da45b0920057cd51ea3, type: 3}
+--- !u!20 &951727805 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 7645114331201778905, guid: 91f977ea227a9da45b0920057cd51ea3, type: 3}
+  m_PrefabInstance: {fileID: 951727804}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1364795524 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2716895824287226475, guid: 91f977ea227a9da45b0920057cd51ea3, type: 3}
@@ -1275,11 +1291,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faf670aabe2b4d66b6468fb14dc75e3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Presentation.World::Heroes.Presentation.World.BuildingPlacementInput
-  placementCamera: {fileID: 0}
+  placementCamera: {fileID: 951727805}
   placementMask:
     serializedVersion: 2
     m_Bits: 64
   planeHeight: 0
+  uiDocument: {fileID: 940440258}
 --- !u!114 &1957195790
 MonoBehaviour:
   m_ObjectHideFlags: 0

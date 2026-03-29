@@ -4,6 +4,9 @@ import { IconButton } from '../components/icon-button'
 import { Resources, Texture2D } from 'UnityEngine'
 import { useEffect, useEventfulState, useMemo, useState } from 'onejs-preact/hooks'
 import clsx from 'clsx'
+import System from 'System'
+
+type BuildingDTO = CS.Heroes.Presentation.UI.BuildingPanel.BuildingDTO;
 
 type Mode = "Economy" | "Civilian" | "Defense" | "Guilds"
 
@@ -16,13 +19,29 @@ export function BuildingPanel() {
   const [selectedCategory, setSelectedCategory] = useState<Mode>("Economy");
 
   const [buildings] = useEventfulState(buildingPanelVM, "Buildings");
-  const [selectedId, setSelectedId] = useEventfulState(buildingPanelVM, "Selected");
+  const [selectedId] = useEventfulState(buildingPanelVM, "Selected");
 
-  const selectedBuildings = useMemo(() => buildings?.filter(b => b.Category == selectedCategory) ?? [], [selectedCategory, buildings]);
+  const selectedBuildings = useMemo(() => toJsArray(buildings).filter(b => b.Category == selectedCategory) ?? [], [selectedCategory, buildings]);
 
-  const selectBuilding = (id: string) => {
-    setSelectedId(id);
+  function toJsArray<T>(csArr: System.Array$1<T>): T[] {
+    if (!csArr) {
+      return [];
+    }
+
+    let arr = new Array(csArr.Length);
+    
+    var i = csArr.Length;
+    
+    while (i--) {
+        arr[i] = csArr.get_Item(i);
+    }
+    
+    return arr;
   }
+
+  useEffect(() => {
+    console.log("Selected building id:", selectedId);
+  }, [selectedId]);
 
   return (
     <div class="w-[850px]">
@@ -37,7 +56,7 @@ export function BuildingPanel() {
 
           <div class='flex w-full h-full justify-center items-center'>
             {selectedBuildings.map(data => (
-              <div class={clsx("hover:text-red-500", selectedId == data.Id ? "text-blue-400" : "text-main")} key={data.Id} onClick={() => buildingPanelVM.Selected = data.Id}>
+              <div class={clsx("hover:text-red-500", selectedId == data.Id ? "text-blue-400" : "text-main")} key={data.Id} onClick={() => buildingPanelVM.SelectBuilding(data.Id)}>
                 {data.Name}
                 {data.Price}
               </div>

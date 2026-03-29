@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Heroes.Content.Abstractions;
+using Heroes.Game.Abstractions;
 using Heroes.Game.Core.Events;
 using Heroes.Game.Core.Events.Bus;
 using UnityEngine;
@@ -11,29 +12,34 @@ namespace Heroes.Presentation.UI.BuildingPanel
     public partial class BuildingPanelViewModel : MonoBehaviour
     {
         private IBuildingCatalog _buildingCatalog;
-        private IGameEventBus _eventBus;
+        private IBuildingPlacementSelectionService _buildingPlacementSelectionService;
 
         [EventfulProperty] private string _selected;
         [EventfulProperty] private BuildingDTO[] _buildings = System.Array.Empty<BuildingDTO>();
         
         [Inject]
-        public void Construct(IBuildingCatalog buildingCatalog, IGameEventBus eventBus)
+        public void Construct(IBuildingCatalog buildingCatalog, IBuildingPlacementSelectionService buildingPlacementSelectionService)
         {
             _buildingCatalog = buildingCatalog;
-            _eventBus = eventBus;
+            _buildingPlacementSelectionService = buildingPlacementSelectionService;
             
-            OnSelectedChanged += HandleSelection;
+            _buildingPlacementSelectionService.OnSelectedChanged += HandleSelectionEvent;
             Refresh();
         }
 
         private void OnDestroy()
         {
-            OnSelectedChanged -= HandleSelection;
+            _buildingPlacementSelectionService.OnSelectedChanged -= HandleSelectionEvent;
         }
 
-        private void HandleSelection(string value)
+        public void SelectBuilding(string buildingId)
         {
-            _eventBus.Publish(new BuildingSelectionChangedEvent(value));
+            _buildingPlacementSelectionService.Select(buildingId);
+        }
+
+        private void HandleSelectionEvent(string value)
+        {
+            Selected = value;
         }
 
         private void Refresh()

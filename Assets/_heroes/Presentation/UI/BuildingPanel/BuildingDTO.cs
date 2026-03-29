@@ -2,7 +2,7 @@
 
 namespace Heroes.Presentation.UI.BuildingPanel
 {
-    public struct BuildingDTO
+    public class BuildingDTO
     {
         public string Id;
         public string Name;
