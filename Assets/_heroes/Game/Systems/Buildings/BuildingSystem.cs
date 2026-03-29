@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Heroes.Content.Abstractions;
 using Heroes.Game.Abstractions;
 using Heroes.Game.Core.Events;
 using Heroes.Game.Core.Events.Bus;
@@ -54,7 +55,11 @@ namespace Heroes.Game.Systems.Buildings
                 return false;
             }
 
-            var building = new Building(new EntityId(_nextId++), definition, position, true);
+            var building = new Building(
+                new EntityId(_nextId++),
+                definition,
+                position,
+                true);
             _buildings.Add(building);
 
             _eventBus.Publish(new ResourcesChangedEvent(_resources.Gold));
@@ -63,11 +68,11 @@ namespace Heroes.Game.Systems.Buildings
             return true;
         }
 
-        public bool HasBuildingOfType(Content.Definitions.Buildings.BuildingType type)
+        public bool HasBuildingInCategory(Content.Definitions.Buildings.BuildingCategory category)
         {
             foreach (var building in _buildings)
             {
-                if (building.Type == type)
+                if (building.Category == category)
                 {
                     return true;
                 }

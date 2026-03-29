@@ -1,10 +1,11 @@
 using Heroes.Content.Definitions.Buildings;
+using Heroes.Content.Abstractions;
 using Heroes.Game.Abstractions;
 using Heroes.Game.Core.Events;
 using Heroes.Game.Core.Events.Bus;
 using Heroes.Game.Domain.Resources;
 using Heroes.Game.Systems.Buildings;
-using Heroes.Presentation.UI.BuildMenu;
+using Heroes.Presentation.UI.BuildingPanel;
 using Heroes.Presentation.World;
 using UnityEngine;
 using VContainer;
@@ -36,10 +37,8 @@ namespace Heroes.Game.Bootstrap
             builder.Register<BuildingSystem>(Lifetime.Singleton)
                 .As<IBuildingSystem>()
                 .As<IBuildingPlacementService>();
-
-            builder.Register<BuildMenuViewModel>(Lifetime.Singleton);
-
-            RegisterIfPresent(builder, Object.FindObjectOfType<BuildMenuPresenter>(true));
+            
+            RegisterIfPresent(builder, Object.FindObjectOfType<BuildingPanelViewModel>(true));
             RegisterIfPresent(builder, Object.FindObjectOfType<BuildingPlacementInput>(true));
             RegisterIfPresent(builder, Object.FindObjectOfType<BuildingWorldPresenter>(true));
         }

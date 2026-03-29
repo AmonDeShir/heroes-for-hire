@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1310c2e5230c2b4a85257b0b1da8075, type: 3}
+  m_Name: Warror
+  m_EditorClassIdentifier: Content::Heroes.Content.Definitions.Entities.HeroDefinition
+  id: warror
+  displayName: Warror
+  description: 
+  displayNameKey: warror.name
+  descriptionKey: warror.description
+  iconResourcePath: 
+  baseStats:
+    strength: 50
+    agility: 10
+    intelligence: 5
+    endurance: 100
+    luck: 10
+    wisdom: 0
+  maxHealth: 300
+  spawnHealth: 300
+  baseRegeneration: 5
+  skills: []
+  defaultAttackSkill: {fileID: 11400000, guid: 9008af2813362a6408030a1bda1211ff, type: 2}
+  maxWeaponSlots: 1
+  maxArmorSlots: 1
+  maxArtifactSlots: 3
+  allowedItemTypes: 00000000010000000200000003000000

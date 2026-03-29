@@ -1,0 +1,4 @@
+[submodule "Assets/_thirdparty/RTSCameraController-Cinemachine"]
+	path = Assets/_thirdparty/RTSCameraController-Cinemachine
+	url = https://github.com/Nickk888SAMP/RTSCameraController-Cinemachine
+	branch = Cinemachine3-Experimental

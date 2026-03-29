@@ -7,13 +7,13 @@ namespace Heroes.Game.AI
 {
     public interface IGoapWorldStateManager
     {
-        bool HasBuilding(BuildingType type);
+        bool HasBuilding(BuildingCategory category);
         int KingdomGold { get; }
     }
 
     public class GOAPWorldStateManager : IGoapWorldStateManager
     {
-        private readonly HashSet<BuildingType> _buildings = new();
+        private readonly HashSet<BuildingCategory> _buildings = new();
 
         public int KingdomGold { get; private set; }
 
@@ -25,7 +25,7 @@ namespace Heroes.Game.AI
 
         private void OnBuildingPlaced(BuildingPlacedEvent evt)
         {
-            _buildings.Add(evt.Building.Type);
+            _buildings.Add(evt.Building.Category);
         }
 
         private void OnResourcesChanged(ResourcesChangedEvent evt)
@@ -33,9 +33,9 @@ namespace Heroes.Game.AI
             KingdomGold = evt.Gold;
         }
 
-        public bool HasBuilding(BuildingType type)
+        public bool HasBuilding(BuildingCategory category)
         {
-            return _buildings.Contains(type);
+            return _buildings.Contains(category);
         }
     }
 }

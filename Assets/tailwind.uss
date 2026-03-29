@@ -7,16 +7,17 @@
 .root .top-0 {
     top: 0px
 }
-.root .mx-_lb_1_d_5px_rb_ {
-    margin-left: 1.5px;
-    margin-right: 1.5px
+.root .ml-_lb_2px_rb_ {
+    margin-left: 2px
 }
-.root .my-_lb_1px_rb_ {
-    margin-top: 1px;
-    margin-bottom: 1px
+.root .mr-_lb_2px_rb_ {
+    margin-right: 2px
 }
 .root .flex {
     display: flex
+}
+.root .h-7 {
+    height: 28px
 }
 .root .h-_lb_133px_rb_ {
     height: 133px
@@ -30,11 +31,14 @@
 .root .h-_lb_20px_rb_ {
     height: 20px
 }
+.root .h-_lb_23px_rb_ {
+    height: 23px
+}
 .root .h-full {
     height: 100%
 }
-.root .h-7 {
-    height: 28px
+.root .w-7 {
+    width: 28px
 }
 .root .w-_lb_133px_rb_ {
     width: 133px
@@ -48,11 +52,14 @@
 .root .w-full {
     width: 100%
 }
-.root .w-7 {
-    width: 28px
-}
 .root .flex-row {
     flex-direction: row
+}
+.root .flex-col {
+    flex-direction: column
+}
+.root .items-start {
+    align-items: flex-start
 }
 .root .items-center {
     align-items: center
@@ -63,6 +70,9 @@
 .root .justify-between {
     justify-content: space-between
 }
+.root .justify-evenly {
+    justify-content: space-evenly
+}
 .root .overflow-hidden {
     overflow: hidden
 }
@@ -72,14 +82,26 @@
 .root .border-2 {
     border-width: 2px
 }
+.root .border-b-0 {
+    border-bottom-width: 0px
+}
+.root .border-active {
+    border-color: #00B6D7
+}
 .root .border-main {
     border-color: #6B0D05
 }
 .root .bg-main {
     background-color: #6B0D05
 }
-.root .bg-cover {
-    background-size: cover
+.root .bg-tertiary {
+    background-color: #E8E0B2
+}
+.root .bg-tertiaryLight {
+    background-color: #FFF7C6
+}
+.root .bg-contain {
+    background-size: contain
 }
 .root .bg-center {
     background-position: center
@@ -87,8 +109,14 @@
 .root .bg-no-repeat {
     background-repeat: no-repeat
 }
+.root .p-0_d_5 {
+    padding: 2px
+}
 .root .p-1 {
     padding: 4px
+}
+.root .p-_lb_2px_rb_ {
+    padding: 2px
 }
 .root .pb-2 {
     padding-bottom: 8px
@@ -101,4 +129,22 @@
 }
 .root .text-secondary {
     color: #FDDB1D
+}
+.root .text-blue-400 {
+    color: #60a5fa
+}
+.root .text-main {
+    color: #6B0D05
+}
+.root .duration-100 {
+    transition-duration: 100ms
+}
+.root .ease-in-out {
+    transition-timing-function: ease-in-out
+}
+.root .hover_c_bg-tertiaryLight:hover {
+    background-color: #FFF7C6
+}
+.root .hover_c_text-red-500:hover {
+    color: #ef4444
 }

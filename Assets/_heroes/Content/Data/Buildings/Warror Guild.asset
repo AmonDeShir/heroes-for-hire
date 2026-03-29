@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3fd9dbeb7dc47aebcffcf42e17950fd, type: 3}
+  m_Name: Warror Guild
+  m_EditorClassIdentifier: Content::Heroes.Content.Definitions.Buildings.BuildingDefinition
+  id: buildings_warror_guild
+  displayName: Warror Guild
+  description: 
+  displayNameKey: building_warror_guild.name
+  descriptionKey: building_warror_guild.description
+  iconResourcePath: Buildings/buildings_warror_guild
+  buildingCategory: 0
+  goldCost: 300
+  prefab: {fileID: 4308677647538470053, guid: 726c109585936b54e929198df50d5517, type: 3}
+  goldGeneration:
+    enabled: 0
+    goldPerTick: 0
+    tickIntervalSeconds: 0
+  autoSpawns: []
+  attack:
+    enabled: 0
+    attackSkill: {fileID: 0}
+    fallbackDamage: 0
+    attackIntervalSeconds: 0
+    range: 0
+    isArea: 0
+    areaRadius: 0
+  heroRecruitment:
+    enabled: 1
+    recruitableHeroes:
+    - {fileID: 11400000, guid: f53f4f2f130076a4bbbcaf893790c6c4, type: 2}
+    maxHeroes: 3
+  shop:
+    enabled: 0
+    purchasableItems: []
+  unlocks:
+    enabled: 0
+    unlockableItems: []
+    unlockableSkills: []
+  upgrades: []
+  queue:
+    enabled: 1
+    capacity: 5
+  maxHealth: 200
+  spawnHealth: 10
+  baseRegeneration: 1

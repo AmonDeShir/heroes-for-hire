@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Heroes.Game.Abstractions;
+using Heroes.Content.Abstractions;
 using UnityEngine;
 
 namespace Heroes.Content.Definitions.Buildings

@@ -20,11 +20,12 @@
         "xml2js": "^0.6.2"
     },
     "dependencies": {
+        "class-variance-authority": "^0.7.1",
+        "clsx": "^2.1.1",
+        "css-flatten": "^2.0.0",
+        "css-simple-parser": "^3.0.0",
         "onejs-core": "~3.0.0",
         "onejs-preact": "^2.0.0",
-        "clsx": "^2.1.1",
-        "tailwind-merge": "^2.6.0",
-        "css-flatten": "^2.0.0",
-        "css-simple-parser": "^3.0.0"
+        "tailwind-merge": "^2.6.1"
     }
 }

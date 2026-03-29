@@ -1,0 +1,16 @@
+{
+    "name": "Heroes.Tools",
+    "rootNamespace": "",
+    "references": [
+        "GUID:7ad8c45436021c04dabec1d0fa8ded88"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

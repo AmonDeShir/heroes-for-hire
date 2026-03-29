@@ -1,0 +1,22 @@
+{
+    "name": "Heroes.ContentEditor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:20cbe13296f512646bb0da63da044d38",
+        "GUID:7ad8c45436021c04dabec1d0fa8ded88",
+        "Heroes.Tools",
+        "Unity.Localization",
+        "Unity.Localization.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

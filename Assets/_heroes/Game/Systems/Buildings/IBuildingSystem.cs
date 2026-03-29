@@ -8,6 +8,6 @@ namespace Heroes.Game.Systems.Buildings
     {
         IReadOnlyList<Building> Buildings { get; }
         bool TryPlaceSelectedBuilding(Vector2 position);
-        bool HasBuildingOfType(Content.Definitions.Buildings.BuildingType type);
+        bool HasBuildingInCategory(Content.Definitions.Buildings.BuildingCategory category);
     }
 }

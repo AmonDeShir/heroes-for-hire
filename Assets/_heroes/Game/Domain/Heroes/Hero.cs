@@ -1,8 +1,12 @@
-﻿using Heroes.Game.Abstractions;
+using System.Collections.Generic;
+using Heroes.Content.Abstractions;
+using Heroes.Game.Abstractions;
 using Heroes.Game.Abstractions.Common;
 using Heroes.Game.Abstractions.Heroes;
+using Heroes.Game.Abstractions.Items;
 using Heroes.Game.Core;
 using Heroes.Game.Domain.Common;
+using Heroes.Game.Domain.Items;
 
 namespace Heroes.Game.Domain.Heroes
 {
@@ -10,13 +14,24 @@ namespace Heroes.Game.Domain.Heroes
     {
         public EntityId Id { get; }
         public IHealthComponent Health { get; }
+        public IEntityDefinition Definition { get; }
         
         public HeroState State { get; private set; }
         public float NormalizedSpeed { get; private set; }
+        public IReadOnlyList<IItemInstance> Inventory => inventory;
+        public IReadOnlyList<IItemInstance> EquippedWeapons => equippedWeapons;
+        public IReadOnlyList<IItemInstance> EquippedArmor => equippedArmor;
+        public IReadOnlyList<IItemInstance> EquippedArtifacts => equippedArtifacts;
+
+        private readonly List<ItemInstance> inventory = new();
+        private readonly List<ItemInstance> equippedWeapons = new();
+        private readonly List<ItemInstance> equippedArmor = new();
+        private readonly List<ItemInstance> equippedArtifacts = new();
         
-        public Hero(EntityId id, IHealthDefinition definition)
+        public Hero(EntityId id, IEntityDefinition definition)
         {
             Id = id;
+            Definition = definition;
             State = HeroState.Idle;
             NormalizedSpeed = 0.0f;
             Health = new HealthComponent(

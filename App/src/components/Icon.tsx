@@ -1,14 +1,16 @@
-import { h } from "onejs-core";
+import { Texture2D } from "UnityEngine";
+import { h, render } from 'preact'
 
-type Props = {
-  icon: string,
-  onClick?: () => void,
-}
+type IconProps = {
+  icon: Texture2D;
+  class?: string;
+};
 
-export function IconButton({ icon, onClick }: Props) {
+export function Icon({ icon, class: className }: IconProps) {
   return (
-    <div class="w-7 h-7 flex justify-center items-center border-2 border-main" onClick={onClick}>
-      <div class="icon w-full h-full bg-center bg-cover bg-no-repeat">{icon}</div>
-    </div>
+    <div
+      class={`w-full h-full bg-center bg-contain bg-no-repeat ${className ?? ""}`}
+      style={{ backgroundImage: icon }}
+    />
   );
 }

@@ -1,4 +1,5 @@
-﻿using Heroes.Content.Definitions.Buildings;
+using Heroes.Content.Abstractions;
+using Heroes.Content.Definitions.Buildings;
 using UnityEngine;
 using EntityId = Heroes.Game.Core.EntityId;
 
@@ -10,7 +11,7 @@ namespace Heroes.Game.Abstractions
         public bool IsUnderConstruction { get; }
         public IBuildingDefinition Definition { get; }
         public Vector2 Position { get; }
-        public BuildingType Type => Definition.Type;
+        public BuildingCategory Category => Definition.Category;
         public string Name => Definition.DisplayName;
     }
 }
