@@ -202,6 +202,7 @@ GameObject:
   m_Component:
   - component: {fileID: 842913649}
   - component: {fileID: 842913650}
+  - component: {fileID: 842913651}
   m_Layer: 0
   m_Name: Barracks
   m_TagString: Untagged
@@ -242,6 +243,21 @@ MonoBehaviour:
   complete: {fileID: 6772556705763586298}
   buildingRoot: {fileID: 59205291}
   destructionRoot: {fileID: 1705234933}
+--- !u!114 &842913651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 842913648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f69f5e3512a74565af60db053ca63aa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Heroes.Game.Authoring.HealthAuthoring
+  max: 100
+  start: 0
+  regen: 0.5
 --- !u!1 &1666423931
 GameObject:
   m_ObjectHideFlags: 0

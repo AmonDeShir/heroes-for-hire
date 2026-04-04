@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Heroes.Game.Components;
+using Unity.Entities;
 using UnityEngine;
 
 namespace Heroes.Game.Authoring
@@ -15,12 +16,11 @@ namespace Heroes.Game.Authoring
             {
                 var entity = GetEntity(TransformUsageFlags.None);
                 
-                AddComponent(entity, new Components.Health
-                {
-                    max = authoring.max,
-                    value = authoring.start,
-                    regen = authoring.regen
-                });
+                AddComponent(entity, new Health { Value = authoring.start });
+                AddComponent(entity, new HealthRegeneration { Value = authoring.regen });
+                AddComponent(entity, new MaxHealth { Value = authoring.max });
+                
+                AddBuffer<DamageBuffer>(entity);
             }
         }
     }

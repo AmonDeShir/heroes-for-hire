@@ -1033,10 +1033,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4b6fa03de2a87c4a939e6c8a3993f05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Heroes.Presentation.UI.BuildingPanel.BuildingPanelViewModel
-  _selected: 
-  _buildings: []
-  _gold: 0
-  _initialized: 0
 --- !u!1 &1624760581
 GameObject:
   m_ObjectHideFlags: 0

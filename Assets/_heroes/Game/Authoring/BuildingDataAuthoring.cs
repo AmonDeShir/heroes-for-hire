@@ -16,14 +16,14 @@ namespace Heroes.Game.Authoring
         {
             public override void Bake(BuildingDataAuthoring authoring)
             {
-                var entity = GetEntity(TransformUsageFlags.None);
+                var entity = GetEntity(TransformUsageFlags.Dynamic);
                 
-                LoadToBuffer(entity, authoring.buildingRoot, e => new BuildingPhaseElement { value = e });
-                LoadToBuffer(entity, authoring.destructionRoot, e => new DestroyPhaseElement { value = e });
+                LoadToBuffer(entity, authoring.buildingRoot, e => new BuildingPhaseElement { Value = e });
+                LoadToBuffer(entity, authoring.destructionRoot, e => new DestroyPhaseElement { Value = e });
                 
                 AddComponent(entity, new BuildingVisuals
                 {
-                    Visual = GetEntity(authoring.complete, TransformUsageFlags.Dynamic)
+                    Value = GetEntity(authoring.complete, TransformUsageFlags.Dynamic)
                 });
             }
 

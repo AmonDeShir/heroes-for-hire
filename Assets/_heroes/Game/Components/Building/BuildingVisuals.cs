@@ -4,6 +4,6 @@ namespace Heroes.Game.Components
 {
     public struct BuildingVisuals : IComponentData
     {
-        public Entity Visual;
+        public Entity Value;
     }
 }

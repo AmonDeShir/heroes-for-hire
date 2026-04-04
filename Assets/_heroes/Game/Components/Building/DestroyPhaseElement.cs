@@ -4,6 +4,6 @@ namespace Heroes.Game.Components
 {
     public struct DestroyPhaseElement : IBufferElementData
     {
-        public Entity value;
+        public Entity Value;
     }
 }
