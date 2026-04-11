@@ -3,9 +3,9 @@
 public class Timer
 {
     private float _waitTime;
-    private bool _oneShoot;
-    private bool _paused;
-    private float _timeLeft;
+    protected bool _oneShoot;
+    protected bool _paused;
+    protected float _timeLeft;
     
     public bool Stopped => _paused;
     
@@ -21,7 +21,7 @@ public class Timer
         _paused = false;
     }
 
-    public void Start()
+    public virtual void Start()
     {
         _timeLeft = _waitTime;
         _paused = false;
@@ -38,7 +38,7 @@ public class Timer
         _paused = false;
     }
 
-    public void Tick(float deltaTime)
+    public virtual void Tick(float deltaTime)
     {
         if (_paused)
         {
