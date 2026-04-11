@@ -1,0 +1,1063 @@
+🧠 Cały system – jak o nim myśleć
+
+To NIE jest:
+
+ani ECS
+ani MVC
+ani „manager hell”
+
+To jest:
+
+👉 świat gry oparty na obiektach + data-driven + core logika oddzielona od Unity
+
+🔷 1. Warstwy (najważniejsze)
+
+Masz 4 główne poziomy:
+
+[ DATA ] → [ CORE LOGIC ] → [ RUNTIME (UNITY) ] → [ UI ]
+
+Każda z nich ma inną odpowiedzialność.
+
+🟦 DATA (Definition layer)
+
+To jest co istnieje w grze jako typy.
+
+Czyli:
+
+jakie są budynki
+jakie są skille
+jakie są jednostki
+jakie są ceny, hp, staty
+
+👉 To jest „design gry”
+
+📌 ważne:
+
+zero runtime
+zero logiki
+tylko konfiguracja
+🟩 CORE LOGIC (Model + Rules)
+
+To jest mózg gry.
+
+Czyli:
+
+co się dzieje z budynkiem w czasie
+jak działa damage
+jak działa budowa
+jak zmienia się stan obiektu
+
+👉 To jest „zasady świata”
+
+📌 ważne:
+
+nie zna Unity
+nie zna GameObjectów
+działa na danych (modelach)
+🟨 RUNTIME / UNITY (Scene layer)
+
+To jest świat fizyczny gry.
+
+Czyli:
+
+GameObjecty
+prefabry
+collidery
+particle
+audio
+animacje
+
+👉 To jest „jak to istnieje w scenie”
+
+📌 ważne:
+
+tu NIE powinno być ciężkiej logiki gameplayowej
+to tylko adapter do Unity
+🟥 UI (OneJS)
+
+To jest interfejs gracza.
+
+Czyli:
+
+panel budynków
+wybór akcji
+HUD
+informacje
+
+👉 To jest „co widzi i klika gracz”
+
+📌 ważne:
+
+UI nie steruje bezpośrednio światem
+UI wysyła komendy do systemu
+🔁 2. Jak płynie kontrola (flow)
+
+To jest najważniejsze.
+
+Kierunek 1: INPUT (gracz → gra)
+UI → VM → SERVICE → WORLD
+
+Czyli:
+
+gracz klika w UI
+UI przekazuje do ViewModelu
+ViewModel wywołuje service
+service wykonuje akcję w świecie
+Kierunek 2: SYMULACJA (gra sama działa)
+WORLD → CORE LOGIC → MODEL → VISUALS
+
+Czyli:
+
+obiekt w scenie istnieje
+jego logika się wykonuje (tick)
+model się zmienia
+visuals się aktualizują
+Kierunek 3: FEEDBACK (gra → UI)
+WORLD → EVENT → UI
+
+Czyli:
+
+coś się wydarzyło (np. budynek powstał)
+event leci do systemu
+UI się odświeża
+🧩 3. Główne elementy systemu
+
+Teraz każdy element „z lotu ptaka”.
+
+🧱 Building Definition
+
+👉 „co to za budynek”
+
+koszt
+hp
+kategoria
+prefab
+parametry
+
+📌 statyczne
+
+🧠 Building Model
+
+👉 „stan konkretnego budynku”
+
+hp
+poziom budowy
+stan (buduje się / gotowy / zniszczony)
+
+📌 runtime
+
+⚙️ Building Logic
+
+👉 „jak działa budynek”
+
+budowa = regen hp
+damage = spadek hp
+zmiana stage
+
+📌 reguły gry
+
+🎮 Building Facade (MonoBehaviour)
+
+👉 „fizyczny budynek w scenie”
+
+istnieje jako GameObject
+trzyma model i logikę
+łączy Unity z core
+
+📌 adapter
+
+🎨 Building Visuals
+
+👉 „jak wygląda budynek”
+
+modele 0–10
+animacje
+particle
+audio
+
+📌 tylko prezentacja
+
+🏗️ Building Placement Service
+
+👉 „stawianie budynków”
+
+sprawdza gold
+instancjuje prefab
+inicjalizuje obiekt
+rejestruje go
+
+📌 akcje globalne
+
+📦 Registry
+
+👉 „lista aktywnych obiektów”
+
+wszystkie budynki
+szybki dostęp po ID
+
+📌 lookup
+
+🔔 Event Bus
+
+👉 „coś się wydarzyło”
+
+budynek postawiony
+gold zmieniony
+budynek zniszczony
+
+📌 komunikacja
+
+🖥️ UI VM
+
+👉 „most do UI”
+
+lista budynków
+selected building
+akcje z UI
+
+📌 tłumacz UI ↔ gra
+
+🔄 4. Cały cykl życia budynku
+🟢 1. Gracz wybiera budynek
+
+UI → VM
+„chcę Barracks”
+
+🟢 2. Gracz klika teren
+
+VM → Placement Service
+
+🟢 3. Service tworzy budynek
+sprawdza gold
+instancjuje prefab
+tworzy runtime obiekt
+🟢 4. Powstaje Building Facade
+tworzy model
+tworzy logikę
+łączy visuals
+🟢 5. Budynek się buduje
+
+Każda klatka:
+
+logika zwiększa hp
+model zmienia stage
+visuals zmieniają model
+🟢 6. Budynek dostaje damage
+ktoś wywołuje IDamageable
+logika zmniejsza hp
+stage może spaść
+visuals reagują
+🟢 7. Budynek kończy budowę
+stan → completed
+visuals zmieniają model
+event leci do systemu
+🟢 8. Budynek zostaje zniszczony
+hp = 0
+stan → destroyed
+visuals → destruction
+event → UI / quest
+🧭 5. Najważniejsze zasady tej architektury
+
+To jest sedno.
+
+✅ 1. Dane ≠ stan ≠ logika
+Definition = dane
+Model = stan
+Logic = zasady
+
+Nigdy nie mieszaj tego.
+
+✅ 2. MonoBehaviour to adapter, nie mózg
+
+MonoBehaviour:
+
+nie podejmuje decyzji gameplayowych
+tylko deleguje do core
+✅ 3. Visuals nic nie decydują
+
+Visuals:
+
+tylko reagują
+nie liczą
+✅ 4. Service wykonuje akcje
+placement
+combat
+selection
+
+Nie UI, nie MonoBehaviour.
+
+✅ 5. Registry daje dostęp
+
+Bez:
+
+FindObjectOfType
+chaosu
+✅ 6. Eventy tylko do powiadomień
+
+Nie do sterowania logiką.
+
+✅ 7. UI nie dotyka świata bezpośrednio
+
+Zawsze przez:
+
+VM → Service
+🧠 6. Jak o tym myśleć mentalnie
+
+Najprościej:
+
+👉 gra to symulacja modeli
+
+👉 Unity to tylko wizualizacja tej symulacji
+
+👉 UI to tylko sterowanie i podgląd
+
+🧨 TL;DR
+Definition → mówi czym coś jest
+Model → mówi w jakim stanie jest
+Logic → mówi jak się zmienia
+Facade → łączy to z Unity
+Visuals → pokazują to graczowi
+Service → wykonuje akcje
+Registry → pozwala znaleźć obiekty
+Event → informuje że coś się stało
+UI → steruje systemem
+
+Jak to ogarniesz, to:
+
+nie wpadniesz w manager hell
+nie będziesz potrzebował DOTS
+nie zabijesz się architekturą
+a dalej będziesz miał „inżynierski poziom” projektu"
+
+
+PRZYKŁAD:
+1. BuildingDefinition
+
+To asset, który wyklikujesz w Unity.
+
+using UnityEngine;
+
+namespace KingdomSim.Buildings
+{
+    public enum BuildingCategory
+    {
+        Economy,
+        Civilian,
+        Defense,
+        Guilds
+    }
+
+    [CreateAssetMenu(menuName = "KingdomSim/Buildings/Building Definition")]
+    public class BuildingDefinition : ScriptableObject
+    {
+        [Header("Identity")]
+        public string Id;
+        public string DisplayName;
+        public BuildingCategory Category;
+
+        [Header("Cost")]
+        public int GoldCost = 100;
+
+        [Header("Construction")]
+        public float MaxHp = 100f;
+        public float BuildHpPerSecond = 10f;
+
+        [Header("Prefab")]
+        public BuildingFacade Prefab;
+    }
+}
+2. BuildingCatalog
+
+Katalog definicji do UI i lookupu.
+
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace KingdomSim.Buildings
+{
+    [CreateAssetMenu(menuName = "KingdomSim/Buildings/Building Catalog")]
+    public class BuildingCatalog : ScriptableObject
+    {
+        [SerializeField] private BuildingDefinition[] buildings;
+
+        private Dictionary<string, BuildingDefinition> byId;
+
+        public IReadOnlyList<BuildingDefinition> Buildings => buildings;
+
+        public void Initialize()
+        {
+            byId = new Dictionary<string, BuildingDefinition>();
+
+            if (buildings == null)
+                return;
+
+            foreach (var building in buildings)
+            {
+                if (building == null || string.IsNullOrWhiteSpace(building.Id))
+                    continue;
+
+                byId[building.Id] = building;
+            }
+        }
+
+        public BuildingDefinition GetById(string id)
+        {
+            if (byId == null)
+                Initialize();
+
+            return byId != null && byId.TryGetValue(id, out var definition)
+                ? definition
+                : null;
+        }
+    }
+}
+3. KingdomModel
+
+Prosty model zasobów gracza.
+
+namespace KingdomSim.Core
+{
+    public sealed class KingdomModel
+    {
+        public int Gold { get; private set; }
+
+        public KingdomModel(int startGold)
+        {
+            Gold = startGold;
+        }
+
+        public bool CanAfford(int amount)
+        {
+            return Gold >= amount;
+        }
+
+        public bool TrySpendGold(int amount)
+        {
+            if (amount < 0 || Gold < amount)
+                return false;
+
+            Gold -= amount;
+            return true;
+        }
+
+        public void AddGold(int amount)
+        {
+            if (amount > 0)
+                Gold += amount;
+        }
+    }
+}
+4. BuildingModel
+
+To runtime state jednego budynku.
+Bez Unity.
+
+namespace KingdomSim.Buildings
+{
+    public enum BuildingState
+    {
+        UnderConstruction,
+        Completed,
+        Destroyed
+    }
+
+    public sealed class BuildingModel
+    {
+        public string InstanceId { get; }
+        public string DefinitionId { get; }
+
+        public float Hp { get; private set; }
+        public float MaxHp { get; }
+
+        public int ConstructionStage { get; private set; }
+        public BuildingState State { get; private set; }
+
+        public BuildingModel(string instanceId, string definitionId, float maxHp)
+        {
+            InstanceId = instanceId;
+            DefinitionId = definitionId;
+            MaxHp = maxHp;
+
+            Hp = 0f;
+            ConstructionStage = 0;
+            State = BuildingState.UnderConstruction;
+        }
+
+        public void SetHp(float hp)
+        {
+            if (State == BuildingState.Destroyed)
+                return;
+
+            Hp = hp;
+            if (Hp < 0f)
+                Hp = 0f;
+            if (Hp > MaxHp)
+                Hp = MaxHp;
+
+            ConstructionStage = CalculateStage(Hp, MaxHp);
+
+            if (Hp <= 0f && MaxHp > 0f)
+            {
+                State = BuildingState.Destroyed;
+            }
+            else if (Hp >= MaxHp)
+            {
+                State = BuildingState.Completed;
+            }
+            else
+            {
+                State = BuildingState.UnderConstruction;
+            }
+        }
+
+        private static int CalculateStage(float hp, float maxHp)
+        {
+            if (maxHp <= 0f)
+                return 0;
+
+            float normalized = hp / maxHp;
+            if (normalized < 0f) normalized = 0f;
+            if (normalized > 1f) normalized = 1f;
+
+            return (int)System.Math.Round(normalized * 10f);
+        }
+    }
+}
+5. Interfejs IDamageable
+
+Lekki kontrakt.
+
+namespace KingdomSim.Combat
+{
+    public interface IDamageable
+    {
+        bool IsAlive { get; }
+        void ApplyDamage(float amount);
+    }
+}
+6. BuildingConstructionLogic
+
+To core logika.
+Nie zna GameObjectów, particle ani modeli.
+
+namespace KingdomSim.Buildings
+{
+    public sealed class BuildingConstructionLogic
+    {
+        private readonly BuildingModel model;
+        private readonly float buildHpPerSecond;
+
+        public BuildingConstructionLogic(BuildingModel model, float buildHpPerSecond)
+        {
+            this.model = model;
+            this.buildHpPerSecond = buildHpPerSecond;
+        }
+
+        public void Tick(float deltaTime)
+        {
+            if (model.State != BuildingState.UnderConstruction)
+                return;
+
+            float nextHp = model.Hp + buildHpPerSecond * deltaTime;
+            model.SetHp(nextHp);
+        }
+
+        public void ApplyDamage(float amount)
+        {
+            if (amount <= 0f)
+                return;
+
+            if (model.State == BuildingState.Destroyed)
+                return;
+
+            float nextHp = model.Hp - amount;
+            model.SetHp(nextHp);
+        }
+    }
+}
+7. BuildingVisuals
+
+To komponent prezentacji.
+Zakładam hierarchię podobną do Twojej:
+
+Building
+0
+1
+...
+10
+Complete
+Destruction
+using System.Collections;
+using UnityEngine;
+
+namespace KingdomSim.Buildings
+{
+    public class BuildingVisuals : MonoBehaviour
+    {
+        [Header("Roots")]
+        [SerializeField] private Transform constructionStagesRoot;
+        [SerializeField] private GameObject completeRoot;
+        [SerializeField] private GameObject destructionRoot;
+
+        [Header("FX")]
+        [SerializeField] private ParticleSystem stageUpgradeParticles;
+        [SerializeField] private AudioSource stageUpgradeAudio;
+
+        [Header("Animation")]
+        [SerializeField] private float popDuration = 0.25f;
+        [SerializeField] private float popHeight = 0.75f;
+
+        private GameObject[] stageObjects;
+        private int currentStage = -1;
+        private BuildingState currentState;
+
+        private void Awake()
+        {
+            CacheStageObjects();
+        }
+
+        public void RefreshImmediate(BuildingModel model)
+        {
+            currentStage = model.ConstructionStage;
+            currentState = model.State;
+
+            ApplyState(model.State);
+            ApplyStageImmediate(model.ConstructionStage);
+        }
+
+        public void Refresh(BuildingModel model, int previousStage, BuildingState previousState)
+        {
+            if (previousState != model.State)
+            {
+                currentState = model.State;
+                ApplyState(model.State);
+            }
+
+            if (previousStage != model.ConstructionStage)
+            {
+                int newStage = model.ConstructionStage;
+
+                if (newStage > previousStage && model.State == BuildingState.UnderConstruction)
+                    AnimateForwardStage(newStage);
+                else
+                    ApplyStageImmediate(newStage);
+
+                currentStage = newStage;
+            }
+        }
+
+        private void ApplyState(BuildingState state)
+        {
+            bool showConstruction = state == BuildingState.UnderConstruction;
+            bool showComplete = state == BuildingState.Completed;
+            bool showDestroyed = state == BuildingState.Destroyed;
+
+            if (constructionStagesRoot != null)
+                constructionStagesRoot.gameObject.SetActive(showConstruction);
+
+            if (completeRoot != null)
+                completeRoot.SetActive(showComplete);
+
+            if (destructionRoot != null)
+                destructionRoot.SetActive(showDestroyed);
+        }
+
+        private void ApplyStageImmediate(int stage)
+        {
+            if (stageObjects == null)
+                return;
+
+            for (int i = 0; i < stageObjects.Length; i++)
+            {
+                if (stageObjects[i] != null)
+                    stageObjects[i].SetActive(i == stage);
+            }
+        }
+
+        private void AnimateForwardStage(int stage)
+        {
+            ApplyStageImmediate(stage);
+
+            if (stageObjects == null || stage < 0 || stage >= stageObjects.Length)
+                return;
+
+            var target = stageObjects[stage];
+            if (target == null)
+                return;
+
+            StopAllCoroutines();
+            StartCoroutine(PlayStagePopAnimation(target.transform));
+
+            stageUpgradeParticles?.Play();
+            stageUpgradeAudio?.Play();
+        }
+
+        private IEnumerator PlayStagePopAnimation(Transform target)
+        {
+            Vector3 basePos = target.localPosition;
+            Vector3 startPos = basePos + Vector3.up * popHeight;
+
+            float time = 0f;
+            target.localScale = Vector3.zero;
+            target.localPosition = startPos;
+
+            while (time < popDuration)
+            {
+                time += Time.deltaTime;
+                float t = Mathf.Clamp01(time / popDuration);
+
+                float scaleT = Mathf.Clamp01(t / 0.4f);
+
+                target.localScale = Vector3.LerpUnclamped(Vector3.zero, Vector3.one, scaleT);
+                target.localPosition = Vector3.LerpUnclamped(startPos, basePos, t);
+
+                yield return null;
+            }
+
+            target.localScale = Vector3.one;
+            target.localPosition = basePos;
+        }
+
+        private void CacheStageObjects()
+        {
+            stageObjects = new GameObject[11];
+
+            if (constructionStagesRoot == null)
+                return;
+
+            for (int i = 0; i <= 10; i++)
+            {
+                var child = constructionStagesRoot.Find(i.ToString());
+                if (child != null)
+                    stageObjects[i] = child.gameObject;
+            }
+        }
+    }
+}
+8. BuildingFacade
+
+To adapter Unity.
+
+trzyma definicję
+tworzy model
+tworzy logikę
+aktualizuje visuals
+implementuje IDamageable
+using KingdomSim.Combat;
+using UnityEngine;
+
+namespace KingdomSim.Buildings
+{
+    public class BuildingFacade : MonoBehaviour, IDamageable
+    {
+        [SerializeField] private BuildingVisuals visuals;
+
+        public BuildingDefinition Definition { get; private set; }
+        public BuildingModel Model { get; private set; }
+
+        private BuildingConstructionLogic constructionLogic;
+
+        public bool IsAlive => Model != null && Model.State != BuildingState.Destroyed;
+
+        public void Initialize(BuildingDefinition definition, string instanceId)
+        {
+            Definition = definition;
+            Model = new BuildingModel(instanceId, definition.Id, definition.MaxHp);
+            constructionLogic = new BuildingConstructionLogic(Model, definition.BuildHpPerSecond);
+
+            if (visuals != null)
+                visuals.RefreshImmediate(Model);
+        }
+
+        private void Update()
+        {
+            if (Model == null || constructionLogic == null)
+                return;
+
+            int previousStage = Model.ConstructionStage;
+            BuildingState previousState = Model.State;
+
+            constructionLogic.Tick(Time.deltaTime);
+
+            if (visuals != null)
+                visuals.Refresh(Model, previousStage, previousState);
+        }
+
+        public void ApplyDamage(float amount)
+        {
+            if (Model == null || constructionLogic == null)
+                return;
+
+            int previousStage = Model.ConstructionStage;
+            BuildingState previousState = Model.State;
+
+            constructionLogic.ApplyDamage(amount);
+
+            if (visuals != null)
+                visuals.Refresh(Model, previousStage, previousState);
+        }
+    }
+}
+9. BuildingRegistry
+
+Runtime lookup aktywnych budynków.
+
+using System.Collections.Generic;
+
+namespace KingdomSim.Buildings
+{
+    public sealed class BuildingRegistry
+    {
+        private readonly Dictionary<string, BuildingFacade> byId = new();
+
+        public void Register(BuildingFacade building)
+        {
+            if (building == null || building.Model == null)
+                return;
+
+            byId[building.Model.InstanceId] = building;
+        }
+
+        public void Unregister(BuildingFacade building)
+        {
+            if (building == null || building.Model == null)
+                return;
+
+            byId.Remove(building.Model.InstanceId);
+        }
+
+        public bool TryGet(string id, out BuildingFacade building)
+        {
+            return byId.TryGetValue(id, out building);
+        }
+
+        public IEnumerable<BuildingFacade> All => byId.Values;
+    }
+}
+10. BuildingPlacementService
+
+To stawia budynek.
+
+using System;
+using KingdomSim.Core;
+using UnityEngine;
+
+namespace KingdomSim.Buildings
+{
+    public sealed class BuildingPlacementService
+    {
+        private readonly KingdomModel kingdomModel;
+        private readonly BuildingRegistry buildingRegistry;
+
+        public BuildingPlacementService(KingdomModel kingdomModel, BuildingRegistry buildingRegistry)
+        {
+            this.kingdomModel = kingdomModel;
+            this.buildingRegistry = buildingRegistry;
+        }
+
+        public bool TryPlace(BuildingDefinition definition, Vector3 position, Quaternion rotation, out BuildingFacade building)
+        {
+            building = null;
+
+            if (definition == null || definition.Prefab == null)
+                return false;
+
+            if (!kingdomModel.TrySpendGold(definition.GoldCost))
+                return false;
+
+            building = UnityEngine.Object.Instantiate(definition.Prefab, position, rotation);
+            building.Initialize(definition, Guid.NewGuid().ToString());
+
+            buildingRegistry.Register(building);
+            return true;
+        }
+    }
+}
+11. Placement Controller
+
+To MonoBehaviour od kliknięcia na teren.
+
+using KingdomSim.Buildings;
+using UnityEngine;
+
+namespace KingdomSim.Runtime
+{
+    public class BuildingPlacementController : MonoBehaviour
+    {
+        [SerializeField] private Camera worldCamera;
+        [SerializeField] private LayerMask groundMask;
+
+        public BuildingDefinition SelectedBuilding { get; set; }
+        public BuildingPlacementService PlacementService { get; set; }
+
+        private void Update()
+        {
+            if (SelectedBuilding == null || PlacementService == null)
+                return;
+
+            if (!Input.GetMouseButtonDown(0))
+                return;
+
+            Ray ray = worldCamera.ScreenPointToRay(Input.mousePosition);
+
+            if (!Physics.Raycast(ray, out var hit, 500f, groundMask))
+                return;
+
+            if (PlacementService.TryPlace(SelectedBuilding, hit.point, Quaternion.identity, out _))
+            {
+                SelectedBuilding = null;
+            }
+        }
+    }
+}
+12. Bootstrap
+
+Spina wszystko razem.
+
+using KingdomSim.Buildings;
+using KingdomSim.Core;
+using UnityEngine;
+
+namespace KingdomSim.Runtime
+{
+    public class GameBootstrap : MonoBehaviour
+    {
+        [SerializeField] private BuildingCatalog buildingCatalog;
+        [SerializeField] private BuildingPlacementController placementController;
+
+        public KingdomModel Kingdom { get; private set; }
+        public BuildingRegistry BuildingRegistry { get; private set; }
+        public BuildingPlacementService BuildingPlacementService { get; private set; }
+
+        private void Awake()
+        {
+            buildingCatalog.Initialize();
+
+            Kingdom = new KingdomModel(startGold: 1000);
+            BuildingRegistry = new BuildingRegistry();
+            BuildingPlacementService = new BuildingPlacementService(Kingdom, BuildingRegistry);
+
+            placementController.PlacementService = BuildingPlacementService;
+        }
+
+        public void SelectBuildingForPlacement(string buildingId)
+        {
+            var definition = buildingCatalog.GetById(buildingId);
+            placementController.SelectedBuilding = definition;
+        }
+    }
+}
+13. Jak UI to wywołuje
+
+Z OneJS możesz po prostu wywołać coś w stylu:
+
+gameBootstrap.SelectBuildingForPlacement(data.Id)
+
+Czyli:
+
+UI pokazuje definicje z katalogu
+klik w budynek ustawia selected building
+klik na mapie stawia go przez placement service
+
+To jest czyste.
+
+14. Co gdzie siedzi
+W danych
+koszt budowy
+hp max
+tempo budowy
+prefab
+W modelu
+aktualne hp
+aktualny stage
+aktualny stan
+W logice
+tick budowy
+damage
+przejścia stage/state
+W facade
+spięcie modelu/logiki z Unity
+W visuals
+modele 0–10
+complete/destruction
+audio i particles
+W placement service
+płatność
+spawn
+init
+registry
+15. Dlaczego to jest sensowne
+
+Bo nie masz:
+
+wielkiego BuildingSystem
+całej logiki w jednym Building.cs
+danych w prefabie jako jedynego źródła prawdy
+
+A jednocześnie nie robisz:
+
+ECS
+20 warstw
+enterprise frameworka
+
+Masz po prostu:
+
+data-driven definitions
+testowalny core
+Unity-friendly runtime
+16. Co bym jeszcze rozdzielił później, ale nie teraz
+
+Jeśli system urośnie, możesz wydzielić:
+
+BuildingHealthLogic
+BuildingStateMachine
+BuildingEventPublisher
+BuildingSelection
+
+Ale na ten moment to by było za wcześnie.
+
+17. Minimum testów, które tu mają sens
+
+Najbardziej testowalne są:
+
+BuildingModel
+BuildingConstructionLogic
+KingdomModel
+
+Przykłady:
+
+czy budowa zwiększa hp
+czy stage liczy się poprawnie
+czy hp > max jest clampowane
+czy damage może cofnąć etap
+czy TrySpendGold działa poprawnie
+18. TL;DR architektury tego systemu
+BuildingDefinition
+  -> opis typu budynku
+
+BuildingModel
+  -> stan konkretnego budynku
+
+BuildingConstructionLogic
+  -> reguły budowy i damage
+
+BuildingFacade
+  -> adapter Unity, łączy core z prefabem
+
+BuildingVisuals
+  -> pokazuje stage, complete, destruction, FX
+
+BuildingPlacementService
+  -> stawia budynki i pobiera gold
+
+BuildingRegistry
+  -> trzyma aktywne budynki
+
+BuildingPlacementController
+  -> zbiera kliknięcie na mapie
+
+GameBootstrap
+  -> spina wszystko
+
+UI / OneJS
+  -> wybór typu budynku

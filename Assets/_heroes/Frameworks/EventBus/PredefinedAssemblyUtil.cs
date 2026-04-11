@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace EventBus
 {
@@ -19,8 +20,8 @@ namespace EventBus
             {
                 "Assembly-CSharp" => AssemblyType.AssemblyCSharp,
                 "Assembly-CSharp-Editor" => AssemblyType.AssemblyCSharpEditor,
-                "Assembly-CSharp-Editor-firstpass" => AssemblyType.AssemblyCSharpFirstPass,
-                "Assembly-CSharp-firstpass" => AssemblyType.AssemblyCSharpEditorFirstPass,
+                "Assembly-CSharp-Editor-firstpass" => AssemblyType.AssemblyCSharpEditorFirstPass,
+                "Assembly-CSharp-firstpass" => AssemblyType.AssemblyCSharpFirstPass,
                 _ => null
             };
         }
@@ -37,14 +38,24 @@ namespace EventBus
 
                 if (assemblyType != null)
                 {
-                    assemblyTypes.Add((AssemblyType)assemblyType, assembly.GetTypes());
+                    assemblyTypes.Add((AssemblyType)assemblyType, SafeGetTypes(assembly));
                 }
             }
 
-            AddTypesFromAssembly(assemblyTypes[AssemblyType.AssemblyCSharp], interfaceType, types);
-            AddTypesFromAssembly(assemblyTypes[AssemblyType.AssemblyCSharpEditor], interfaceType, types);
-            AddTypesFromAssembly(assemblyTypes[AssemblyType.AssemblyCSharpFirstPass], interfaceType, types);
-            AddTypesFromAssembly(assemblyTypes[AssemblyType.AssemblyCSharpEditorFirstPass], interfaceType, types);
+            if (assemblyTypes.Count == 0)
+            {
+                foreach (var assembly in assemblies)
+                {
+                    AddTypesFromAssembly(SafeGetTypes(assembly), interfaceType, types);
+                }
+
+                return types;
+            }
+
+            AddIfPresent(assemblyTypes, AssemblyType.AssemblyCSharp, interfaceType, types);
+            AddIfPresent(assemblyTypes, AssemblyType.AssemblyCSharpEditor, interfaceType, types);
+            AddIfPresent(assemblyTypes, AssemblyType.AssemblyCSharpFirstPass, interfaceType, types);
+            AddIfPresent(assemblyTypes, AssemblyType.AssemblyCSharpEditorFirstPass, interfaceType, types);
 
             return types;
         }
@@ -62,6 +73,26 @@ namespace EventBus
                 {
                     types.Add(type);
                 }
+            }
+        }
+
+        private static void AddIfPresent(Dictionary<AssemblyType, Type[]> assemblyTypes, AssemblyType key, Type interfaceType, ICollection<Type> types)
+        {
+            if (assemblyTypes.TryGetValue(key, out var assembly))
+            {
+                AddTypesFromAssembly(assembly, interfaceType, types);
+            }
+        }
+
+        private static Type[] SafeGetTypes(Assembly assembly)
+        {
+            try
+            {
+                return assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException exception)
+            {
+                return exception.Types ?? Array.Empty<Type>();
             }
         }
     }

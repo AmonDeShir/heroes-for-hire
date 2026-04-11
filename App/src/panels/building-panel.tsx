@@ -18,8 +18,8 @@ const iconGuilds = Resources.Load("Icons/buildings-guilds") as Texture2D
 export function BuildingPanel() {
   const [selectedCategory, setSelectedCategory] = useState<Mode>("Economy");
 
-  const [buildings] = useEventfulState(buildingPanelVM, "Buildings");
-  const [selectedId] = useEventfulState(buildingPanelVM, "Selected");
+  const [buildings] = useEventfulState(buildingPanelPresenter, "Buildings");
+  const [selectedId] = useEventfulState(buildingPanelPresenter, "Selected");
 
   const selectedBuildings = useMemo(() => toJsArray(buildings).filter(b => b.Category == selectedCategory) ?? [], [selectedCategory, buildings]);
 
@@ -56,7 +56,7 @@ export function BuildingPanel() {
 
           <div class='flex w-full h-full justify-center items-center'>
             {selectedBuildings.map(data => (
-              <div class={clsx("hover:text-red-500", selectedId == data.Id ? "text-blue-400" : "text-main")} key={data.Id} onClick={() => buildingPanelVM.SelectBuilding(data.Id)}>
+              <div class={clsx("hover:text-red-500", selectedId == data.Id ? "text-blue-400" : "text-main")} key={data.Id} onClick={() => buildingPanelPresenter.SelectBuilding(data.Id)}>
                 {data.Name}
                 {data.Price}
               </div>

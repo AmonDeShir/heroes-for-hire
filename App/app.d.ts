@@ -96,14 +96,14 @@ declare namespace CS {
         }
     }
     namespace Heroes.Presentation.UI.BuildingPanel {
-        class BuildingPanelViewModel extends UnityEngine.MonoBehaviour
+        class BuildingPanelPresenter extends UnityEngine.MonoBehaviour
         {
             protected [__keep_incompatibility]: never;
             public get Selected(): string;
             public set Selected(value: string);
             public get Buildings(): System.Array$1<Heroes.Presentation.UI.BuildingPanel.BuildingDTO>;
             public set Buildings(value: System.Array$1<Heroes.Presentation.UI.BuildingPanel.BuildingDTO>);
-            public Construct ($buildingCatalog: Heroes.Content.Abstractions.IBuildingCatalog, $eventBus: Heroes.Game.Core.Events.Bus.IGameEventBus) : void
+            public Construct ($buildingCatalog: Heroes.Content.Buildings.BuildingCatalog, $buildingPlacementSelectionService: Heroes.Game.Buildings.BuildingPlacementSelectionService) : void
             public add_OnSelectedChanged ($value: System.Action$1<string>) : void
             public remove_OnSelectedChanged ($value: System.Action$1<string>) : void
             public add_OnBuildingsChanged ($value: System.Action$1<System.Array$1<Heroes.Presentation.UI.BuildingPanel.BuildingDTO>>) : void
@@ -121,14 +121,18 @@ declare namespace CS {
             public Category: string;
         }
     }
-    namespace Heroes.Content.Abstractions {
-        interface IBuildingCatalog
+    namespace Heroes.Content.Buildings {
+        class BuildingCatalog extends UnityEngine.ScriptableObject
         {
+            protected [__keep_incompatibility]: never;
+            public constructor ()
         }
     }
-    namespace Heroes.Game.Core.Events.Bus {
-        interface IGameEventBus
+    namespace Heroes.Game.Buildings {
+        class BuildingPlacementSelectionService extends System.Object
         {
+            protected [__keep_incompatibility]: never;
+            public constructor ()
         }
     }
     namespace System.Collections.Generic {
@@ -172,4 +176,4 @@ declare namespace CS {
     }
 }
 
-declare const buildingPanelVM: CS.Heroes.Presentation.UI.BuildingPanel.BuildingPanelViewModel;
+declare const buildingPanelPresenter: CS.Heroes.Presentation.UI.BuildingPanel.BuildingPanelPresenter;
