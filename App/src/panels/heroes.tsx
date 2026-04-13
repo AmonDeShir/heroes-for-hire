@@ -4,7 +4,7 @@ import { Bar } from "../components/bar";
 export function Heroes() {
   return (
     <div style={{ width: 200 }}>
-      <Bar details={1} title="Bochaterowie">
+      <Bar details={1} title="Heroes">
       </Bar>  
     </div>
     

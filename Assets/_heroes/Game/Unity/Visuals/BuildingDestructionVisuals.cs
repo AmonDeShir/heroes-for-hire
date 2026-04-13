@@ -19,10 +19,14 @@ namespace Heroes.Game.Buildings
         {
             var showDestruction = model.State == BuildingState.Damaged || model.State == BuildingState.Destroyed;
             if (destructionStagesRoot != null)
+            {
                 destructionStagesRoot.gameObject.SetActive(showDestruction);
+            }
 
             if (!showDestruction)
+            {
                 return;
+            }
 
             var newStage = GetDestructionStageIndex(model);
             if (newStage != _currentStage)
@@ -35,10 +39,14 @@ namespace Heroes.Game.Buildings
         private void ApplyStageImmediate(int stage)
         {
             if (_destructionStages == null || _destructionStages.Length == 0)
+            {
                 return;
+            }
 
             for (var i = 0; i < _destructionStages.Length; i++)
+            {
                 _destructionStages[i].SetActive(i == stage);
+            }
         }
 
         private int GetDestructionStageIndex(BuildingModel model)
@@ -50,13 +58,21 @@ namespace Heroes.Game.Buildings
         private static int CalculateStageIndex(float value, float max, GameObject[] stages)
         {
             if (stages == null || stages.Length == 0 || max <= 0f)
+            {
                 return 0;
+            }
 
             var normalized = value / max;
+            
             if (normalized < 0f)
+            {
                 normalized = 0f;
+            }
+
             if (normalized > 1f)
+            {
                 normalized = 1f;
+            }
 
             return Mathf.RoundToInt(normalized * (stages.Length - 1));
         }
@@ -64,13 +80,17 @@ namespace Heroes.Game.Buildings
         private static GameObject[] CacheStageObjects(Transform root)
         {
             if (root == null)
+            {
                 return System.Array.Empty<GameObject>();
+            }
 
             var count = root.childCount;
             var stages = new GameObject[count];
 
             for (var i = 0; i < count; i++)
+            {
                 stages[i] = root.GetChild(i).gameObject;
+            }
 
             return stages;
         }

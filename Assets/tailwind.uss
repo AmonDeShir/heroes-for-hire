@@ -127,14 +127,14 @@
 .root .text-xs {
     font-size: 12px
 }
-.root .text-secondary {
-    color: #FDDB1D
-}
 .root .text-blue-400 {
     color: #60a5fa
 }
 .root .text-main {
     color: #6B0D05
+}
+.root .text-secondary {
+    color: #FDDB1D
 }
 .root .duration-100 {
     transition-duration: 100ms

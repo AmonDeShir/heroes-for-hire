@@ -18,7 +18,7 @@ MonoBehaviour:
   Category: 3
   GoldCost: 100
   MaxHp: 100
-  BuildHpPerSecond: 1
+  BuildHpPerSecond: 5
   StartHp: 10
   IconPath: 
   Prefab: {fileID: 3714646239772070877, guid: b91e8fd7ec44ec44c910ea3db98120bd, type: 3}

@@ -16,7 +16,7 @@
         "jsx": "react",
         "jsxFactory": "h",
         "jsxFragmentFactory": "Fragment",
-        "typeRoots": [ "./node_modules/@types" ],
+        "typeRoots": [ "./node_modules/@types", "./index.d.ts" ],
         "sourceMap": true,
         "skipLibCheck": true
     },

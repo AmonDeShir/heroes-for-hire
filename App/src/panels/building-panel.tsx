@@ -28,9 +28,9 @@ export function BuildingPanel() {
       return [];
     }
 
-    let arr = new Array(csArr.Length);
+    let arr = new Array((csArr as any).Length);
     
-    var i = csArr.Length;
+    var i = (csArr as any).Length;
     
     while (i--) {
         arr[i] = csArr.get_Item(i);
@@ -45,7 +45,7 @@ export function BuildingPanel() {
 
   return (
     <div class="w-[850px]">
-      <Panel title={`Budynki - ${selectedCategory}`}>
+      <Panel title={`Buildings - ${selectedCategory}`}>
         <div class='w-full h-full p-[2px] flex flex-row '>
           <div class='flex w-7 h-full flex-col justify-evenly items-start'>
             <IconButton icon={iconEconomy} active={selectedCategory == "Economy"} onClick={() => setSelectedCategory("Economy")} />

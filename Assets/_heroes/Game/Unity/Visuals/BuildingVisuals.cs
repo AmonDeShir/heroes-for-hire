@@ -12,6 +12,11 @@ namespace Heroes.Game.Buildings
         [Header("FX")]
         [SerializeField] private ParticleSystem placementBurstParticles;
 
+        [Header("SFX")] 
+        [SerializeField] private AudioSource buildingSfx;
+        [SerializeField] private AudioSource sfxAudioSource;
+        [SerializeField] private AudioClip placementBurstAudio;
+
         [Header("Animation")]
         [SerializeField] private float popDuration = 0.25f;
         [SerializeField] private float popHeight = 0.75f;
@@ -46,7 +51,20 @@ namespace Heroes.Game.Buildings
 
             if (model.State != BuildingState.UnderConstruction)
             {
+                if (buildingSfx.isPlaying)
+                {
+                    buildingSfx.Stop();
+                }
+
                 return;
+            }
+
+            if (model.State == BuildingState.UnderConstruction)
+            {
+                if (!buildingSfx.isPlaying)
+                {
+                    buildingSfx.Play();
+                }
             }
 
             var newStage = GetConstructionStageIndex(model);
@@ -93,6 +111,8 @@ namespace Heroes.Game.Buildings
 
             if (stage < 0 || stage >= _constructionStages.Length)
             {
+                buildingSfx.Stop();
+                
                 return;
             }
 
@@ -167,6 +187,11 @@ namespace Heroes.Game.Buildings
             if (placementBurstParticles != null)
             {
                 placementBurstParticles.Play();
+            }
+            
+            if (sfxAudioSource != null)
+            {
+                sfxAudioSource.PlayOneShot(placementBurstAudio);
             }
         }
 

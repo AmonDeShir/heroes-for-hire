@@ -8,7 +8,7 @@ const Image = Resources.Load("capybara") as Texture2D
 export function InfoPanel() {
   return (
     <div class="w-[850px]">
-      <Panel title='Informacje'>
+      <Panel title='Info'>
         <div class='w-full h-full p-[2px]'>
           <IconButton active icon={Image} onClick={() => console.log("I can be activated!")}/>
           <IconButton icon={Image} onClick={() => console.log("I can be activated!")}/>
