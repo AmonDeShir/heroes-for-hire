@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using EventBus;
 using Heroes.Content.Buildings;
 using Heroes.Game.Core;
@@ -17,11 +18,16 @@ namespace Heroes.Game.Buildings
             _kingdom = kingdom;
         }
 
+        public bool CanBuild(BuildingDefinition definition)
+        {
+            return definition != null && definition.Prefab != null && _kingdom.CanAfford(definition.GoldCost);
+        }
+
         public bool TryPlace(BuildingDefinition definition, Vector3 position, Quaternion rotation, out BuildingFacade building)
         {
             building = null;
 
-            if (definition == null || definition.Prefab == null)
+            if (!CanBuild(definition))
             {
                 return false;
             }
@@ -34,8 +40,9 @@ namespace Heroes.Game.Buildings
             }
 
             var newGold = _kingdom.Gold;
-
+            
             building = UnityEngine.Object.Instantiate(definition.Prefab, position, rotation);
+            
             var instanceId = Guid.NewGuid().ToString();
             building.Initialize(definition, instanceId);
 
@@ -53,7 +60,7 @@ namespace Heroes.Game.Buildings
                 DefinitionId = definition.Id,
                 Position = position
             });
-
+            
             return true;
         }
     }

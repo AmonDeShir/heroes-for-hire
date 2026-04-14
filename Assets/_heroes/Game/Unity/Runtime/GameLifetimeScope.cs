@@ -12,7 +12,9 @@ namespace Heroes.Game.Runtime
     {
         [SerializeField] private BuildingCatalog buildingCatalog;
         [SerializeField] private BuildingPlacementController placementController;
+        [SerializeField] private BuildingCursor buildingCursor;
         [SerializeField] private BuildingPanelPresenter buildingPanelPresenter;
+
         [SerializeField] private int startGold = 1000;
 
         protected override void Configure(IContainerBuilder builder)
@@ -27,6 +29,7 @@ namespace Heroes.Game.Runtime
 
             builder.RegisterComponent(placementController);
             builder.RegisterComponent(buildingPanelPresenter);
+            builder.RegisterComponent(buildingCursor);
         }
     }
 }

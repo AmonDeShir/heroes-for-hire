@@ -9,13 +9,8 @@ namespace Heroes.Game.Buildings
         [SerializeField] private Transform constructionStagesRoot;
         [SerializeField] private GameObject completeRoot;
 
-        [Header("FX")]
-        [SerializeField] private ParticleSystem placementBurstParticles;
-
         [Header("SFX")] 
         [SerializeField] private AudioSource buildingSfx;
-        [SerializeField] private AudioSource sfxAudioSource;
-        [SerializeField] private AudioClip placementBurstAudio;
 
         [Header("Animation")]
         [SerializeField] private float popDuration = 0.25f;
@@ -24,7 +19,6 @@ namespace Heroes.Game.Buildings
         private GameObject[] _constructionStages;
         private int _currentStage = -1;
         private BuildingState _currentState;
-        private bool _placementBurstPlayed;
 
         private void Awake()
         {
@@ -38,7 +32,6 @@ namespace Heroes.Game.Buildings
 
             ApplyState(model.State);
             ApplyStageCumulative(_currentStage);
-            TryPlayPlacementBurst(model.State);
         }
 
         public void Refresh(BuildingModel model)
@@ -59,18 +52,16 @@ namespace Heroes.Game.Buildings
                 return;
             }
 
-            if (model.State == BuildingState.UnderConstruction)
+            if (!buildingSfx.isPlaying)
             {
-                if (!buildingSfx.isPlaying)
-                {
-                    buildingSfx.Play();
-                }
+                buildingSfx.Play();
             }
 
             var newStage = GetConstructionStageIndex(model);
             if (newStage != _currentStage)
             {
                 ApplyStageCumulative(newStage);
+
                 if (newStage > _currentStage)
                 {
                     AnimateStage(newStage);
@@ -112,7 +103,6 @@ namespace Heroes.Game.Buildings
             if (stage < 0 || stage >= _constructionStages.Length)
             {
                 buildingSfx.Stop();
-                
                 return;
             }
 
@@ -130,7 +120,6 @@ namespace Heroes.Game.Buildings
         {
             var basePos = target.localPosition;
             var baseScale = target.localScale;
-
             var startPos = basePos + Vector3.up * popHeight;
 
             var scaleDuration = popDuration * 0.6f;
@@ -145,7 +134,6 @@ namespace Heroes.Game.Buildings
             {
                 time += Time.deltaTime;
                 var t = Mathf.Clamp01(time / scaleDuration);
-
                 var scaleT = t * t;
 
                 target.localScale = Vector3.LerpUnclamped(Vector3.zero, baseScale, scaleT);
@@ -161,7 +149,6 @@ namespace Heroes.Game.Buildings
             {
                 time += Time.deltaTime;
                 var t = Mathf.Clamp01(time / moveDuration);
-
                 var moveT = t * t * t;
 
                 target.localPosition = Vector3.LerpUnclamped(startPos, basePos, moveT);
@@ -171,28 +158,10 @@ namespace Heroes.Game.Buildings
 
             target.localPosition = basePos;
         }
+
         private int GetConstructionStageIndex(BuildingModel model)
         {
             return CalculateStageIndex(model.Health.Current, model.Health.Max, _constructionStages);
-        }
-
-        private void TryPlayPlacementBurst(BuildingState state)
-        {
-            if (_placementBurstPlayed || state != BuildingState.UnderConstruction)
-            {
-                return;
-            }
-
-            _placementBurstPlayed = true;
-            if (placementBurstParticles != null)
-            {
-                placementBurstParticles.Play();
-            }
-            
-            if (sfxAudioSource != null)
-            {
-                sfxAudioSource.PlayOneShot(placementBurstAudio);
-            }
         }
 
         private static int CalculateStageIndex(float value, float max, GameObject[] stages)
@@ -202,18 +171,7 @@ namespace Heroes.Game.Buildings
                 return 0;
             }
 
-            var normalized = value / max;
-            
-            if (normalized < 0f)
-            {
-                normalized = 0f;
-            }
-
-            if (normalized > 1f)
-            {
-                normalized = 1f;
-            }
-
+            var normalized = Mathf.Clamp01(value / max);
             return Mathf.RoundToInt(normalized * (stages.Length - 1));
         }
 
