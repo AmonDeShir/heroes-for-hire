@@ -5,6 +5,9 @@ import { Resources, Texture2D } from 'UnityEngine'
 import { useEffect, useEventfulState, useMemo, useState } from 'onejs-preact/hooks'
 import clsx from 'clsx'
 import System from 'System'
+import { DecorativeFrame } from '../components/decorative-frame'
+import { DecorativeFrameButton } from '../components/decorative-frame-button'
+import { ShopButton } from '../components/shop-button'
 
 type BuildingDTO = CS.Heroes.Presentation.UI.BuildingPanel.BuildingDTO;
 
@@ -56,10 +59,14 @@ export function BuildingPanel() {
 
           <div class='flex w-full h-full justify-center items-center'>
             {selectedBuildings.map(data => (
-              <div class={clsx("hover:text-red-500", selectedId == data.Id ? "text-blue-400" : "text-main")} key={data.Id} onClick={() => buildingPanelPresenter.SelectBuilding(data.Id)}>
-                {data.Name}
-                {data.Price}
-              </div>
+              <ShopButton 
+                key={data.Id}
+                name={data.Name}
+                price={data.Price} 
+                icon={Resources.Load(data.Icon) as Texture2D} 
+                active={selectedId == data.Id}
+                onClick={() => buildingPanelPresenter.SelectBuilding(data.Id)}
+              />
             ))}
           </div>
         </div>

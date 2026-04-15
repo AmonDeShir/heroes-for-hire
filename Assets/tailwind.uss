@@ -1,11 +1,59 @@
 .root .absolute {
     position: absolute
 }
+.root .relative {
+    position: relative
+}
+.root .inset-0 {
+    inset: 0px
+}
 .root .left-0 {
     left: 0px
 }
+.root .left-_lb_10px_rb_ {
+    left: 10px
+}
+.root .left-_lb_12px_rb_ {
+    left: 12px
+}
+.root .left-_lb_16px_rb_ {
+    left: 16px
+}
+.root .left-_lb_18px_rb_ {
+    left: 18px
+}
+.root .left-_lb_3px_rb_ {
+    left: 3px
+}
+.root .left-_lb_6px_rb_ {
+    left: 6px
+}
+.root .right-_lb_3px_rb_ {
+    right: 3px
+}
+.root .right-_lb_6px_rb_ {
+    right: 6px
+}
 .root .top-0 {
     top: 0px
+}
+.root .top-_lb_10px_rb_ {
+    top: 10px
+}
+.root .top-_lb_12px_rb_ {
+    top: 12px
+}
+.root .top-_lb_16px_rb_ {
+    top: 16px
+}
+.root .top-_lb_18px_rb_ {
+    top: 18px
+}
+.root .top-_lb_3px_rb_ {
+    top: 3px
+}
+.root .top-_lb_6px_rb_ {
+    top: 6px
 }
 .root .ml-_lb_2px_rb_ {
     margin-left: 2px
@@ -13,14 +61,20 @@
 .root .mr-_lb_2px_rb_ {
     margin-right: 2px
 }
+.root .mr-1 {
+    margin-right: 4px
+}
 .root .flex {
     display: flex
 }
 .root .h-7 {
     height: 28px
 }
-.root .h-_lb_133px_rb_ {
-    height: 133px
+.root .h-_lb_10px_rb_ {
+    height: 10px
+}
+.root .h-_lb_12px_rb_ {
+    height: 12px
 }
 .root .h-_lb_142px_rb_ {
     height: 142px
@@ -31,26 +85,65 @@
 .root .h-_lb_20px_rb_ {
     height: 20px
 }
+.root .h-_lb_21px_rb_ {
+    height: 21px
+}
 .root .h-_lb_23px_rb_ {
     height: 23px
+}
+.root .h-_lb_2px_rb_ {
+    height: 2px
+}
+.root .h-_lb_39px_rb_ {
+    height: 39px
+}
+.root .h-_lb_3px_rb_ {
+    height: 3px
+}
+.root .h-_lb_4px_rb_ {
+    height: 4px
 }
 .root .h-full {
     height: 100%
 }
+.root .h-_lb_101px_rb_ {
+    height: 101px
+}
 .root .w-7 {
     width: 28px
 }
-.root .w-_lb_133px_rb_ {
-    width: 133px
+.root .w-_lb_12px_rb_ {
+    width: 12px
+}
+.root .w-_lb_14px_rb_ {
+    width: 14px
+}
+.root .w-_lb_21px_rb_ {
+    width: 21px
+}
+.root .w-_lb_2px_rb_ {
+    width: 2px
 }
 .root .w-_lb_36px_rb_ {
     width: 36px
 }
+.root .w-_lb_39px_rb_ {
+    width: 39px
+}
+.root .w-_lb_4px_rb_ {
+    width: 4px
+}
 .root .w-_lb_850px_rb_ {
     width: 850px
 }
+.root .w-_lb_8px_rb_ {
+    width: 8px
+}
 .root .w-full {
     width: 100%
+}
+.root .w-_lb_78px_rb_ {
+    width: 78px
 }
 .root .flex-row {
     flex-direction: row
@@ -63,6 +156,9 @@
 }
 .root .items-center {
     align-items: center
+}
+.root .justify-start {
+    justify-content: flex-start
 }
 .root .justify-center {
     justify-content: center
@@ -82,14 +178,17 @@
 .root .border-2 {
     border-width: 2px
 }
-.root .border-b-0 {
-    border-bottom-width: 0px
-}
 .root .border-active {
     border-color: #00B6D7
 }
 .root .border-main {
     border-color: #6B0D05
+}
+.root .border-secondary {
+    border-color: #FDDB1D
+}
+.root .bg-_lb__n_6B0D05_rb_ {
+    background-color: #6B0D05
 }
 .root .bg-main {
     background-color: #6B0D05
@@ -99,6 +198,12 @@
 }
 .root .bg-tertiaryLight {
     background-color: #FFF7C6
+}
+.root .bg-active {
+    background-color: #00B6D7
+}
+.root .bg-secondary {
+    background-color: #FDDB1D
 }
 .root .bg-contain {
     background-size: contain
@@ -118,6 +223,22 @@
 .root .p-_lb_2px_rb_ {
     padding: 2px
 }
+.root .p-0 {
+    padding: 0px
+}
+.root .p-4 {
+    padding: 16px
+}
+.root .p-3 {
+    padding: 12px
+}
+.root .p-2 {
+    padding: 8px
+}
+.root .py-_lb_3px_rb_ {
+    padding-top: 3px;
+    padding-bottom: 3px
+}
 .root .pb-2 {
     padding-bottom: 8px
 }
@@ -126,6 +247,9 @@
 }
 .root .text-xs {
     font-size: 12px
+}
+.root .text-_lb_9px_rb_ {
+    font-size: 9px
 }
 .root .text-blue-400 {
     color: #60a5fa
@@ -136,15 +260,37 @@
 .root .text-secondary {
     color: #FDDB1D
 }
+.root .text-active {
+    color: #00B6D7
+}
+.root .text-textInverse {
+    color: #FFFFFF
+}
+.root .transition-colors {
+    transition-property: color, background-color, border-color;
+    transition-duration: 150ms
+}
 .root .duration-100 {
     transition-duration: 100ms
 }
 .root .ease-in-out {
     transition-timing-function: ease-in-out
 }
+.root .text-center {
+    -unity-text-align: middle-center
+}
+.root .inset-0 {
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px
+}
 .root .hover_c_bg-tertiaryLight:hover {
     background-color: #FFF7C6
 }
 .root .hover_c_text-red-500:hover {
     color: #ef4444
+}
+.root .group:hover .group-hover_c_bg-tertiaryLight {
+    background-color: #FFF7C6
 }

@@ -35,3 +35,15 @@ declare namespace CS.System {
 }
 
 declare const buildingPanelPresenter: CS.Heroes.Presentation.UI.BuildingPanel.BuildingPanelPresenter;
+
+interface MaskElement extends JSX.VisualElement {
+  masksrc?: string;
+}
+
+const MaskElement: typeof OneJS.Dom.MaskElement;
+
+declare namespace JSX {
+  interface IntrinsicElements {
+    maskelement: MaskElement;
+  }
+}
