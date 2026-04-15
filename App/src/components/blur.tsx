@@ -1,9 +1,7 @@
 import { h } from "onejs-preact";
 import { useEffect, useRef, useState } from "onejs-preact/hooks";
-import { RenderTexture, Resources, Screen } from "UnityEngine";
-import { Background, BackgroundRepeat, Repeat, StyleBackground, StyleBackgroundRepeat } from "UnityEngine/UIElements";
-
-const SCREEN_TEXTURE = Resources.Load("CameraTexture") as RenderTexture;
+import { Screen } from "UnityEngine";
+import { getVisualElement, useRenderTexture } from "../hooks/use-render-texture";
 
 type Props = { 
   children?: any, 
@@ -13,7 +11,7 @@ type Props = {
 };
 
 export function Blur({ children, blur = 5, color = "white", opacity = 0.1 }: Props) {
-  const imageRef = useRef<HTMLElement>(null);
+  const imageRef = useRenderTexture("CameraTexture");
   const parentRef = useRef<HTMLElement>(null);
   const [pos, setPos] = useState({w: 0, h: 0, l: 0, t: 0});
 
@@ -21,12 +19,9 @@ export function Blur({ children, blur = 5, color = "white", opacity = 0.1 }: Pro
     const image = getVisualElement(imageRef.current);
     const parentImage = getVisualElement(parentRef.current);
 
-    if (!image || !SCREEN_TEXTURE || !parentImage) {
+    if (!image || !parentImage) {
       return;
     }
-
-    image.style.backgroundImage  = new StyleBackground(Background.FromRenderTexture(SCREEN_TEXTURE));
-    image.style.backgroundRepeat = new StyleBackgroundRepeat(new BackgroundRepeat(Repeat.NoRepeat, Repeat.NoRepeat));
 
     const bound = parentImage.worldBound;
 
@@ -57,12 +52,4 @@ export function Blur({ children, blur = 5, color = "white", opacity = 0.1 }: Pro
       {children}
     </div>
   );
-}
-
-function getVisualElement(element: any): (VisualElement & { scaledPixelsPerPoint: number }) {
-  if (!element) {
-    return
-  }
-
-  return element.ve ?? element.__ve;
 }

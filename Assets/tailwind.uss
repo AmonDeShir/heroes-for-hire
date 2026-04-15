@@ -61,14 +61,14 @@
 .root .mr-_lb_2px_rb_ {
     margin-right: 2px
 }
-.root .mr-1 {
-    margin-right: 4px
-}
 .root .flex {
     display: flex
 }
 .root .h-7 {
     height: 28px
+}
+.root .h-_lb_101px_rb_ {
+    height: 101px
 }
 .root .h-_lb_10px_rb_ {
     height: 10px
@@ -106,9 +106,6 @@
 .root .h-full {
     height: 100%
 }
-.root .h-_lb_101px_rb_ {
-    height: 101px
-}
 .root .w-7 {
     width: 28px
 }
@@ -133,6 +130,9 @@
 .root .w-_lb_4px_rb_ {
     width: 4px
 }
+.root .w-_lb_78px_rb_ {
+    width: 78px
+}
 .root .w-_lb_850px_rb_ {
     width: 850px
 }
@@ -141,9 +141,6 @@
 }
 .root .w-full {
     width: 100%
-}
-.root .w-_lb_78px_rb_ {
-    width: 78px
 }
 .root .flex-row {
     flex-direction: row
@@ -156,9 +153,6 @@
 }
 .root .items-center {
     align-items: center
-}
-.root .justify-start {
-    justify-content: flex-start
 }
 .root .justify-center {
     justify-content: center
@@ -187,11 +181,14 @@
 .root .border-secondary {
     border-color: #FDDB1D
 }
-.root .bg-_lb__n_6B0D05_rb_ {
-    background-color: #6B0D05
+.root .bg-active {
+    background-color: #00B6D7
 }
 .root .bg-main {
     background-color: #6B0D05
+}
+.root .bg-secondary {
+    background-color: #FDDB1D
 }
 .root .bg-tertiary {
     background-color: #E8E0B2
@@ -199,14 +196,11 @@
 .root .bg-tertiaryLight {
     background-color: #FFF7C6
 }
-.root .bg-active {
-    background-color: #00B6D7
-}
-.root .bg-secondary {
-    background-color: #FDDB1D
-}
 .root .bg-contain {
     background-size: contain
+}
+.root .bg-cover {
+    background-size: cover
 }
 .root .bg-center {
     background-position: center
@@ -220,20 +214,11 @@
 .root .p-1 {
     padding: 4px
 }
-.root .p-_lb_2px_rb_ {
-    padding: 2px
-}
-.root .p-0 {
-    padding: 0px
-}
-.root .p-4 {
-    padding: 16px
-}
-.root .p-3 {
-    padding: 12px
-}
 .root .p-2 {
     padding: 8px
+}
+.root .p-_lb_2px_rb_ {
+    padding: 2px
 }
 .root .py-_lb_3px_rb_ {
     padding-top: 3px;
@@ -242,26 +227,20 @@
 .root .pb-2 {
     padding-bottom: 8px
 }
+.root .text-_lb_9px_rb_ {
+    font-size: 9px
+}
 .root .text-sm {
     font-size: 14px
 }
 .root .text-xs {
     font-size: 12px
 }
-.root .text-_lb_9px_rb_ {
-    font-size: 9px
-}
-.root .text-blue-400 {
-    color: #60a5fa
-}
 .root .text-main {
     color: #6B0D05
 }
 .root .text-secondary {
     color: #FDDB1D
-}
-.root .text-active {
-    color: #00B6D7
 }
 .root .text-textInverse {
     color: #FFFFFF
@@ -287,9 +266,6 @@
 }
 .root .hover_c_bg-tertiaryLight:hover {
     background-color: #FFF7C6
-}
-.root .hover_c_text-red-500:hover {
-    color: #ef4444
 }
 .root .group:hover .group-hover_c_bg-tertiaryLight {
     background-color: #FFF7C6

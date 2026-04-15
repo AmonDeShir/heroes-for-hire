@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7406359367697769535}
   - component: {fileID: 7213176722757936503}
   - component: {fileID: 7213530939670821045}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PlacementPuff
   m_TagString: Untagged
   m_Icon: {fileID: 0}
