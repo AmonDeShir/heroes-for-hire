@@ -8,7 +8,7 @@ const mask = Resources.Load("FrameMask") as Material;
 type Props = {
   size?: number,
   mask?: string,
-  color?: "main" | "secondary" | "active",
+  color?: "main" | "secondary" | "active" | "disabled",
   children?: ComponentChildren,
 }
 
@@ -34,7 +34,7 @@ type CornerProps = {
   bottom?: number,
   rotate?: string,
   size?: number,
-  color: "main" | "secondary" | "active",
+  color: "main" | "secondary" | "active" | "disabled",
 }
 
 function Corner({top, left, right, bottom, rotate, size = 78, color}: CornerProps) {
@@ -43,6 +43,7 @@ function Corner({top, left, right, bottom, rotate, size = 78, color}: CornerProp
     color == "main" && "bg-main",
     color == "secondary" && "bg-secondary",
     color == "active" && "bg-active",
+    color == "disabled" && "bg-disabled",
   );
 
   return (

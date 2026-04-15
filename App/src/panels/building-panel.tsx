@@ -1,12 +1,9 @@
-import { h, render } from 'preact'
+import { h } from 'preact'
 import { Panel } from '../components/panel'
 import { IconButton } from '../components/icon-button'
 import { Resources, Texture2D } from 'UnityEngine'
-import { useEffect, useEventfulState, useMemo, useState } from 'onejs-preact/hooks'
-import clsx from 'clsx'
+import { useEventfulState, useMemo, useState } from 'onejs-preact/hooks'
 import System from 'System'
-import { DecorativeFrame } from '../components/decorative-frame'
-import { DecorativeFrameButton } from '../components/decorative-frame-button'
 import { ShopButton } from '../components/shop-button'
 
 type BuildingDTO = CS.Heroes.Presentation.UI.BuildingPanel.BuildingDTO;
@@ -23,6 +20,7 @@ export function BuildingPanel() {
 
   const [buildings] = useEventfulState(buildingPanelPresenter, "Buildings");
   const [selectedId] = useEventfulState(buildingPanelPresenter, "Selected");
+  const [gold] = useEventfulState(kingdomResourcesPanelPresenter, "Gold");
 
   const selectedBuildings = useMemo(() => toJsArray(buildings).filter(b => b.Category == selectedCategory) ?? [], [selectedCategory, buildings]);
 
@@ -41,10 +39,6 @@ export function BuildingPanel() {
     
     return arr;
   }
-
-  useEffect(() => {
-    console.log("Selected building id:", selectedId);
-  }, [selectedId]);
 
   return (
     <div class="w-[850px]">
@@ -65,6 +59,7 @@ export function BuildingPanel() {
                 price={data.Price} 
                 icon={Resources.Load(data.Icon) as Texture2D} 
                 active={selectedId == data.Id}
+                disabled={data.Price > gold}
                 onClick={() => buildingPanelPresenter.SelectBuilding(data.Id)}
               />
             ))}

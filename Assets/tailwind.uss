@@ -7,14 +7,11 @@
 .root .inset-0 {
     inset: 0px
 }
-.root .-left-0 {
-    left: -0px
-}
-.root .-left-_lb_133px_rb_ {
-    left: -133px
-}
 .root .left-0 {
     left: 0px
+}
+.root .left-_lb_-100px_rb_ {
+    left: -100px
 }
 .root .left-_lb_10px_rb_ {
     left: 10px
@@ -60,27 +57,6 @@
 }
 .root .top-_lb_6px_rb_ {
     top: 6px
-}
-.root .left-20 {
-    left: 80px
-}
-.root .-left-20 {
-    left: -80px
-}
-.root .left-_lb_-133px_rb_ {
-    left: -133px
-}
-.root .right-_lb_-133px_rb_ {
-    right: -133px
-}
-.root .right-_lb_0px_rb_ {
-    right: 0px
-}
-.root .right-_lb_-100px_rb_ {
-    right: -100px
-}
-.root .left-_lb_-100px_rb_ {
-    left: -100px
 }
 .root .ml-_lb_2px_rb_ {
     margin-left: 2px
@@ -148,6 +124,9 @@
 .root .w-7 {
     width: 28px
 }
+.root .w-_lb_100px_rb_ {
+    width: 100px
+}
 .root .w-_lb_106px_rb_ {
     width: 106px
 }
@@ -190,12 +169,6 @@
 .root .w-full {
     width: 100%
 }
-.root .w-_lb_146px_rb_ {
-    width: 146px
-}
-.root .w-_lb_100px_rb_ {
-    width: 100px
-}
 .root .flex-shrink-0 {
     flex-shrink: 0
 }
@@ -207,9 +180,6 @@
 }
 .root .items-start {
     align-items: flex-start
-}
-.root .items-end {
-    align-items: flex-end
 }
 .root .items-center {
     align-items: center
@@ -247,6 +217,9 @@
 .root .bg-active {
     background-color: #00B6D7
 }
+.root .bg-disabled {
+    background-color: #222222
+}
 .root .bg-main {
     background-color: #6B0D05
 }
@@ -255,6 +228,9 @@
 }
 .root .bg-tertiary {
     background-color: #E8E0B2
+}
+.root .bg-tertiaryDisabled {
+    background-color: #C9C19A
 }
 .root .bg-tertiaryLight {
     background-color: #FFF7C6
@@ -299,6 +275,9 @@
 .root .text-xs {
     font-size: 12px
 }
+.root .text-disabled {
+    color: #222222
+}
 .root .text-main {
     color: #6B0D05
 }
@@ -307,6 +286,9 @@
 }
 .root .text-textInverse {
     color: #FFFFFF
+}
+.root .opacity-60 {
+    opacity: 0.6
 }
 .root .transition-colors {
     transition-property: color, background-color, border-color;
