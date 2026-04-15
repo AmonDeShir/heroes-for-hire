@@ -501,6 +501,7 @@ MonoBehaviour:
   placementController: {fileID: 5271024}
   buildingCursor: {fileID: 831628566}
   buildingPanelPresenter: {fileID: 1421007577}
+  kingdomResourcesPresenter: {fileID: 1421007578}
   startGold: 1000
 --- !u!1 &410087039
 GameObject:
@@ -1554,6 +1555,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1421007576}
   - component: {fileID: 1421007577}
+  - component: {fileID: 1421007578}
   m_Layer: 0
   m_Name: Bridge
   m_TagString: Untagged
@@ -1588,6 +1590,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a2a3b7f8a129c64888b49ae8e501d3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Game::Heroes.Presentation.UI.BuildingPanel.BuildingPanelPresenter
+--- !u!114 &1421007578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1421007575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76004286d4584226bdb7a8a535bf1872, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game::Heroes.Presentation.UI.ResourcesPanel.KingdomResourcesPresenter
 --- !u!1001 &1478644966
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2147,7 +2161,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8930752045537606291, guid: f99b6aec6fc021f4c9572906776c6555, type: 3}
       propertyPath: globalObjects.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8930752045537606291, guid: f99b6aec6fc021f4c9572906776c6555, type: 3}
       propertyPath: 'styleSheets.Array.data[1]'
@@ -2162,8 +2176,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1421007577}
     - target: {fileID: 8930752045537606291, guid: f99b6aec6fc021f4c9572906776c6555, type: 3}
+      propertyPath: globalObjects.Array.data[1].obj
+      value: 
+      objectReference: {fileID: 1421007578}
+    - target: {fileID: 8930752045537606291, guid: f99b6aec6fc021f4c9572906776c6555, type: 3}
       propertyPath: globalObjects.Array.data[0].name
       value: buildingPanelPresenter
+      objectReference: {fileID: 0}
+    - target: {fileID: 8930752045537606291, guid: f99b6aec6fc021f4c9572906776c6555, type: 3}
+      propertyPath: globalObjects.Array.data[1].name
+      value: kingdomResourcesPanelPresenter
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

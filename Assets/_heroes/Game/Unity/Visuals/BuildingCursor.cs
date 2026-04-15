@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Heroes.Content.Buildings;
 using Heroes.Game.Abstractions;
 using UnityEngine;
@@ -59,7 +60,7 @@ namespace Heroes.Game.Buildings
         {
             selectionService.OnSelectedChanged -= HandleSelectionChange;
         }
-
+        
         private void Update()
         {
             if (!HasSelection())

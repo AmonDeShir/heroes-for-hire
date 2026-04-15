@@ -22,6 +22,8 @@ namespace Heroes.Game.Runtime
         public BuildingPlacementSelectionService SelectionService { get; private set; }
         private BuildingCatalog _buildingCatalog;
 
+        private bool inBuildingState = false;
+
         [Inject]
         public void Construct(BuildingPlacementService placementService, BuildingPlacementSelectionService selectionService, BuildingCatalog buildingCatalog)
         {
@@ -57,6 +59,11 @@ namespace Heroes.Game.Runtime
 
         private async Awaitable HandlePlacement()
         {
+            if (inBuildingState)
+            {
+                return;   
+            }
+
             if (Mouse.current == null || !Mouse.current.leftButton.wasPressedThisFrame)
             {
                 return;
@@ -85,13 +92,17 @@ namespace Heroes.Game.Runtime
 
             if (PlacementService.CanBuild(definition))
             {
+                inBuildingState = true;
                 SelectionService.Clear();
+                buildingCursor.gameObject.SetActive(false);
                 
                 PlayPlacementEffects(placement.BuildingPosition);
                 await Awaitable.WaitForSecondsAsync(0.5f);
                 terrainHelper.PrepareAreaForBuilding(placement);
                 
                 PlacementService.TryPlace(definition, placement.BuildingPosition, Quaternion.identity, out _);
+                inBuildingState = false;
+                buildingCursor.gameObject.SetActive(true);
             }
         }
         

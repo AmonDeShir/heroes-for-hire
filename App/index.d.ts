@@ -26,6 +26,22 @@ declare namespace CS.Heroes.Presentation.UI.BuildingPanel {
   }
 }
 
+declare namespace CS.Heroes.Presentation.UI.ResourcesPanel {
+  class KingdomResourcesPresenter {
+    public get Gold(): number;
+    public set Gold(value: number);
+    public get Population(): number;
+    public set Population(value: number);
+
+    public add_OnGoldChanged ($value: System.Action$1<number>) : void
+    public remove_OnGoldChanged ($value: System.Action$1<number>) : void
+    public add_OnPopulationChanged ($value: System.Action$1<number>) : void
+    public remove_OnPopulationChanged ($value: System.Action$1<number>) : void
+
+    public constructor ()
+  }
+}
+
 declare namespace CS.System {
   interface Array$1<T> extends CS.System.Array {
     get_Item(index: number): T;
@@ -35,6 +51,7 @@ declare namespace CS.System {
 }
 
 declare const buildingPanelPresenter: CS.Heroes.Presentation.UI.BuildingPanel.BuildingPanelPresenter;
+declare const kingdomResourcesPanelPresenter: CS.Heroes.Presentation.UI.ResourcesPanel.KingdomResourcesPresenter;
 
 interface MaskElement extends JSX.VisualElement {
   masksrc?: string;

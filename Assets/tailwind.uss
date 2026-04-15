@@ -7,6 +7,12 @@
 .root .inset-0 {
     inset: 0px
 }
+.root .-left-0 {
+    left: -0px
+}
+.root .-left-_lb_133px_rb_ {
+    left: -133px
+}
 .root .left-0 {
     left: 0px
 }
@@ -55,6 +61,27 @@
 .root .top-_lb_6px_rb_ {
     top: 6px
 }
+.root .left-20 {
+    left: 80px
+}
+.root .-left-20 {
+    left: -80px
+}
+.root .left-_lb_-133px_rb_ {
+    left: -133px
+}
+.root .right-_lb_-133px_rb_ {
+    right: -133px
+}
+.root .right-_lb_0px_rb_ {
+    right: 0px
+}
+.root .right-_lb_-100px_rb_ {
+    right: -100px
+}
+.root .left-_lb_-100px_rb_ {
+    left: -100px
+}
 .root .ml-_lb_2px_rb_ {
     margin-left: 2px
 }
@@ -76,11 +103,17 @@
 .root .h-_lb_12px_rb_ {
     height: 12px
 }
+.root .h-_lb_133px_rb_ {
+    height: 133px
+}
 .root .h-_lb_142px_rb_ {
     height: 142px
 }
 .root .h-_lb_16px_rb_ {
     height: 16px
+}
+.root .h-_lb_18px_rb_ {
+    height: 18px
 }
 .root .h-_lb_20px_rb_ {
     height: 20px
@@ -91,8 +124,14 @@
 .root .h-_lb_23px_rb_ {
     height: 23px
 }
+.root .h-_lb_27px_rb_ {
+    height: 27px
+}
 .root .h-_lb_2px_rb_ {
     height: 2px
+}
+.root .h-_lb_31px_rb_ {
+    height: 31px
 }
 .root .h-_lb_39px_rb_ {
     height: 39px
@@ -109,17 +148,26 @@
 .root .w-7 {
     width: 28px
 }
+.root .w-_lb_106px_rb_ {
+    width: 106px
+}
 .root .w-_lb_12px_rb_ {
     width: 12px
 }
 .root .w-_lb_14px_rb_ {
     width: 14px
 }
+.root .w-_lb_18px_rb_ {
+    width: 18px
+}
 .root .w-_lb_21px_rb_ {
     width: 21px
 }
 .root .w-_lb_2px_rb_ {
     width: 2px
+}
+.root .w-_lb_31px_rb_ {
+    width: 31px
 }
 .root .w-_lb_36px_rb_ {
     width: 36px
@@ -142,6 +190,15 @@
 .root .w-full {
     width: 100%
 }
+.root .w-_lb_146px_rb_ {
+    width: 146px
+}
+.root .w-_lb_100px_rb_ {
+    width: 100px
+}
+.root .flex-shrink-0 {
+    flex-shrink: 0
+}
 .root .flex-row {
     flex-direction: row
 }
@@ -150,6 +207,9 @@
 }
 .root .items-start {
     align-items: flex-start
+}
+.root .items-end {
+    align-items: flex-end
 }
 .root .items-center {
     align-items: center
@@ -171,6 +231,9 @@
 }
 .root .border-2 {
     border-width: 2px
+}
+.root .border-r-2 {
+    border-right-width: 2px
 }
 .root .border-active {
     border-color: #00B6D7
