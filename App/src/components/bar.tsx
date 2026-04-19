@@ -1,5 +1,7 @@
 import { h } from 'preact'
 import { Detail } from './detail'
+import { Icon } from './icon'
+import { Resources } from 'UnityEngine'
 
 type Props = {
   details: number,

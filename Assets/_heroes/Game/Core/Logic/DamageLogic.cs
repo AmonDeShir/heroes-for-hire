@@ -1,3 +1,6 @@
+using EventBus;
+using Heroes.Game.Core.Events;
+
 namespace Heroes.Game.Core.Health
 {
     public sealed class DamageLogic
@@ -21,8 +24,16 @@ namespace Heroes.Game.Core.Health
                 return;
             }
 
+            var prev =  _health.Current;
             var next = _health.Current - amount;
             _health.SetCurrent(next);
+            
+            EventBus<HealthChangedEvent>.Invoke(new HealthChangedEvent
+            {
+                Id = _health.Id,
+                NewValue = next,
+                OldValue = prev,
+            });
         }
     }
 }

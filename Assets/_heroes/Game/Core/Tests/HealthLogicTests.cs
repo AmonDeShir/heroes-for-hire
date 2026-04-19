@@ -8,7 +8,7 @@ namespace Heroes.Tests.Core
         [Test]
         public void DamageLogic_ReducesHealth()
         {
-            var health = new HealthModel(100f, 50f);
+            var health = new HealthModel("0", 100f, 50f);
             var damage = new DamageLogic(health);
 
             damage.Apply(15f);
@@ -19,7 +19,7 @@ namespace Heroes.Tests.Core
         [Test]
         public void HealLogic_IncreasesHealth()
         {
-            var health = new HealthModel(100f, 20f);
+            var health = new HealthModel("0", 100f, 20f);
             var heal = new HealLogic(health);
 
             heal.Apply(25f);

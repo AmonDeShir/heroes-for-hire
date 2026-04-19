@@ -42,6 +42,38 @@ declare namespace CS.Heroes.Presentation.UI.ResourcesPanel {
   }
 }
 
+declare namespace CS.Heroes.Presentation.UI.SelectionPanel {
+  class SelectionDTO extends CS.System.Object {
+    protected [__keep_incompatibility]: never;
+    public get Id(): string;
+    public get Name(): string;
+    public get Description(): string;
+    public get Icon(): string;
+  }
+
+  class DamageableSelectionDTO extends CS.System.Object {
+    protected [__keep_incompatibility]: never;
+    public get CurrentHealth(): number;
+    public get MaxHealth(): number;
+  }
+
+  class BuildingSelectionDTO extends CS.System.Object {
+    protected [__keep_incompatibility]: never;
+    public get IsComplete(): boolean;
+  }
+
+  class SelectionPanelPresenter {
+    public get Selected(): null | SelectionDTO;
+    public get SelectedDamageable(): null | DamageableSelectionDTO;
+    public get SelectedBuilding(): null | BuildingSelectionDTO;
+
+    public add_OnSelectedChanged ($value: System.Action$1<SelectionDTO>) : void
+    public remove_OnSelectedChanged ($value: System.Action$1<SelectionDTO>) : void
+
+    public constructor ()
+  }
+}
+
 declare namespace CS.System {
   interface Array$1<T> extends CS.System.Array {
     get_Item(index: number): T;
@@ -52,6 +84,7 @@ declare namespace CS.System {
 
 declare const buildingPanelPresenter: CS.Heroes.Presentation.UI.BuildingPanel.BuildingPanelPresenter;
 declare const kingdomResourcesPanelPresenter: CS.Heroes.Presentation.UI.ResourcesPanel.KingdomResourcesPresenter;
+declare const selectionPanelPresenter: CS.Heroes.Presentation.UI.SelectionPanel.SelectionPanelPresenter;
 
 interface MaskElement extends JSX.VisualElement {
   masksrc?: string;

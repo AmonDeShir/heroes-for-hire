@@ -2,12 +2,13 @@ using EventBus;
 using Heroes.Content.Buildings;
 using Heroes.Game.Abstractions;
 using Heroes.Game.Core.Events;
+using Heroes.Presentation.UI.BuildingPanel;
 using UnityEngine;
 using Registry;
 
 namespace Heroes.Game.Buildings
 {
-    public class BuildingFacade : MonoBehaviour, IDamageable
+    public class BuildingFacade : MonoBehaviour, IDamageable, ISelectable
     {
         [SerializeField] private BuildingVisuals constructionVisuals;
         [SerializeField] private BuildingDestructionVisuals destructionVisuals;
@@ -15,6 +16,14 @@ namespace Heroes.Game.Buildings
         public BuildingDefinition Definition { get; private set; }
         public BuildingModel Model { get; private set; }
 
+        public string Id => Model.InstanceId;
+        public string Name => Definition.DisplayName;
+        public string Description => Definition.Description;
+        public string Icon => Definition.IconPath;
+
+        public float Health => Model.Health.Current;
+        public float MaxHealth => Model.MaxHp;
+        
         private BuildingConstructionLogic _constructionLogic;
         private Core.Health.DamageLogic _damageLogic;
 
@@ -35,6 +44,11 @@ namespace Heroes.Game.Buildings
 
         private void Update()
         {
+            if (Model == null)
+            {
+                return;
+            }
+
             var previousState = Model.State;
 
             _constructionLogic.Tick(Time.deltaTime);

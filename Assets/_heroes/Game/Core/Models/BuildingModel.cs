@@ -9,14 +9,15 @@ namespace Heroes.Game.Buildings
         public float MaxHp => Health.Max;
         public int ConstructionStage { get; private set; }
         public BuildingState State { get; private set; }
-        private bool _wasCompleted;
+        public bool IsCompleted { get; private set; }
+
 
         public BuildingModel(string instanceId, string definitionId, float maxHp, float startHp)
         {
             InstanceId = instanceId;
             DefinitionId = definitionId;
 
-            Health = new Core.Health.HealthModel(maxHp, startHp);
+            Health = new Core.Health.HealthModel(InstanceId, maxHp, startHp);
             ConstructionStage = 0;
             State = BuildingState.UnderConstruction;
         }
@@ -35,11 +36,11 @@ namespace Heroes.Game.Buildings
             else if (max > 0f && hp >= max)
             {
                 State = BuildingState.Completed;
-                _wasCompleted = true;
+                IsCompleted = true;
             }
             else
             {
-                State = _wasCompleted ? BuildingState.Damaged : BuildingState.UnderConstruction;
+                State = IsCompleted ? BuildingState.Damaged : BuildingState.UnderConstruction;
             }
         }
 

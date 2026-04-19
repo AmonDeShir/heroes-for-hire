@@ -12,18 +12,18 @@ export function useAnimateNumber(value: number) {
     const animate = () => {
       setAnimatedValue((prev) => {
         const target = targetRef.current;
-
         const diff = target - prev;
+
+        if (Math.abs(diff) < 0.5) {
+          return target;
+        }
+
         const speed = Math.min(Math.abs(diff) * 0.15, 20);
         const next = prev + Math.sign(diff) * speed;
 
-        if (Math.abs(diff) < 0.5) {
-          return Math.floor(target);
-        }
-        
         frame = requestAnimationFrame(animate);
         
-        return Math.floor(next);
+        return next;
       });
     };
 

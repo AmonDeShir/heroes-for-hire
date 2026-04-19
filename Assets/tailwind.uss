@@ -58,14 +58,30 @@
 .root .top-_lb_6px_rb_ {
     top: 6px
 }
+.root .my-auto {
+    margin-top: auto;
+    margin-bottom: auto
+}
+.root .ml-4 {
+    margin-left: 16px
+}
 .root .ml-_lb_2px_rb_ {
     margin-left: 2px
+}
+.root .mr-4 {
+    margin-right: 16px
 }
 .root .mr-_lb_2px_rb_ {
     margin-right: 2px
 }
+.root .ml-2 {
+    margin-left: 8px
+}
 .root .flex {
     display: flex
+}
+.root .h-5 {
+    height: 20px
 }
 .root .h-7 {
     height: 28px
@@ -118,8 +134,17 @@
 .root .h-_lb_4px_rb_ {
     height: 4px
 }
+.root .h-_lb_70px_rb_ {
+    height: 70px
+}
 .root .h-full {
     height: 100%
+}
+.root .h-max {
+    height: max-content
+}
+.root .w-0_d_5 {
+    width: 2px
 }
 .root .w-7 {
     width: 28px
@@ -169,8 +194,20 @@
 .root .w-full {
     width: 100%
 }
+.root .w-_lb_148px_rb_ {
+    width: 148px
+}
+.root .flex-1 {
+    flex: 1 1 0%
+}
+.root .flex-auto {
+    flex: 1 1 auto
+}
 .root .flex-shrink-0 {
     flex-shrink: 0
+}
+.root .flex-grow {
+    flex-grow: 1
 }
 .root .flex-row {
     flex-direction: row
@@ -183,6 +220,9 @@
 }
 .root .items-center {
     align-items: center
+}
+.root .justify-start {
+    justify-content: flex-start
 }
 .root .justify-center {
     justify-content: center
@@ -204,6 +244,9 @@
 }
 .root .border-r-2 {
     border-right-width: 2px
+}
+.root .border-l-0 {
+    border-left-width: 0px
 }
 .root .border-active {
     border-color: #00B6D7
@@ -234,6 +277,9 @@
 }
 .root .bg-tertiaryLight {
     background-color: #FFF7C6
+}
+.root .bg-mainDark {
+    background-color: #450803
 }
 .root .bg-contain {
     background-size: contain
@@ -274,6 +320,9 @@
 }
 .root .text-xs {
     font-size: 12px
+}
+.root .text-_lb_10px_rb_ {
+    font-size: 10px
 }
 .root .text-disabled {
     color: #222222

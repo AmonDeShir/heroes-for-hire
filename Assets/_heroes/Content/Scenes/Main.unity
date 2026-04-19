@@ -128,7 +128,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5271023}
-  - component: {fileID: 5271024}
   - component: {fileID: 5271025}
   m_Layer: 0
   m_Name: ---Scene---
@@ -154,26 +153,6 @@ Transform:
   - {fileID: 1522948156}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5271024
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5271022}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9f72abd2fca5e54a9821dae01faa3aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Game::Heroes.Game.Runtime.BuildingPlacementController
-  worldCamera: {fileID: 951727806}
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 64
-  terrainHelper: {fileID: 1522948159}
-  buildingCursor: {fileID: 831628566}
-  placementBurstPrefab: {fileID: 7213176722757936503, guid: 8c8f2ff3c95a6ae4fb43d8a33a947bd7, type: 3}
-  placementAudio: {fileID: 5271025}
 --- !u!82 &5271025
 AudioSource:
   m_ObjectHideFlags: 0
@@ -498,10 +477,12 @@ MonoBehaviour:
   autoRun: 1
   autoInjectGameObjects: []
   buildingCatalog: {fileID: 11400000, guid: 6ea31b90aea8b1d47947b3fbe8bb2e5c, type: 2}
-  placementController: {fileID: 5271024}
+  placementController: {fileID: 526373016}
+  selectionController: {fileID: 954487015}
   buildingCursor: {fileID: 831628566}
   buildingPanelPresenter: {fileID: 1421007577}
   kingdomResourcesPresenter: {fileID: 1421007578}
+  selectionPanelPresenter: {fileID: 1421007579}
   startGold: 1000
 --- !u!1 &410087039
 GameObject:
@@ -663,6 +644,58 @@ Transform:
   - {fileID: 410087041}
   - {fileID: 12197269}
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &526373015
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 526373017}
+  - component: {fileID: 526373016}
+  m_Layer: 0
+  m_Name: Building Placement Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &526373016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 526373015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9f72abd2fca5e54a9821dae01faa3aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game::Heroes.Game.Runtime.BuildingPlacementController
+  worldCamera: {fileID: 951727806}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 64
+  terrainHelper: {fileID: 1522948159}
+  buildingCursor: {fileID: 831628566}
+  placementBurstPrefab: {fileID: 7213176722757936503, guid: 8c8f2ff3c95a6ae4fb43d8a33a947bd7, type: 3}
+  placementAudio: {fileID: 5271025}
+--- !u!4 &526373017
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 526373015}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1064527407}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &530569637
 GameObject:
@@ -1540,6 +1573,84 @@ Camera:
   m_CorrespondingSourceObject: {fileID: 7645114331201778905, guid: 91f977ea227a9da45b0920057cd51ea3, type: 3}
   m_PrefabInstance: {fileID: 951727804}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &954487013
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 954487014}
+  - component: {fileID: 954487015}
+  m_Layer: 0
+  m_Name: Selection Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &954487014
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 954487013}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1064527407}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &954487015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 954487013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 933ee4820b5046a9808c55b1905e05ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game::Heroes.Game.Runtime.SelectionController
+  worldCamera: {fileID: 951727806}
+--- !u!1 &1064527406
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1064527407}
+  m_Layer: 0
+  m_Name: ---Controllers---
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1064527407
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1064527406}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 526373017}
+  - {fileID: 954487014}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1364795524 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2716895824287226475, guid: 91f977ea227a9da45b0920057cd51ea3, type: 3}
@@ -1556,6 +1667,7 @@ GameObject:
   - component: {fileID: 1421007576}
   - component: {fileID: 1421007577}
   - component: {fileID: 1421007578}
+  - component: {fileID: 1421007579}
   m_Layer: 0
   m_Name: Bridge
   m_TagString: Untagged
@@ -1602,6 +1714,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76004286d4584226bdb7a8a535bf1872, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Game::Heroes.Presentation.UI.ResourcesPanel.KingdomResourcesPresenter
+--- !u!114 &1421007579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1421007575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8d3a6e2a11e4d3fb6178ab34b2856e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game::Heroes.Presentation.UI.BuildingPanel.SelectionPanelPresenter
 --- !u!1001 &1478644966
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2115,6 +2239,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ScriptEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 2637249758932584858, guid: f99b6aec6fc021f4c9572906776c6555, type: 3}
+      propertyPath: clearGameObjects
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5391669799819843152, guid: f99b6aec6fc021f4c9572906776c6555, type: 3}
       propertyPath: m_LocalPosition.x
       value: 34.123512
@@ -2161,7 +2289,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8930752045537606291, guid: f99b6aec6fc021f4c9572906776c6555, type: 3}
       propertyPath: globalObjects.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8930752045537606291, guid: f99b6aec6fc021f4c9572906776c6555, type: 3}
       propertyPath: 'styleSheets.Array.data[1]'
@@ -2169,6 +2297,10 @@ PrefabInstance:
       objectReference: {fileID: 7433441132597879392, guid: c16f1b0fe8693314a812baedcb07fc7b, type: 3}
     - target: {fileID: 8930752045537606291, guid: f99b6aec6fc021f4c9572906776c6555, type: 3}
       propertyPath: 'styleSheets.Array.data[2]'
+      value: 
+      objectReference: {fileID: 7433441132597879392, guid: 85d685e5becca034ca605ca8f23c0bb9, type: 3}
+    - target: {fileID: 8930752045537606291, guid: f99b6aec6fc021f4c9572906776c6555, type: 3}
+      propertyPath: 'styleSheets.Array.data[3]'
       value: 
       objectReference: {fileID: 7433441132597879392, guid: 85d685e5becca034ca605ca8f23c0bb9, type: 3}
     - target: {fileID: 8930752045537606291, guid: f99b6aec6fc021f4c9572906776c6555, type: 3}
@@ -2180,12 +2312,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1421007578}
     - target: {fileID: 8930752045537606291, guid: f99b6aec6fc021f4c9572906776c6555, type: 3}
+      propertyPath: globalObjects.Array.data[2].obj
+      value: 
+      objectReference: {fileID: 1421007579}
+    - target: {fileID: 8930752045537606291, guid: f99b6aec6fc021f4c9572906776c6555, type: 3}
       propertyPath: globalObjects.Array.data[0].name
       value: buildingPanelPresenter
       objectReference: {fileID: 0}
     - target: {fileID: 8930752045537606291, guid: f99b6aec6fc021f4c9572906776c6555, type: 3}
       propertyPath: globalObjects.Array.data[1].name
       value: kingdomResourcesPanelPresenter
+      objectReference: {fileID: 0}
+    - target: {fileID: 8930752045537606291, guid: f99b6aec6fc021f4c9572906776c6555, type: 3}
+      propertyPath: globalObjects.Array.data[2].name
+      value: selectionPanelPresenter
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2205,4 +2345,5 @@ SceneRoots:
   - {fileID: 507639472}
   - {fileID: 1624760582}
   - {fileID: 604350088}
+  - {fileID: 1064527407}
   - {fileID: 5271023}
