@@ -16,6 +16,10 @@ MonoBehaviour:
   DisplayName: Barracks
   Description: You can hire warrors here!
   Category: 3
+  AvailableUpgrades:
+  - {fileID: 11400000, guid: 2aaed8a47ecad6f4883b1c18aa6cc897, type: 2}
+  - {fileID: 11400000, guid: a65872b635beb1d45828d32b87d8ccf3, type: 2}
+  - {fileID: 11400000, guid: e08fa6f9969ad03419440a6405700f86, type: 2}
   GoldCost: 100
   MaxHp: 100
   BuildHpPerSecond: 5

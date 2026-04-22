@@ -26,17 +26,14 @@
             "id": "60601954bb3b5a24",
             "type": "leaf",
             "state": {
-              "type": "canvas",
+              "type": "markdown",
               "state": {
-                "file": "Untitled.canvas",
-                "viewState": {
-                  "x": 203.60010158194464,
-                  "y": -567.8501275320101,
-                  "zoom": -0.6666666666666667
-                }
+                "file": "Architecture.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-layout-dashboard",
-              "title": "Untitled"
+              "icon": "lucide-file",
+              "title": "Architecture"
             }
           }
         ],
@@ -221,9 +218,10 @@
   },
   "active": "60601954bb3b5a24",
   "lastOpenFiles": [
+    "Welcome.md",
+    "Architecture.md",
     "Untitled.canvas",
     "Mechaniki.md",
-    "Welcome.md",
     "2026-04-03.md",
     "Untitled 1.canvas",
     "Untitled 2.canvas",

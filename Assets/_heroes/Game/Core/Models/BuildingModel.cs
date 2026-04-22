@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using Heroes.Game.Core.Models;
+
 namespace Heroes.Game.Buildings
 {
     public sealed class BuildingModel
@@ -11,8 +14,9 @@ namespace Heroes.Game.Buildings
         public BuildingState State { get; private set; }
         public bool IsCompleted { get; private set; }
 
+        public QueueModel UpgradeQueue { get; private set; }
 
-        public BuildingModel(string instanceId, string definitionId, float maxHp, float startHp)
+        public BuildingModel(string instanceId, string definitionId, List<string> upgrades, float maxHp, float startHp)
         {
             InstanceId = instanceId;
             DefinitionId = definitionId;
@@ -20,6 +24,8 @@ namespace Heroes.Game.Buildings
             Health = new Core.Health.HealthModel(InstanceId, maxHp, startHp);
             ConstructionStage = 0;
             State = BuildingState.UnderConstruction;
+
+            UpgradeQueue = new QueueModel(upgrades);
         }
 
         public void SyncFromHealth()
@@ -42,6 +48,12 @@ namespace Heroes.Game.Buildings
             {
                 State = IsCompleted ? BuildingState.Damaged : BuildingState.UnderConstruction;
             }
+        }
+
+        public void RestartConstruction()
+        {
+            IsCompleted = false;
+            SyncFromHealth();
         }
 
         private static int CalculateStage(float hp, float maxHp)

@@ -1,7 +1,4 @@
-﻿using Heroes.Presentation.UI.BuildingPanel;
-using UnityEngine;
-
-namespace Heroes.Game.Abstractions
+﻿namespace Heroes.Game.Abstractions
 {
     public interface ISelectable
     {

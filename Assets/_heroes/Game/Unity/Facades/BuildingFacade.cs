@@ -1,8 +1,9 @@
+using System.Linq;
 using EventBus;
 using Heroes.Content.Buildings;
 using Heroes.Game.Abstractions;
+using Heroes.Game.Core.Logic;
 using Heroes.Game.Core.Events;
-using Heroes.Presentation.UI.BuildingPanel;
 using UnityEngine;
 using Registry;
 
@@ -26,20 +27,31 @@ namespace Heroes.Game.Buildings
         
         private BuildingConstructionLogic _constructionLogic;
         private Core.Health.DamageLogic _damageLogic;
-
+        
+        private QueueLogic<
+            UpgradeQueueProgressChangedEvent, 
+            UpgradeQueueChangedEvent, 
+            UpgradeQueueActiveChangedEvent, 
+            UpgradeQueueAvailableListChangedEvent,
+            UpgradeQueueUpgradeCompletedEvent
+        > _upgradeQueueLogic;
+        
         public bool IsAlive => Model.State != BuildingState.Destroyed;
 
         public void Initialize(BuildingDefinition definition, string instanceId)
         {
+            var upgrades = definition.AvailableUpgrades.Select(item => item.Id).ToList();
+            
             Definition = definition;
-            Model = new BuildingModel(instanceId, definition.Id, definition.MaxHp, definition.StartHp);
+            Model = new BuildingModel(instanceId, definition.Id, upgrades, definition.MaxHp, definition.StartHp);
             _constructionLogic = new BuildingConstructionLogic(Model, definition.BuildHpPerSecond);
             _damageLogic = new Core.Health.DamageLogic(Model.Health);
-
+            _upgradeQueueLogic = new(Model.UpgradeQueue, Model.InstanceId);
+            
             Model.SyncFromHealth();
 
-            constructionVisuals.RefreshImmediate(Model);
-            destructionVisuals.Refresh(Model);
+            constructionVisuals?.RefreshImmediate(Model);
+            destructionVisuals?.Refresh(Model);
         }
 
         private void Update()
@@ -51,19 +63,9 @@ namespace Heroes.Game.Buildings
 
             var previousState = Model.State;
 
-            _constructionLogic.Tick(Time.deltaTime);
-
-            constructionVisuals.Refresh(Model);
-            destructionVisuals.Refresh(Model);
-
-            if (previousState != BuildingState.Destroyed && Model.State == BuildingState.Destroyed)
-            {
-                EventBus<BuildingDestroyedEvent>.Invoke(new BuildingDestroyedEvent
-                {
-                    InstanceId = Model.InstanceId,
-                    DefinitionId = Model.DefinitionId
-                });
-            }
+            TickLogic(Time.deltaTime);
+            RefreshVisuals();
+            PublishDestroyedEventIfNeeded(previousState);
         }
 
         public void ApplyDamage(float amount)
@@ -73,17 +75,34 @@ namespace Heroes.Game.Buildings
             _damageLogic.Apply(amount);
             Model.SyncFromHealth();
 
-            constructionVisuals.Refresh(Model);
-            destructionVisuals.Refresh(Model);
+            RefreshVisuals();
+            PublishDestroyedEventIfNeeded(previousState);
+        }
 
-            if (previousState != BuildingState.Destroyed && Model.State == BuildingState.Destroyed)
+        private void TickLogic(float deltaTime)
+        {
+            _constructionLogic.Tick(deltaTime);
+            _upgradeQueueLogic.Tick(deltaTime);
+        }
+
+        private void RefreshVisuals()
+        {
+            constructionVisuals?.Refresh(Model);
+            destructionVisuals?.Refresh(Model);
+        }
+
+        private void PublishDestroyedEventIfNeeded(BuildingState previousState)
+        {
+            if (previousState == BuildingState.Destroyed || Model.State != BuildingState.Destroyed)
             {
-                EventBus<BuildingDestroyedEvent>.Invoke(new BuildingDestroyedEvent
-                {
-                    InstanceId = Model.InstanceId,
-                    DefinitionId = Model.DefinitionId
-                });
+                return;
             }
+
+            EventBus<BuildingDestroyedEvent>.Invoke(new BuildingDestroyedEvent
+            {
+                InstanceId = Model.InstanceId,
+                DefinitionId = Model.DefinitionId
+            });
         }
 
         private void OnDestroy()

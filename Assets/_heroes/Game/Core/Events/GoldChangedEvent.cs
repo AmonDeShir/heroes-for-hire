@@ -2,9 +2,8 @@ using EventBus;
 
 namespace Heroes.Game.Core.Events
 {
-    public struct GoldChangedEvent : IEvent
+    public struct GoldChangedEvent : IValueChangedEvent<int>
     {
-        public int OldValue;
-        public int NewValue;
+        public int Value { get; set; }
     }
 }

@@ -11,6 +11,9 @@ namespace Heroes.Content.Buildings
         public string DisplayName;
         public string Description;
         public BuildingCategory Category;
+        
+        [Header("Upgrades")]
+        public BuildingUpgradeDefinition[] AvailableUpgrades;
 
         [Header("Cost")]
         public int GoldCost = 100;

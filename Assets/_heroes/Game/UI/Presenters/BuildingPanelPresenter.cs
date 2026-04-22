@@ -1,5 +1,7 @@
+using EventBus;
 using Heroes.Content.Buildings;
 using Heroes.Game.Buildings;
+using Heroes.Game.Core.Events;
 using OneJS;
 using UnityEngine;
 using VContainer;
@@ -10,6 +12,7 @@ namespace Heroes.Presentation.UI.BuildingPanel
     {
         private BuildingCatalog _buildingCatalog;
         private BuildingPlacementSelectionService _buildingPlacementSelectionService;
+        private EventBinding<BuildingPlacementSelectedChangedEvent> _buildingPlacementSelectedChangedEvent;
 
         [EventfulProperty] private string _selected;
         [EventfulProperty] private BuildingDTO[] _buildings = System.Array.Empty<BuildingDTO>();
@@ -20,14 +23,17 @@ namespace Heroes.Presentation.UI.BuildingPanel
             _buildingCatalog = buildingCatalog;
             _buildingPlacementSelectionService = buildingPlacementSelectionService;
 
-            _buildingPlacementSelectionService.OnSelectedChanged += HandleSelectionEvent;
+            _buildingPlacementSelectedChangedEvent = new EventBinding<BuildingPlacementSelectedChangedEvent>(HandleSelectionEvent);
+            EventBus<BuildingPlacementSelectedChangedEvent>.Register(_buildingPlacementSelectedChangedEvent);
+
+            Selected = _buildingPlacementSelectionService.Selected;
 
             Refresh();
         }
 
         private void OnDestroy()
         {
-            _buildingPlacementSelectionService.OnSelectedChanged -= HandleSelectionEvent;
+            EventBus<BuildingPlacementSelectedChangedEvent>.Unregister(_buildingPlacementSelectedChangedEvent);
         }
 
         public void SelectBuilding(string buildingId)
@@ -35,9 +41,9 @@ namespace Heroes.Presentation.UI.BuildingPanel
             _buildingPlacementSelectionService.Select(buildingId);
         }
 
-        private void HandleSelectionEvent(string value)
+        private void HandleSelectionEvent(BuildingPlacementSelectedChangedEvent @event)
         {
-            Selected = value;
+            Selected = @event.Value;
         }
 
         private void Refresh()

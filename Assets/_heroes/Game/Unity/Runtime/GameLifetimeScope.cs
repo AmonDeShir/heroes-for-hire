@@ -29,8 +29,10 @@ namespace Heroes.Game.Runtime
             builder.RegisterInstance(buildingCatalog);
             builder.RegisterInstance(new KingdomModel(startGold));
 
+            builder.Register<KingdomService>(Lifetime.Singleton);
             builder.Register<BuildingPlacementSelectionService>(Lifetime.Singleton);
             builder.Register<BuildingPlacementService>(Lifetime.Singleton);
+            builder.Register<BuildingUpgradeService>(Lifetime.Singleton);
             builder.Register<SelectionService>(Lifetime.Singleton);
 
             builder.RegisterComponent(placementController);

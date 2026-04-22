@@ -3,8 +3,8 @@ using Heroes.Game.Abstractions;
 
 namespace Heroes.Game.Core.Events
 {
-    public struct ObjectSelectedEvent : IEvent
+    public struct ObjectSelectedEvent : IValueChangedEvent<ISelectable>
     {
-        public ISelectable value;
+        public ISelectable Value { get; set; }
     }
 }

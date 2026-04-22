@@ -17,13 +17,13 @@ namespace Heroes.Game.Buildings
             }
 
             Selected = item;
-            EventBus<ObjectSelectedEvent>.Invoke(new ObjectSelectedEvent { value = item });
+            EventBus<ObjectSelectedEvent>.Invoke(new ObjectSelectedEvent { Value = item });
         }
         
         public void Clear()
         {
             Selected = null;
-            EventBus<ObjectSelectedEvent>.Invoke(new ObjectSelectedEvent { value = null });
+            EventBus<ObjectSelectedEvent>.Invoke(new ObjectSelectedEvent { Value = null });
         }
     }
 }

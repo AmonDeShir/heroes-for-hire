@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Heroes.Content.Buildings;
 using Heroes.Game.Buildings;
 using UnityEngine;
@@ -40,7 +39,7 @@ namespace Heroes.Game.Runtime
             }
 
             HandleCancel();
-            HandlePlacement();
+            _ = HandlePlacement();
         }
 
         private void HandleCancel()
@@ -88,19 +87,30 @@ namespace Heroes.Game.Runtime
                 return;
             }
 
-            var placement = terrainHelper.GetPreparedPlacement(buildingCursor.GetCursorBounds(), buildingCursor.transform.position);
-
-            if (PlacementService.CanBuild(definition))
+            if (!PlacementService.CanBuild(definition))
             {
-                inBuildingState = true;
-                SelectionService.Clear();
-                buildingCursor.gameObject.SetActive(false);
-                
+                return;
+            }
+
+            var placement = terrainHelper.GetPreparedPlacement(buildingCursor.GetCursorBounds(), buildingCursor.transform.position);
+            await RunPlacementSequence(definition, placement);
+        }
+
+        private async Awaitable RunPlacementSequence(BuildingDefinition definition, TerrainHelper.PreparedPlacement placement)
+        {
+            inBuildingState = true;
+            SelectionService.Clear();
+            buildingCursor.gameObject.SetActive(false);
+
+            try
+            {
                 PlayPlacementEffects(placement.BuildingPosition);
                 await Awaitable.WaitForSecondsAsync(0.5f);
                 terrainHelper.PrepareAreaForBuilding(placement);
-                
                 PlacementService.TryPlace(definition, placement.BuildingPosition, Quaternion.identity, out _);
+            }
+            finally
+            {
                 inBuildingState = false;
                 buildingCursor.gameObject.SetActive(true);
             }

@@ -59,13 +59,41 @@ declare namespace CS.Heroes.Presentation.UI.SelectionPanel {
 
   class BuildingSelectionDTO extends CS.System.Object {
     protected [__keep_incompatibility]: never;
-    public get IsComplete(): boolean;
+    public get IsAlive(): boolean;
+  }
+
+  class BuildingUpgradeSelectionDTO extends CS.System.Object {
+    protected [__keep_incompatibility]: never;
+    public get Id(): string;
+    public get Name(): string;
+    public get Description(): string;
+    public get Price(): number;
+    public get Icon(): string;
+    public get IsQueued(): boolean;
+    public get IsActive(): boolean;
+    public get IsCompleted(): boolean;
+    public get CanQueue(): boolean;
+    public get LockReason(): string;
+    public get Progress(): number;
+    public get QueueIndex(): number;
+  }
+
+  class QueuedBuildingUpgradeSelectionDTO extends CS.System.Object {
+    protected [__keep_incompatibility]: never;
+    public get Id(): string;
+    public get Name(): string;
+    public get Description(): string;
+    public get Icon(): string;
+    public get Order(): number;
   }
 
   class SelectionPanelPresenter {
     public get Selected(): null | SelectionDTO;
     public get SelectedDamageable(): null | DamageableSelectionDTO;
     public get SelectedBuilding(): null | BuildingSelectionDTO;
+    public get BuildingUpgrades(): System.Array$1<Heroes.Presentation.UI.SelectionPanel.BuildingUpgradeSelectionDTO>;
+    public get QueuedBuildingUpgrades(): System.Array$1<Heroes.Presentation.UI.SelectionPanel.QueuedBuildingUpgradeSelectionDTO>;
+    public SelectUpgrade ($upgradeId: string) : void
 
     public add_OnSelectedChanged ($value: System.Action$1<SelectionDTO>) : void
     public remove_OnSelectedChanged ($value: System.Action$1<SelectionDTO>) : void

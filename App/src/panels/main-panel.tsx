@@ -1,41 +1,38 @@
-import { h, render } from 'preact'
+import { h } from 'preact'
 import { useEffect, useEventfulState, useState } from 'onejs-preact/hooks'
-import { BuildingPanel } from './building-panel'
-import { InfoPanel } from './info-panel'
-import { Debug } from 'UnityEngine';
+import { Panel } from '../components/panel'
+import { BuildingCategory, BuildingPanelContent } from './building-panel'
+import { InfoPanelContent } from './info-panel'
 
 export function MainPanel() {
-  const [mode, setMode] = useState("buildings" as "buildings" | "info");
-
-  const [selected] = useEventfulState(selectionPanelPresenter, "Selected");
+  const [mode, setMode] = useState("buildings" as "buildings" | "info")
+  const [selectedCategory, setSelectedCategory] = useState<BuildingCategory>("Economy")
+  const [selected] = useEventfulState(selectionPanelPresenter, "Selected")
 
   useEffect(() => {
-    console.log("Selected changed:", selected);
-
     if (selected != null) {
-        setMode("info");
-    }
-    else {
-      setMode("buildings");
+      setMode("info")
+      return
     }
 
-  }, [selected]);
+    setMode("buildings")
+  }, [selected])
 
-  if (mode === "buildings") {
-    Debug.Log("Rendering building panel");
+  const title = mode === "info" && selected != null
+    ? selected.Name
+    : `Buildings - ${selectedCategory}`
 
-    return (
-      <BuildingPanel />
-    )
-  }
-
-  if (mode === "info") {
-    Debug.Log("Rendering info panel");
-
-    return (
-      <InfoPanel />
-    )
-  }
-
-  return (<div></div>)
+  return (
+    <div class='w-[850px]'>
+      <Panel title={title}>
+        <div class='w-full h-full p-[2px] flex flex-row '>
+          {mode === "info" ? (
+            <InfoPanelContent selected={selected} />
+          ) : (
+            <BuildingPanelContent selectedCategory={selectedCategory} onSelectCategory={setSelectedCategory} />
+          )}
+        </div>
+      </Panel>
+    </div>
+  )
 }

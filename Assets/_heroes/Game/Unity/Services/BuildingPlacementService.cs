@@ -1,8 +1,6 @@
 using System;
-using System.Threading.Tasks;
 using EventBus;
 using Heroes.Content.Buildings;
-using Heroes.Game.Core;
 using Heroes.Game.Core.Events;
 using UnityEngine;
 using Registry;
@@ -11,9 +9,9 @@ namespace Heroes.Game.Buildings
 {
     public sealed class BuildingPlacementService
     {
-        private readonly KingdomModel _kingdom;
+        private readonly KingdomService _kingdom;
 
-        public BuildingPlacementService(KingdomModel kingdom)
+        public BuildingPlacementService(KingdomService kingdom)
         {
             _kingdom = kingdom;
         }
@@ -31,15 +29,11 @@ namespace Heroes.Game.Buildings
             {
                 return false;
             }
-
-            var oldGold = _kingdom.Gold;
-
+            
             if (!_kingdom.TrySpendGold(definition.GoldCost))
             {
                 return false;
             }
-
-            var newGold = _kingdom.Gold;
             
             building = UnityEngine.Object.Instantiate(definition.Prefab, position, rotation);
             
@@ -47,12 +41,6 @@ namespace Heroes.Game.Buildings
             building.Initialize(definition, instanceId);
 
             Registry<BuildingFacade>.TryAdd(building);
-
-            EventBus<GoldChangedEvent>.Invoke(new GoldChangedEvent
-            {
-                OldValue = oldGold,
-                NewValue = newGold
-            });
 
             EventBus<BuildingPlacedEvent>.Invoke(new BuildingPlacedEvent
             {

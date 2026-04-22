@@ -1,7 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using EventBus;
 using Heroes.Content.Buildings;
 using Heroes.Game.Abstractions;
+using Heroes.Game.Core.Events;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using VContainer;
@@ -32,6 +34,7 @@ namespace Heroes.Game.Buildings
 
         private BuildingPlacementSelectionService selectionService;
         private BuildingCatalog buildingCatalog;
+        private EventBinding<BuildingPlacementSelectedChangedEvent> buildingPlacementSelectedChangedEvent;
 
         [Inject]
         public void Construct(BuildingPlacementSelectionService selectionService, BuildingCatalog buildingCatalog)
@@ -51,14 +54,17 @@ namespace Heroes.Game.Buildings
                 worldCamera = Camera.main;
             }
 
-            selectionService.OnSelectedChanged += HandleSelectionChange;
+            buildingPlacementSelectedChangedEvent = new EventBinding<BuildingPlacementSelectedChangedEvent>(HandleSelectionChange);
+            EventBus<BuildingPlacementSelectedChangedEvent>.Register(buildingPlacementSelectedChangedEvent);
+
+            HandleSelectionChange(new BuildingPlacementSelectedChangedEvent { Value = selectionService.Selected });
             RefreshVisibility();
             UpdateColor();
         }
 
         private void OnDestroy()
         {
-            selectionService.OnSelectedChanged -= HandleSelectionChange;
+            EventBus<BuildingPlacementSelectedChangedEvent>.Unregister(buildingPlacementSelectedChangedEvent);
         }
         
         private void Update()
@@ -71,8 +77,9 @@ namespace Heroes.Game.Buildings
             FollowMouse();
         }
 
-        private void HandleSelectionChange(string selected)
+        private void HandleSelectionChange(BuildingPlacementSelectedChangedEvent @event)
         {
+            var selected = @event.Value;
             var definition = buildingCatalog.GetById(selected);
 
             if (definition == null)

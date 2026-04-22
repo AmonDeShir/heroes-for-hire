@@ -37,12 +37,12 @@ namespace Heroes.Presentation.UI.ResourcesPanel
         
         private void UpdateGold(GoldChangedEvent @event)
         {
-            Gold = @event.NewValue;
+            Gold = @event.Value;
         }
         
         private void UpdatePopulation(PopulationChangedEvent @event)
         {
-            Population = @event.NewValue;
+            Population = @event.Value;
         }
     }
 }

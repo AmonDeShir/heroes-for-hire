@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Heroes.Game.Buildings;
 using NUnit.Framework;
 
@@ -8,7 +9,7 @@ namespace Heroes.Tests.Core
         [Test]
         public void Tick_IncreasesHpByRate()
         {
-            var model = new BuildingModel("id", "def", 100f, 0f);
+            var model = new BuildingModel("id", "def", new List<string>(), 100f, 0f);
             var logic = new BuildingConstructionLogic(model, 10f);
 
             logic.Tick(2f);

@@ -1,11 +1,10 @@
-using System;
+using EventBus;
+using Heroes.Game.Core.Events;
 
 namespace Heroes.Game.Buildings
 {
     public sealed class BuildingPlacementSelectionService
     {
-        public event Action<string> OnSelectedChanged;
-
         public string Selected { get; private set; }
 
         public void Select(string buildingId)
@@ -16,7 +15,10 @@ namespace Heroes.Game.Buildings
             }
 
             Selected = buildingId;
-            OnSelectedChanged?.Invoke(Selected);
+            EventBus<BuildingPlacementSelectedChangedEvent>.Invoke(new BuildingPlacementSelectedChangedEvent
+            {
+                Value = Selected
+            });
         }
 
         public void Clear()
@@ -27,7 +29,10 @@ namespace Heroes.Game.Buildings
             }
 
             Selected = null;
-            OnSelectedChanged?.Invoke(Selected);
+            EventBus<BuildingPlacementSelectedChangedEvent>.Invoke(new BuildingPlacementSelectedChangedEvent
+            {
+                Value = Selected
+            });
         }
     }
 }
