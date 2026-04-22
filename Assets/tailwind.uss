@@ -64,6 +64,12 @@
 .root .top-_lb_6px_rb_ {
     top: 6px
 }
+.root .m-2 {
+    margin: 8px
+}
+.root .m-1 {
+    margin: 4px
+}
 .root .my-auto {
     margin-top: auto;
     margin-bottom: auto

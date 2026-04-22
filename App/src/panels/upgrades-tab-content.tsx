@@ -120,8 +120,6 @@ export function UpgradesTabContent(props: { active: boolean, onAvailabilityChang
       <DescriptionTooltip
         text={buildTooltipText(hoveredUpgrade)}
         visible={hoveredUpgrade != null}
-        x={tooltipPos.x}
-        y={tooltipPos.y}
       />
     </Fragment>
   )
