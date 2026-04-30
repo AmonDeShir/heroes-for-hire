@@ -3,8 +3,11 @@ using System.Linq;
 using Heroes.Content.Buildings;
 using EventBus;
 using Heroes.Game.Abstractions;
+using Heroes.Game.AI;
+using Heroes.Game.Heroes;
 using Heroes.Game.Buildings;
 using Heroes.Game.Core.Events;
+using Heroes.GOAP.Core.Debug;
 using OneJS;
 using UnityEngine;
 using VContainer;
@@ -25,10 +28,13 @@ namespace Heroes.Presentation.UI.SelectionPanel
         private EventBinding<UpgradeQueueProgressChangedEvent> _upgradeQueueProgressChangedEvent;
         private EventBinding<UpgradeQueueAvailableListChangedEvent> _upgradeQueueAvailableListChangedEvent;
         private EventBinding<UpgradeQueueUpgradeCompletedEvent> _upgradeQueueUpgradeCompletedEvent;
+        private float _nextHeroRefreshTime;
 
         [EventfulProperty] private SelectionDTO _selected;
         [EventfulProperty] private DamageableSelectionDTO _selectedDamageable;
         [EventfulProperty] private BuildingSelectionDTO _selectedBuilding;
+        [EventfulProperty] private HeroSelectionDTO _selectedHero;
+        [EventfulProperty] private GoapSelectionDTO _selectedGoap;
         [EventfulProperty] private BuildingUpgradeSelectionDTO[] _buildingUpgrades = System.Array.Empty<BuildingUpgradeSelectionDTO>();
         [EventfulProperty] private QueuedBuildingUpgradeSelectionDTO[] _queuedBuildingUpgrades = System.Array.Empty<QueuedBuildingUpgradeSelectionDTO>();
 
@@ -84,6 +90,8 @@ namespace Heroes.Presentation.UI.SelectionPanel
                 Selected = null;
                 SelectedDamageable = null;
                 SelectedBuilding = null;
+                SelectedHero = null;
+                SelectedGoap = null;
                 BuildingUpgrades = System.Array.Empty<BuildingUpgradeSelectionDTO>();
                 QueuedBuildingUpgrades = System.Array.Empty<QueuedBuildingUpgradeSelectionDTO>();
                 
@@ -103,11 +111,21 @@ namespace Heroes.Presentation.UI.SelectionPanel
             if (obj.Value is BuildingFacade building)
             {
                 SelectedBuilding = new BuildingSelectionDTO(building.IsAlive);
+                SelectedHero = null;
+                SelectedGoap = null;
                 RefreshSelectedBuildingUpgrades();
                 return;
             }
 
+            if (obj.Value is HeroFacade hero)
+            {
+                RefreshSelectedHero(hero);
+                return;
+            }
+
             SelectedBuilding = null;
+            SelectedHero = null;
+            SelectedGoap = null;
             BuildingUpgrades = System.Array.Empty<BuildingUpgradeSelectionDTO>();
             QueuedBuildingUpgrades = System.Array.Empty<QueuedBuildingUpgradeSelectionDTO>();
         }
@@ -142,8 +160,65 @@ namespace Heroes.Presentation.UI.SelectionPanel
             Selected = null;
             SelectedDamageable = null;
             SelectedBuilding = null;
+            SelectedHero = null;
+            SelectedGoap = null;
             BuildingUpgrades = System.Array.Empty<BuildingUpgradeSelectionDTO>();
             QueuedBuildingUpgrades = System.Array.Empty<QueuedBuildingUpgradeSelectionDTO>();
+        }
+
+        private void Update()
+        {
+            if (Time.unscaledTime < _nextHeroRefreshTime)
+            {
+                return;
+            }
+
+            _nextHeroRefreshTime = Time.unscaledTime + 0.2f;
+
+            if (_selectionService?.Selected is HeroFacade hero)
+            {
+                RefreshSelectedHero(hero);
+            }
+        }
+
+        private void RefreshSelectedHero(HeroFacade hero)
+        {
+            SelectedBuilding = null;
+            BuildingUpgrades = System.Array.Empty<BuildingUpgradeSelectionDTO>();
+            QueuedBuildingUpgrades = System.Array.Empty<QueuedBuildingUpgradeSelectionDTO>();
+
+            if (hero?.Model == null)
+            {
+                SelectedHero = null;
+                SelectedGoap = null;
+                return;
+            }
+
+            SelectedHero = new HeroSelectionDTO(hero.Model.Gold, hero.Model.GearLevel, hero.Model.DangerLevel, hero.Model.IsAlive, hero.Model.IsInHome);
+
+            if (hero.TryGetComponent<HeroAgent>(out var heroAgent) && heroAgent.TryGetSnapshot(out var snapshot))
+            {
+                SelectedGoap = ToGoapSelection(snapshot);
+            }
+            else
+            {
+                SelectedGoap = null;
+            }
+        }
+
+        private static GoapSelectionDTO ToGoapSelection(GoapDebugSnapshot snapshot)
+        {
+            if (snapshot == null)
+            {
+                return null;
+            }
+
+            var beliefs = snapshot.Memory?.Beliefs?.Select(item => new GoapBeliefSelectionDTO(item.Name, item.Value)).ToArray()
+                ?? System.Array.Empty<GoapBeliefSelectionDTO>();
+            var steps = snapshot.Plan?.Steps?.Select(item => new GoapPlanStepSelectionDTO(item.Name, item.Description, item.PreconditionsMet)).ToArray()
+                ?? System.Array.Empty<GoapPlanStepSelectionDTO>();
+
+            return new GoapSelectionDTO(snapshot.Plan?.GoalName ?? string.Empty, snapshot.Idle?.Name ?? string.Empty, snapshot.Idle?.IsActive ?? false, beliefs, steps);
         }
 
         private void HandleUpgradeQueueEvent(string buildingId)

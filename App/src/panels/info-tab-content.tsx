@@ -11,6 +11,7 @@ export function InfoTabContent(props: {
   selected: any
 }) {
   const [damageable] = useEventfulState(selectionPanelPresenter, 'SelectedDamageable')
+  const [hero] = useEventfulState(selectionPanelPresenter, 'SelectedHero')
   const icon = useMemo(
     () => props.selected ? Resources.Load(props.selected.Icon) as Texture2D : HEART_ICON,
     [props.selected],
@@ -28,7 +29,7 @@ export function InfoTabContent(props: {
 
       <div class='w-0.5 h-[70px] bg-main ml-4 mr-4 my-auto' />
 
-      <div class='flex h-full items-start justify-evenly'>
+      <div class='flex h-full items-start justify-evenly gap-3'>
         {damageable && (
           <div>
             <ProgressBar
@@ -43,6 +44,15 @@ export function InfoTabContent(props: {
 
         <div class='font-[10px]'>
           {props.selected.Description}
+
+          {hero && (
+            <div class='mt-2'>
+              <div>Gold: {hero.Gold}</div>
+              <div>Gear: {hero.GearLevel.toFixed(1)}</div>
+              <div>Danger: {hero.DangerLevel.toFixed(2)}</div>
+              <div>{hero.IsInHome ? 'Inside home' : 'Outside'}</div>
+            </div>
+          )}
         </div>
       </div>
     </div>

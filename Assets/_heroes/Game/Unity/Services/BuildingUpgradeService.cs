@@ -2,7 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using EventBus;
 using Heroes.Content.Buildings;
+using Heroes.Content.Buildings.UpgradeEffects;
 using Heroes.Game.Core.Events;
+using Heroes.Game.Heroes;
 using Registry;
 
 namespace Heroes.Game.Buildings
@@ -11,12 +13,14 @@ namespace Heroes.Game.Buildings
     {
         private readonly SelectionService _selectionService;
         private readonly KingdomService _kingdomService;
+        private readonly HeroSpawnService _heroSpawnService;
         private readonly EventBinding<UpgradeQueueUpgradeCompletedEvent> _upgradeCompletedEvent;
 
-        public BuildingUpgradeService(SelectionService selectionService, KingdomService kingdomService)
+        public BuildingUpgradeService(SelectionService selectionService, KingdomService kingdomService, HeroSpawnService heroSpawnService = null)
         {
             _selectionService = selectionService;
             _kingdomService = kingdomService;
+            _heroSpawnService = heroSpawnService;
 
             _upgradeCompletedEvent = new EventBinding<UpgradeQueueUpgradeCompletedEvent>(HandleUpgradeCompleted);
             EventBus<UpgradeQueueUpgradeCompletedEvent>.Register(_upgradeCompletedEvent);
@@ -174,8 +178,31 @@ namespace Heroes.Game.Buildings
             }
 
             ApplyEffects(building, upgrade);
+            SpawnHeroes(building, upgrade);
             UnlockUpgrades(building, upgrade);
             building.Model.SyncFromHealth();
+        }
+
+        private void SpawnHeroes(BuildingFacade building, BuildingUpgradeDefinition upgrade)
+        {
+            if (_heroSpawnService == null || upgrade?.Effects == null)
+            {
+                return;
+            }
+
+            foreach (var effect in upgrade.Effects)
+            {
+                if (effect is not SpawnHeroEffect spawnEffect || spawnEffect.Hero == null)
+                {
+                    continue;
+                }
+
+                var count = spawnEffect.Count <= 0 ? 1 : spawnEffect.Count;
+                for (var i = 0; i < count; i++)
+                {
+                    _heroSpawnService.Spawn(spawnEffect.Hero, building);
+                }
+            }
         }
 
         private static void ApplyEffects(BuildingFacade building, BuildingUpgradeDefinition upgrade)
