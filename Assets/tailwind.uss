@@ -64,9 +64,6 @@
 .root .top-_lb_6px_rb_ {
     top: 6px
 }
-.root .m-2 {
-    margin: 8px
-}
 .root .m-1 {
     margin: 4px
 }
@@ -74,13 +71,8 @@
     margin-top: auto;
     margin-bottom: auto
 }
-.root .my-2 {
-    margin-top: 8px;
+.root .mb-2 {
     margin-bottom: 8px
-}
-.root .my-1 {
-    margin-top: 4px;
-    margin-bottom: 4px
 }
 .root .ml-2 {
     margin-left: 8px
@@ -91,23 +83,23 @@
 .root .ml-_lb_2px_rb_ {
     margin-left: 2px
 }
+.root .mr-0_d_5 {
+    margin-right: 2px
+}
+.root .mr-2 {
+    margin-right: 8px
+}
 .root .mr-4 {
     margin-right: 16px
 }
 .root .mr-_lb_2px_rb_ {
     margin-right: 2px
 }
-.root .mr-2 {
-    margin-right: 8px
+.root .mt-1 {
+    margin-top: 4px
 }
-.root .mr-1 {
-    margin-right: 4px
-}
-.root .mr-0_d_5 {
-    margin-right: 2px
-}
-.root .ml-8 {
-    margin-left: 32px
+.root .mt-2 {
+    margin-top: 8px
 }
 .root .flex {
     display: flex
@@ -172,12 +164,6 @@
 .root .min-h-_lb_18px_rb_ {
     min-height: 18px
 }
-.root .min-h-_lb_36px_rb_ {
-    min-height: 36px
-}
-.root .min-h-_lb_30px_rb_ {
-    min-height: 30px
-}
 .root .min-h-_lb_32px_rb_ {
     min-height: 32px
 }
@@ -196,14 +182,14 @@
 .root .w-_lb_12px_rb_ {
     width: 12px
 }
-.root .w-_lb_132px_rb_ {
-    width: 132px
-}
 .root .w-_lb_148px_rb_ {
     width: 148px
 }
 .root .w-_lb_14px_rb_ {
     width: 14px
+}
+.root .w-_lb_150px_rb_ {
+    width: 150px
 }
 .root .w-_lb_18px_rb_ {
     width: 18px
@@ -261,9 +247,6 @@
 }
 .root .items-center {
     align-items: center
-}
-.root .justify-start {
-    justify-content: flex-start
 }
 .root .justify-center {
     justify-content: center
@@ -356,6 +339,10 @@
     padding-left: 8px;
     padding-right: 8px
 }
+.root .py-0_d_5 {
+    padding-top: 2px;
+    padding-bottom: 2px
+}
 .root .py-1 {
     padding-top: 4px;
     padding-bottom: 4px
@@ -363,14 +350,6 @@
 .root .py-_lb_3px_rb_ {
     padding-top: 3px;
     padding-bottom: 3px
-}
-.root .py-_lb_6px_rb_ {
-    padding-top: 6px;
-    padding-bottom: 6px
-}
-.root .py-0_d_5 {
-    padding-top: 2px;
-    padding-bottom: 2px
 }
 .root .pb-2 {
     padding-bottom: 8px
@@ -393,6 +372,9 @@
 .root .text-main {
     color: #6B0D05
 }
+.root .text-main_s_80 {
+    color: rgba(107 13 5 0.8)
+}
 .root .text-secondary {
     color: #FDDB1D
 }
@@ -401,6 +383,9 @@
 }
 .root .opacity-60 {
     opacity: 0.6
+}
+.root .font-bold {
+    -unity-font-style: bold
 }
 .root .transition-colors {
     transition-property: color, background-color, border-color;

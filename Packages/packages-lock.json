@@ -7,6 +7,15 @@
       "dependencies": {},
       "hash": "ee927cd3f735f5c5b08572b4df5ba2aab03bf5ce"
     },
+    "com.github.lajawi.betternavmeshbake": {
+      "version": "https://github.com/lajawi/unity-navmesh-better-bake.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.ai.navigation": "2.0.8+"
+      },
+      "hash": "4b0048e593db0b3a2b2c793d2fee0e6cb2681dee"
+    },
     "com.singtaa.onejs": {
       "version": "https://github.com/Singtaa/OneJS.git",
       "depth": 0,

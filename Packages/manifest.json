@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "com.gitamend.unityutils": "https://github.com/adammyhre/Unity-Utils.git",
+    "com.github.lajawi.betternavmeshbake": "https://github.com/lajawi/unity-navmesh-better-bake.git",
     "com.singtaa.onejs": "https://github.com/Singtaa/OneJS.git",
     "com.unity.addressables": "2.8.1",
     "com.unity.ai.navigation": "2.0.12",

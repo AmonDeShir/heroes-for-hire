@@ -25,7 +25,7 @@ export function ResourceBar({ value, icon }: Props) {
             </div>
 
             <div class="text-center w-full h-full justify-center items-center">
-              {animatedValue}
+              {animatedValue.toFixed(0)}
             </div>
           </div>  
         </Blur>

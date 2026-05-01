@@ -2,6 +2,7 @@
     "scripts": {
         "setup": "npm install && tsc -p tsconfig.json",
         "switch": "node node_modules/onejs-core/scripts/switch.cjs",
+        "build": "npx tsc -w",
         "tailwind": "npx postcss input.css -o ../Assets/tailwind.uss --watch"
     },
     "devDependencies": {
@@ -24,8 +25,10 @@
         "clsx": "^2.1.1",
         "css-flatten": "^2.0.0",
         "css-simple-parser": "^3.0.0",
+        "global": "^4.4.0",
         "onejs-core": "~3.0.0",
         "onejs-preact": "^2.0.0",
-        "tailwind-merge": "^2.6.1"
+        "tailwind-merge": "^2.6.1",
+        "typescript": "^6.0.3"
     }
 }
