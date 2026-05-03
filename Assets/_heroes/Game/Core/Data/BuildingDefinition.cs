@@ -7,11 +7,17 @@ namespace Heroes.Content.Buildings
     public class BuildingDefinition : ScriptableObject
     {
         [Header("Identity")]
+        [GUID]
         public string Id;
         public string DisplayName;
-        public string Description;
         public BuildingCategory Category;
         
+        [Multiline]
+        public string Description;
+        
+        [ResourceIcon("Buildings")]
+        public string IconPath;
+
         [Header("Upgrades")]
         public BuildingUpgradeDefinition[] AvailableUpgrades;
 
@@ -22,9 +28,6 @@ namespace Heroes.Content.Buildings
         public float MaxHp = 100f;
         public float BuildHpPerSecond = 10f;
         public float StartHp = 5f;
-        
-        [Header("Visuals")]
-        public string IconPath;
 
         [Header("Prefab")]
         public BuildingFacade Prefab;

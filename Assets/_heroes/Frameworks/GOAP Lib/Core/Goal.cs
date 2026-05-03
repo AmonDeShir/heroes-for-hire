@@ -8,6 +8,7 @@ namespace Heroes.GOAP.Core
         public int Priority { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
+        public string Icon { get; private set; }
 
         public Func<AgentContext<TSnapshot>, float> Importance { get; private set; }
         public Func<AgentContext<TSnapshot>, float> Heuristic { get; private set; }
@@ -80,6 +81,12 @@ namespace Heroes.GOAP.Core
             public Builder WithAchieved(Func<AgentContext<TSnapshot>, bool> achieved)
             {
                 goal.Achieved = achieved;
+                return this;
+            }
+            
+            public Builder WithIcon(string icon)
+            {
+                goal.Icon = icon;
                 return this;
             }
         }

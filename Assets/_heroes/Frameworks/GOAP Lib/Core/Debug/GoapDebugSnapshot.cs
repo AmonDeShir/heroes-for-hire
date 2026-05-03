@@ -87,10 +87,14 @@ namespace Heroes.GOAP.Core.Debug
         public float Importance { get; }
         public float Heuristic { get; }
         public bool Achieved { get; }
+        public string Icon { get; }
+        public string Description { get; }
 
-        public GoapDebugGoal(string name, int priority, float importance, float heuristic, bool achieved)
+        public GoapDebugGoal(string name, string description, string icon, int priority, float importance, float heuristic, bool achieved)
         {
             Name = name;
+            Description = description;
+            Icon = icon;
             Priority = priority;
             Importance = importance;
             Heuristic = heuristic;

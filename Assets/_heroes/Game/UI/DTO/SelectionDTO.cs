@@ -40,6 +40,68 @@ namespace Heroes.Presentation.UI.SelectionPanel
         }
     }
 
+    public class HeroSelectionDTO
+    {
+        public int Gold;
+        public float GearLevel;
+        public float DangerLevel;
+        public bool IsAlive;
+        public bool IsInHome;
+
+        public HeroSelectionDTO(int gold, float gearLevel, float dangerLevel, bool isAlive, bool isInHome)
+        {
+            Gold = gold;
+            GearLevel = gearLevel;
+            DangerLevel = dangerLevel;
+            IsAlive = isAlive;
+            IsInHome = isInHome;
+        }
+    }
+    
+    public class GoapGoalSelectionDTO
+    {
+        public string Name;
+        public string Description;
+        public string Icon;
+        public float Value;
+        public bool IsActive;
+
+        public GoapGoalSelectionDTO(string name, string description, string icon, float value, bool isActive)
+        {
+            Name = name;
+            Description = description;
+            Value = value;
+            Icon = icon;
+            IsActive = isActive;
+        }
+    }
+
+    public class GoapPlanStepSelectionDTO
+    {
+        public string Name;
+        public string Description;
+        public bool PreconditionsMet;
+
+        public GoapPlanStepSelectionDTO(string name, string description, bool preconditionsMet)
+        {
+            Name = name;
+            Description = description;
+            PreconditionsMet = preconditionsMet;
+        }
+    }
+
+    public class GoapSelectionDTO
+    {
+        public GoapPlanStepSelectionDTO[] Steps;
+        public GoapGoalSelectionDTO[] Goals;
+
+        public GoapSelectionDTO(GoapGoalSelectionDTO[] goals, GoapPlanStepSelectionDTO[] steps)
+        {
+            Goals = goals ?? Array.Empty<GoapGoalSelectionDTO>();
+            Steps = steps ?? Array.Empty<GoapPlanStepSelectionDTO>();
+        }
+    }
+
     public class BuildingUpgradeSelectionDTO
     {
         public string Id;

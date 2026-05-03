@@ -1,6 +1,8 @@
 using Heroes.Content.Buildings;
 using Heroes.Game.Buildings;
 using Heroes.Game.Core;
+using Heroes.Game.AI;
+using Heroes.Game.Heroes;
 using Heroes.Presentation.UI.BuildingPanel;
 using Heroes.Presentation.UI.ResourcesPanel;
 using Heroes.Presentation.UI.SelectionPanel;
@@ -16,6 +18,7 @@ namespace Heroes.Game.Runtime
         [SerializeField] private BuildingPlacementController placementController;
         [SerializeField] private SelectionController selectionController;
         [SerializeField] private BuildingCursor buildingCursor;
+        [SerializeField] private GameWorldStateManager gameWorldStateManager;
         [SerializeField] private BuildingPanelPresenter buildingPanelPresenter;
         [SerializeField] private KingdomResourcesPresenter kingdomResourcesPresenter;
         [SerializeField] private SelectionPanelPresenter selectionPanelPresenter;
@@ -32,9 +35,12 @@ namespace Heroes.Game.Runtime
             builder.Register<KingdomService>(Lifetime.Singleton);
             builder.Register<BuildingPlacementSelectionService>(Lifetime.Singleton);
             builder.Register<BuildingPlacementService>(Lifetime.Singleton);
+            builder.Register<HeroRosterService>(Lifetime.Singleton);
+            builder.Register<HeroSpawnService>(Lifetime.Singleton);
             builder.Register<BuildingUpgradeService>(Lifetime.Singleton);
             builder.Register<SelectionService>(Lifetime.Singleton);
 
+            builder.RegisterComponent(gameWorldStateManager);
             builder.RegisterComponent(placementController);
             builder.RegisterComponent(selectionController);
             builder.RegisterComponent(buildingPanelPresenter);

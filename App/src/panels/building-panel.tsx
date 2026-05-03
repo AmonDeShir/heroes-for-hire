@@ -4,6 +4,8 @@ import { Resources, Texture2D } from 'UnityEngine'
 import { useEventfulState, useMemo } from 'onejs-preact/hooks'
 import System from 'System'
 import { ShopButton } from '../components/shop-button'
+import { ButtonConfig, SideButtonGroup } from '../components/side-button-group'
+import { useTooltipBinding } from '../hooks/use-tooltip'
 
 type BuildingDTO = CS.Heroes.Presentation.UI.BuildingPanel.BuildingDTO;
 
@@ -22,19 +24,23 @@ export function BuildingPanelContent(props: {
   const [selectedId] = useEventfulState(buildingPanelPresenter, "Selected")
   const [gold] = useEventfulState(kingdomResourcesPanelPresenter, "Gold")
 
+  const bindTooltip = useTooltipBinding();
+
   const selectedBuildings = useMemo(
     () => toJsArray(buildings).filter((building) => building.Category == props.selectedCategory) ?? [],
     [props.selectedCategory, buildings],
   )
 
+  const menuButtons: ButtonConfig[] = [
+    { icon: iconEconomy, active: props.selectedCategory === "Economy", onClick: () => props.onSelectCategory("Economy") },
+    { icon: iconCivilian, active: props.selectedCategory === "Civilian", onClick: () => props.onSelectCategory("Civilian") },
+    { icon: iconDefense, active: props.selectedCategory === "Defense", onClick: () => props.onSelectCategory("Defense") },
+    { icon: iconGuilds, active: props.selectedCategory === "Guilds", onClick: () => props.onSelectCategory("Guilds") },
+  ];
+
   return (
     <>
-      <div class='flex w-7 h-full flex-col justify-evenly items-start'>
-        <IconButton icon={iconEconomy} active={props.selectedCategory == "Economy"} onClick={() => props.onSelectCategory("Economy")} />
-        <IconButton icon={iconCivilian} active={props.selectedCategory == "Civilian"} onClick={() => props.onSelectCategory("Civilian")} />
-        <IconButton icon={iconDefense} active={props.selectedCategory == "Defense"} onClick={() => props.onSelectCategory("Defense")} />
-        <IconButton icon={iconGuilds} active={props.selectedCategory == "Guilds"} onClick={() => props.onSelectCategory("Guilds")} />
-      </div>
+      <SideButtonGroup buttons={menuButtons} />
 
       <div class='flex w-full h-full justify-center items-center'>
         {selectedBuildings.map((data: BuildingDTO) => (
@@ -46,6 +52,7 @@ export function BuildingPanelContent(props: {
             active={selectedId == data.Id}
             disabled={data.Price > gold}
             onClick={() => buildingPanelPresenter.SelectBuilding(data.Id)}
+            {...bindTooltip(data.Description)}
           />
         ))}
       </div>

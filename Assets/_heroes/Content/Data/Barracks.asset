@@ -12,17 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56bf6edaf2c6448448de3a2938f98781, type: 3}
   m_Name: Barracks
   m_EditorClassIdentifier: Game::Heroes.Content.Buildings.BuildingDefinition
-  Id: 234234
+  Id: 09636867-7fb2-406f-aa5a-0065648dc342
   DisplayName: Barracks
-  Description: You can hire warrors here!
   Category: 3
+  Description: You can hire warrors here!
+  IconPath: Buildings/Barracks_Icon
   AvailableUpgrades:
   - {fileID: 11400000, guid: 2aaed8a47ecad6f4883b1c18aa6cc897, type: 2}
   - {fileID: 11400000, guid: a65872b635beb1d45828d32b87d8ccf3, type: 2}
+  - {fileID: 11400000, guid: fcb5e076dbf689042af76b534bdeb4a6, type: 2}
   - {fileID: 11400000, guid: e08fa6f9969ad03419440a6405700f86, type: 2}
   GoldCost: 100
   MaxHp: 100
   BuildHpPerSecond: 5
   StartHp: 10
-  IconPath: Buildings\buildings_warror_guild
   Prefab: {fileID: 3714646239772070877, guid: b91e8fd7ec44ec44c910ea3db98120bd, type: 3}

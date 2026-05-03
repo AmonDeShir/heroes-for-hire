@@ -21,6 +21,7 @@ namespace Heroes.GOAP
         public TAnimationController Animator => animator;
         public NavMeshAgent NavAgent => navAgent;
         public Rigidbody Rigidbody => rb;
+        protected PlanExecutor<Agent<TSnapshot, TAnimationController>, TSnapshot> PlanExecutor => planExecutor;
         
         protected abstract Archetype<Agent<TSnapshot, TAnimationController>, TSnapshot> CreateArchetype();
         protected abstract IWorldState<TSnapshot> CreateWorldState();

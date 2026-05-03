@@ -9,15 +9,17 @@ type Props = {
   value: number,
   max: number,
   text: string,
-  displayValue?: boolean
+  displayValue?: boolean,
+  onMouseEnter?: (event: any) => void,
+  onMouseLeave?: () => void,
 }
 
-export function ProgressBar({ value, max, icon, text, displayValue }: Props) {
+export function ProgressBar({ value, max, icon, text, displayValue, onMouseEnter, onMouseLeave }: Props) {
   const animatedValue = useAnimateNumber(value);
-const percentage = useMemo(() => Math.max(Math.min((animatedValue / max) * 100, 100), 0), [animatedValue, max]);
+  const percentage = useMemo(() => Math.max(Math.min((animatedValue / max) * 100, 100), 0), [animatedValue, max]);
 
   return (
-    <div class={`w-[148px] h-[18px] flex flex-row`}>
+    <div class={`w-[148px] h-[18px] flex flex-row`} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       <div class='flex-shrink-0 h-[18px] w-[18px] border-box p-0.5 border-2 border-main bg-tertiary'>
         <Icon icon={icon} />
       </div>  

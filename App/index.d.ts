@@ -62,6 +62,38 @@ declare namespace CS.Heroes.Presentation.UI.SelectionPanel {
     public get IsAlive(): boolean;
   }
 
+  class HeroSelectionDTO extends CS.System.Object {
+    protected [__keep_incompatibility]: never;
+    public get Gold(): number;
+    public get GearLevel(): number;
+    public get DangerLevel(): number;
+    public get IsAlive(): boolean;
+    public get IsInHome(): boolean;
+  }
+
+  class GoapGoalSelectionDTO extends CS.System.Object {
+    protected [__keep_incompatibility]: never;
+    public get Name(): string;
+    public get Value(): number;
+    public get Icon(): string;
+    public get Description(): string;
+    public get IsActive(): boolean;
+  }
+
+  class GoapPlanStepSelectionDTO extends CS.System.Object {
+    protected [__keep_incompatibility]: never;
+    public get Name(): string;
+    public get Description(): string;
+    public get Value(): number;
+    public get PreconditionsMet(): boolean;
+  }
+
+  class GoapSelectionDTO extends CS.System.Object {
+    protected [__keep_incompatibility]: never;
+    public get Goals(): System.Array$1<Heroes.Presentation.UI.SelectionPanel.GoapGoalSelectionDTO>;
+    public get Steps(): System.Array$1<Heroes.Presentation.UI.SelectionPanel.GoapPlanStepSelectionDTO>;
+  }
+
   class BuildingUpgradeSelectionDTO extends CS.System.Object {
     protected [__keep_incompatibility]: never;
     public get Id(): string;
@@ -91,6 +123,8 @@ declare namespace CS.Heroes.Presentation.UI.SelectionPanel {
     public get Selected(): null | SelectionDTO;
     public get SelectedDamageable(): null | DamageableSelectionDTO;
     public get SelectedBuilding(): null | BuildingSelectionDTO;
+    public get SelectedHero(): null | HeroSelectionDTO;
+    public get SelectedGoap(): null | GoapSelectionDTO;
     public get BuildingUpgrades(): System.Array$1<Heroes.Presentation.UI.SelectionPanel.BuildingUpgradeSelectionDTO>;
     public get QueuedBuildingUpgrades(): System.Array$1<Heroes.Presentation.UI.SelectionPanel.QueuedBuildingUpgradeSelectionDTO>;
     public SelectUpgrade ($upgradeId: string) : void

@@ -137,6 +137,8 @@ GameObject:
   - component: {fileID: 3347831446829639300}
   - component: {fileID: 2326441661952745153}
   - component: {fileID: 4406949481865372227}
+  - component: {fileID: 2798243666600917208}
+  - component: {fileID: 3495043229090131814}
   m_Layer: 0
   m_Name: Barracks
   m_TagString: Untagged
@@ -519,6 +521,36 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 9.027323, y: 4.60992, z: 8.023838}
   m_Center: {x: 0.025270462, y: 2.21363, z: -0.17027819}
+--- !u!208 &2798243666600917208
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 610681350941845999}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 4.5136614, y: 2.30496, z: 4.011919}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0.02527046, y: 2.21363, z: -0.1702782}
+  m_TimeToStationary: 0.5
+--- !u!114 &3495043229090131814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 610681350941845999}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8a001af2ae4cf547ad74585041804a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game::Heroes.Game.Combat.Faction
+  Team: 0
+  Level: 1
 --- !u!1 &1005979916835462576
 GameObject:
   m_ObjectHideFlags: 0
@@ -2144,7 +2176,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6330859782764218760
 Transform:
   m_ObjectHideFlags: 0
