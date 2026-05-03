@@ -213,12 +213,12 @@ namespace Heroes.Presentation.UI.SelectionPanel
                 return null;
             }
 
-            var beliefs = snapshot.Memory?.Beliefs?.Select(item => new GoapBeliefSelectionDTO(item.Name, item.Value)).ToArray()
-                ?? System.Array.Empty<GoapBeliefSelectionDTO>();
+            var goals = snapshot.Goals.OrderByDescending(item => item.Priority).Select(item => new GoapGoalSelectionDTO(item.Name,  item.Description, item.Icon, item.Heuristic, item.Name == snapshot?.Plan.GoalName)).ToArray()
+                ?? System.Array.Empty<GoapGoalSelectionDTO>();
             var steps = snapshot.Plan?.Steps?.Select(item => new GoapPlanStepSelectionDTO(item.Name, item.Description, item.PreconditionsMet)).ToArray()
                 ?? System.Array.Empty<GoapPlanStepSelectionDTO>();
 
-            return new GoapSelectionDTO(snapshot.Plan?.GoalName ?? string.Empty, snapshot.Idle?.Name ?? string.Empty, snapshot.Idle?.IsActive ?? false, beliefs, steps);
+            return new GoapSelectionDTO(goals, steps);
         }
 
         private void HandleUpgradeQueueEvent(string buildingId)

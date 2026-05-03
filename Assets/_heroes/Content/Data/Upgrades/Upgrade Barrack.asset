@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c947fd3f7afe474088173f5e29e05f2, type: 3}
   m_Name: Upgrade Barrack
   m_EditorClassIdentifier: Game::Heroes.Content.Buildings.BuildingUpgradeDefinition
-  Id: 3
+  Id: 711716e3-43a7-4ea5-acd1-334389f3b7e0
   Name: Upgrade Barrack
   Description: Double health points of the barrack
-  IconPath: Icons\capybara
+  IconPath: Icons/all/lorc/hammer-nails
   GoldCost: 250
   Duration: 100
-  UpgradeRequirements: []
-  UnlocksUpgrades:
-  - {fileID: 11400000, guid: 2aaed8a47ecad6f4883b1c18aa6cc897, type: 2}
   UsageLimit: 1
   Effects:
   - {fileID: 11400000, guid: 128ec9bb1c0063f43ac48c0c29ebadf6, type: 2}
+  UpgradeRequirements: []
+  UnlocksUpgrades:
+  - {fileID: 11400000, guid: 2aaed8a47ecad6f4883b1c18aa6cc897, type: 2}

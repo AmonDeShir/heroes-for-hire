@@ -57,16 +57,22 @@ namespace Heroes.Presentation.UI.SelectionPanel
             IsInHome = isInHome;
         }
     }
-
-    public class GoapBeliefSelectionDTO
+    
+    public class GoapGoalSelectionDTO
     {
         public string Name;
+        public string Description;
+        public string Icon;
         public float Value;
+        public bool IsActive;
 
-        public GoapBeliefSelectionDTO(string name, float value)
+        public GoapGoalSelectionDTO(string name, string description, string icon, float value, bool isActive)
         {
             Name = name;
+            Description = description;
             Value = value;
+            Icon = icon;
+            IsActive = isActive;
         }
     }
 
@@ -86,18 +92,12 @@ namespace Heroes.Presentation.UI.SelectionPanel
 
     public class GoapSelectionDTO
     {
-        public string GoalName;
-        public string IdleName;
-        public bool IsIdle;
-        public GoapBeliefSelectionDTO[] Beliefs;
         public GoapPlanStepSelectionDTO[] Steps;
+        public GoapGoalSelectionDTO[] Goals;
 
-        public GoapSelectionDTO(string goalName, string idleName, bool isIdle, GoapBeliefSelectionDTO[] beliefs, GoapPlanStepSelectionDTO[] steps)
+        public GoapSelectionDTO(GoapGoalSelectionDTO[] goals, GoapPlanStepSelectionDTO[] steps)
         {
-            GoalName = goalName;
-            IdleName = idleName;
-            IsIdle = isIdle;
-            Beliefs = beliefs ?? Array.Empty<GoapBeliefSelectionDTO>();
+            Goals = goals ?? Array.Empty<GoapGoalSelectionDTO>();
             Steps = steps ?? Array.Empty<GoapPlanStepSelectionDTO>();
         }
     }

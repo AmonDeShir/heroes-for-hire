@@ -11,6 +11,7 @@ namespace Heroes.Game.AI
     {
         private const float WanderRadius = 6f;
         private const float MaxGearLevel = 3f;
+        private const float MaxGoldLevel = 100000f;
         private readonly string _homeBuildingInstanceId;
 
         public HeroArchetype(HeroFacade hero) : base(
@@ -28,6 +29,7 @@ namespace Heroes.Game.AI
         private static AgentState CreateBaseState(HeroFacade hero)
         {
             var state = new AgentState(Consts.BELIEF_COUNT);
+            
             if (hero?.Model != null)
             {
                 state.SetLocation(hero.transform.position);
@@ -47,20 +49,42 @@ namespace Heroes.Game.AI
         private void CreateGoals()
         {
             Goals.Add(CreateGoal()
-                .WithName("Be Alive")
+                .WithName("Stay Alive")
+                .WithDescription(
+                    "Life is great! There’s sunshine, cheese, and, oh no, is that a dragon? The hero will prioritize NOT being flat as a pancake whenever things get spooky.")
+                .WithIcon("Icons/all/lorc/piece-skull")
                 .WithPriority(5)
-                .WithImportance(ctx => ctx.state.GetBelieve(Consts.DANGER_LEVEL) * Mathf.Clamp(70f - ctx.state.GetBelieve(Consts.HEALTH), 0f, 100f))
-                .WithAchieved(ctx => ctx.state.GetBelieve(Consts.DANGER_LEVEL) <= 0.01f || ctx.state.GetBelieve(Consts.HEALTH) >= 85f)
-                .WithHeuristic(ctx => (1f - ctx.state.GetBelieve(Consts.DANGER_LEVEL) + ctx.state.GetBelieve(Consts.HEALTH) / 85f) / 2f)
+                .WithImportance(ctx =>
+                    ctx.state.GetBelieve(Consts.DANGER_LEVEL) *
+                    Mathf.Clamp(70f - ctx.state.GetBelieve(Consts.HEALTH), 0f, 100f))
+                .WithAchieved(ctx =>
+                    ctx.state.GetBelieve(Consts.DANGER_LEVEL) <= 0.01f || ctx.state.GetBelieve(Consts.HEALTH) >= 85f)
+                .WithHeuristic(ctx =>
+                    (1f - ctx.state.GetBelieve(Consts.DANGER_LEVEL) + ctx.state.GetBelieve(Consts.HEALTH) / 85f) / 2f)
                 .Build()
             );
-            
+
             Goals.Add(CreateGoal()
-                .WithName("Have Best Gear")
+                .WithName("Shiny Gear")
+                .WithDescription(
+                    "A hero is only as good as their fashion sense. This goal ensures they won't rest until they look like a walking disco ball of legendary plate armor.")
+                .WithIcon("Icons/all/lorc/sword-in-stone")
                 .WithPriority(1)
                 .WithImportance(ctx => 1f)
                 .WithAchieved(ctx => ctx.state.GetBelieve(Consts.GEAR_LEVEL) >= MaxGearLevel)
                 .WithHeuristic(ctx => ctx.state.GetBelieve(Consts.GEAR_LEVEL) / MaxGearLevel)
+                .Build()
+            );
+
+            Goals.Add(CreateGoal()
+                .WithName("Pure Greed")
+                .WithDescription(
+                    "Why be happy with one coin when you can have a pile big enough to sleep on? Pure, unadulterated greed disguised as 'economic stability'.")
+                .WithIcon("Icons/all/willdabeast/gold-bar")
+                .WithPriority(1)
+                .WithImportance(ctx => 1f)
+                .WithAchieved(ctx => ctx.state.GetBelieve(Consts.GOLD) >= MaxGoldLevel)
+                .WithHeuristic(ctx => ctx.state.GetBelieve(Consts.GOLD) / MaxGoldLevel)
                 .Build()
             );
         }

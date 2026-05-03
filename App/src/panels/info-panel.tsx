@@ -5,10 +5,11 @@ import { useEffect, useState } from 'onejs-preact/hooks'
 import { InfoTabContent } from './info-tab-content'
 import { GoapTabContent } from './goap-tab-content'
 import { UpgradesTabContent } from './upgrades-tab-content'
+import { ButtonConfig, SideButtonGroup } from '../components/side-button-group'
 
 const INFO_ICON = Resources.Load("Icons/info") as Texture2D
 const UPGRADE_ICON = Resources.Load("Icons/upgrade") as Texture2D
-const GOAP_ICON = Resources.Load("Icons/capybara") as Texture2D
+const GOAP_ICON = Resources.Load("Icons/all/lorc/brain") as Texture2D
 
 type Mode = "info" | "goap" | "upgrades"
 
@@ -29,17 +30,15 @@ export function InfoPanelContent(props: {
     return <Fragment />
   }
 
+  const sidebarButtons: ButtonConfig[] = [
+    { icon: INFO_ICON, active: mode === "info", onClick: () => setMode("info") },
+    { icon: GOAP_ICON, active: mode === "goap", onClick: () => setMode("goap"), show: hasGoapTab },
+    { icon: UPGRADE_ICON, active: mode === "upgrades", onClick: () => setMode("upgrades"), show: hasUpgradeTab },
+  ];
+
   return (
     <Fragment>
-      <div class='flex w-7 h-full flex-col justify-evenly items-start'>
-        <IconButton active={mode === "info"} icon={INFO_ICON} onClick={() => setMode("info")} />
-        {hasGoapTab && (
-          <IconButton active={mode === "goap"} icon={GOAP_ICON} onClick={() => setMode("goap")} />
-        )}
-        {hasUpgradeTab && (
-          <IconButton active={mode === "upgrades"} icon={UPGRADE_ICON} onClick={() => setMode("upgrades")} />
-        )}
-      </div>
+      <SideButtonGroup buttons={sidebarButtons} />;
 
       {mode === "info" && (
         <InfoTabContent selected={props.selected} />

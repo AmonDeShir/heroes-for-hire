@@ -2,16 +2,14 @@ import { Fragment, h } from 'preact'
 import { Resources, Texture2D } from 'UnityEngine'
 import { useEffect, useEventfulState, useMemo, useState } from 'onejs-preact/hooks'
 import System from 'System'
-import { DescriptionTooltip } from '../components/description-tooltip'
 import { Icon } from '../components/icon'
 import { ProgressBar } from '../components/progress-bar'
 import { ShopButton } from '../components/shop-button'
+import { useTooltipBinding } from '../hooks/use-tooltip'
 
 const INFO_ICON = Resources.Load("Icons/info") as Texture2D
 
 export function UpgradesTabContent(props: { active: boolean, onAvailabilityChange: (hasUpgradeTab: boolean) => void }) {
-  const [hoveredUpgradeId, setHoveredUpgradeId] = useState<string | null>(null)
-  const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 })
   const [building] = useEventfulState(selectionPanelPresenter, 'SelectedBuilding')
   const [buildingUpgrades] = useEventfulState(selectionPanelPresenter, 'BuildingUpgrades')
   const [queuedBuildingUpgrades] = useEventfulState(selectionPanelPresenter, 'QueuedBuildingUpgrades')
@@ -20,14 +18,12 @@ export function UpgradesTabContent(props: { active: boolean, onAvailabilityChang
   const queuedUpgradeItems = useMemo(() => toJsArray(queuedBuildingUpgrades), [queuedBuildingUpgrades])
   const activeUpgrade = useMemo(() => upgrades.find((upgrade) => upgrade.IsActive) ?? null, [upgrades])
   
+  const bindTooltip = useTooltipBinding();
+  const getUpgradeDesc = (u: any) => u.LockReason ? `${u.Description}\n\n${u.LockReason}` : (u.Description ?? "")
+
   const remainingUpgrades = useMemo(
     () => upgrades.filter((upgrade) => upgrade.IsCompleted || upgrade.LockReason !== 'Usage limit reached'),
     [upgrades],
-  )
-
-  const hoveredUpgrade = useMemo(
-    () => upgrades.find((upgrade) => upgrade.Id === hoveredUpgradeId) ?? null,
-    [hoveredUpgradeId, upgrades],
   )
 
   const activeUpgradeIcon = useMemo(
@@ -55,12 +51,7 @@ export function UpgradesTabContent(props: { active: boolean, onAvailabilityChang
                 key={upgrade.Id}
                 class='flex-shrink-0 h-[18px] w-[18px] mr-0.5 border-box border-2 border-main bg-tertiary'
                 onClick={() => selectionPanelPresenter.SelectUpgrade(upgrade.Id)}
-                onMouseEnter={(event) => {
-                  const mouseEvent = event as any
-                  setHoveredUpgradeId(upgrade.Id)
-                  setTooltipPos({ x: mouseEvent.clientX, y: mouseEvent.clientY })
-                }}
-                onMouseLeave={() => setHoveredUpgradeId((current) => current === upgrade.Id ? null : current)}
+                {...bindTooltip(getUpgradeDesc(upgrade))}
               >
                 <Icon icon={Resources.Load(upgrade.Icon) as Texture2D} />
               </div>
@@ -77,6 +68,7 @@ export function UpgradesTabContent(props: { active: boolean, onAvailabilityChang
                   max={1}
                   value={activeUpgrade.Progress}
                   text={`${(activeUpgrade.Progress * 100).toFixed(0)}%`}
+                  {...bindTooltip(activeUpgrade.Description)}
                 />
               ) : (
                 <div class='w-[148px] h-[18px] flex flex-row border-2 border-main bg-tertiary/40' />
@@ -101,11 +93,7 @@ export function UpgradesTabContent(props: { active: boolean, onAvailabilityChang
                   disabled={!upgrade.IsCompleted && !upgrade.CanQueue}
                   extraText
                   onClick={() => selectionPanelPresenter.SelectUpgrade(upgrade.Id)}
-                  onMouseEnter={(event) => {
-                    setHoveredUpgradeId(upgrade.Id)
-                    setTooltipPos({ x: event.clientX, y: event.clientY })
-                  }}
-                  onMouseLeave={() => setHoveredUpgradeId((current) => current === upgrade.Id ? null : current)}
+                  {...bindTooltip(getUpgradeDesc(upgrade))}
                 />
               </div>
             ))}
@@ -116,11 +104,6 @@ export function UpgradesTabContent(props: { active: boolean, onAvailabilityChang
           </div>
         </div>
       </div>
-
-      <DescriptionTooltip
-        text={buildTooltipText(hoveredUpgrade)}
-        visible={hoveredUpgrade != null}
-      />
     </Fragment>
   )
 }

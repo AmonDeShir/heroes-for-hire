@@ -249,7 +249,7 @@ namespace Heroes.GOAP.Core.Debug
                 var importance = goal.Importance(ctx);
                 var heuristic = goal.Heuristic(ctx);
                 var achieved = goal.Achieved(ctx);
-                goals.Add(new GoapDebugGoal(goal.Name, goal.Priority, importance, heuristic, achieved));
+                goals.Add(new GoapDebugGoal(goal.Name, goal.Description, goal.Icon, goal.Priority, importance, heuristic, achieved));
             }
 
             return goals;

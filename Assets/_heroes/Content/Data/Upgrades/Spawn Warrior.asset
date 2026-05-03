@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c947fd3f7afe474088173f5e29e05f2, type: 3}
   m_Name: Spawn Warrior
   m_EditorClassIdentifier: Game::Heroes.Content.Buildings.BuildingUpgradeDefinition
-  Id: 4
+  Id: 3d9447e9-4674-4791-8922-c49221a8b121
   Name: Recruit a warrior
   Description: The guild is recruiting a brave warrior to fight for you.
-  IconPath: Icons\capybara
+  IconPath: Icons/all/lorc/shark-jaws
   GoldCost: 150
   Duration: 20
-  UpgradeRequirements:
-  - {fileID: 11400000, guid: a65872b635beb1d45828d32b87d8ccf3, type: 2}
-  UnlocksUpgrades: []
   UsageLimit: 3
   Effects:
   - {fileID: 11400000, guid: d170edd9825aa934b920becce883b448, type: 2}
+  UpgradeRequirements:
+  - {fileID: 11400000, guid: a65872b635beb1d45828d32b87d8ccf3, type: 2}
+  UnlocksUpgrades: []

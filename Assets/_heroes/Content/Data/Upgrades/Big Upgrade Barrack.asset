@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c947fd3f7afe474088173f5e29e05f2, type: 3}
   m_Name: Big Upgrade Barrack
   m_EditorClassIdentifier: Game::Heroes.Content.Buildings.BuildingUpgradeDefinition
-  Id: 1
+  Id: fbdcf001-59e8-4139-b468-5e9ba2012839
   Name: Big Upgrade Barrack
   Description: Triple  health points of the barrack
-  IconPath: Icons\capybara
+  IconPath: Icons/all/delapouite/all-seeing-eye
   GoldCost: 50
   Duration: 10
-  UpgradeRequirements:
-  - {fileID: 11400000, guid: e08fa6f9969ad03419440a6405700f86, type: 2}
-  UnlocksUpgrades: []
   UsageLimit: 1
   Effects:
   - {fileID: 11400000, guid: 0d5e88e5b59ffa94583eed5ecec7a1b0, type: 2}
+  UpgradeRequirements:
+  - {fileID: 11400000, guid: e08fa6f9969ad03419440a6405700f86, type: 2}
+  UnlocksUpgrades: []

@@ -12,12 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 673c7d622b8f947449147c88b29e38f1, type: 3}
   m_Name: Warrior
   m_EditorClassIdentifier: Game::Heroes.Content.Heroes.HeroDefinition
-  Id: 123
+  Id: a84c75cc-036f-47a6-9939-259f388ab14e
   DisplayName: Warrior
   Description: I am just a simple warrior, i see a target, i attack 'em
-  IconPath: Icons\capybara
+  IconPath: Heros/Warrior_Icon
   MaxHp: 300
   StartHp: 100
+  HpRegeneration: 1
+  Attack: 0
+  Defence: 0
+  Speed: 0
   StartGold: 100
   BaseGearLevel: 0
   HomeRadius: 2

@@ -71,25 +71,26 @@ declare namespace CS.Heroes.Presentation.UI.SelectionPanel {
     public get IsInHome(): boolean;
   }
 
-  class GoapBeliefSelectionDTO extends CS.System.Object {
+  class GoapGoalSelectionDTO extends CS.System.Object {
     protected [__keep_incompatibility]: never;
     public get Name(): string;
     public get Value(): number;
+    public get Icon(): string;
+    public get Description(): string;
+    public get IsActive(): boolean;
   }
 
   class GoapPlanStepSelectionDTO extends CS.System.Object {
     protected [__keep_incompatibility]: never;
     public get Name(): string;
     public get Description(): string;
+    public get Value(): number;
     public get PreconditionsMet(): boolean;
   }
 
   class GoapSelectionDTO extends CS.System.Object {
     protected [__keep_incompatibility]: never;
-    public get GoalName(): string;
-    public get IdleName(): string;
-    public get IsIdle(): boolean;
-    public get Beliefs(): System.Array$1<Heroes.Presentation.UI.SelectionPanel.GoapBeliefSelectionDTO>;
+    public get Goals(): System.Array$1<Heroes.Presentation.UI.SelectionPanel.GoapGoalSelectionDTO>;
     public get Steps(): System.Array$1<Heroes.Presentation.UI.SelectionPanel.GoapPlanStepSelectionDTO>;
   }
 

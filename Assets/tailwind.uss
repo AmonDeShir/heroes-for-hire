@@ -71,6 +71,14 @@
     margin-top: auto;
     margin-bottom: auto
 }
+.root .my-1 {
+    margin-top: 4px;
+    margin-bottom: 4px
+}
+.root .my-2 {
+    margin-top: 8px;
+    margin-bottom: 8px
+}
 .root .mb-2 {
     margin-bottom: 8px
 }
@@ -100,6 +108,12 @@
 }
 .root .mt-2 {
     margin-top: 8px
+}
+.root .mt-0_d_5 {
+    margin-top: 2px
+}
+.root .ml-3 {
+    margin-left: 12px
 }
 .root .flex {
     display: flex
@@ -160,6 +174,9 @@
 }
 .root .h-full {
     height: 100%
+}
+.root .h-_lb_90px_rb_ {
+    height: 90px
 }
 .root .min-h-_lb_18px_rb_ {
     min-height: 18px
@@ -353,6 +370,24 @@
 }
 .root .pb-2 {
     padding-bottom: 8px
+}
+.root .pb-1 {
+    padding-bottom: 4px
+}
+.root .pt-1 {
+    padding-top: 4px
+}
+.root .pt-2 {
+    padding-top: 8px
+}
+.root .pt-2_d_5 {
+    padding-top: 10px
+}
+.root .pt-4 {
+    padding-top: 16px
+}
+.root .pt-3 {
+    padding-top: 12px
 }
 .root .text-_lb_10px_rb_ {
     font-size: 10px
