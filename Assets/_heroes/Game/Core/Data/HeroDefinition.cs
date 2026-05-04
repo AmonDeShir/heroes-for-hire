@@ -31,7 +31,6 @@ namespace Heroes.Content.Heroes
         public float HomeRadius = 2f;
         public float DangerSenseRadius = 12f;
         
-        
         [Header("Prefab")]
         public HeroFacade Prefab;
     }
