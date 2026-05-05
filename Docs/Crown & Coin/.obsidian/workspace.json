@@ -4,54 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "b91b7345737f9e25",
+        "id": "8ce60e59dccedcc0",
         "type": "tabs",
-        "dimension": 75.89498806682577,
         "children": [
           {
-            "id": "2c70682bd2944d18",
+            "id": "d4c3ddf879ce3e28",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Welcome.md",
+                "file": "Budynki/Farma.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Welcome"
-            }
-          },
-          {
-            "id": "60601954bb3b5a24",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Architecture.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Architecture"
-            }
-          }
-        ],
-        "currentTab": 1
-      },
-      {
-        "id": "e4a67683c7ff6d49",
-        "type": "tabs",
-        "dimension": 24.105011933174225,
-        "children": [
-          {
-            "id": "978f7e72bc146669",
-            "type": "leaf",
-            "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Graph view"
+              "title": "Farma"
             }
           }
         ]
@@ -216,15 +183,42 @@
       "bases:Create new base": false
     }
   },
-  "active": "60601954bb3b5a24",
+  "active": "d4c3ddf879ce3e28",
   "lastOpenFiles": [
-    "Welcome.md",
-    "Architecture.md",
-    "Untitled.canvas",
+    "Budynki/Targ.md",
+    "Heroes/poziom bohatera.md",
+    "Heroes/Statystyki.md",
+    "Budynki/Kaplica.md",
+    "Budynki/Zamek.md",
+    "Proste jednostki/Strażnik.md",
+    "Budynki/Kuźnia.md",
+    "Potwory/Spawner Potworów.md",
+    "Budynki/Budynki.md",
+    "Budynki/Alhemik.md",
+    "Przedmioty/Ekwipunek.md",
+    "Heroes",
+    "Przedmioty/Loot z potworów.md",
+    "Potwory/Potwory.md",
+    "Proste jednostki/Poborca podatkowy.md",
+    "Proste jednostki",
+    "Przedmioty/Sklep.md",
+    "Potwory/Strefa spawnu.md",
+    "Budynki/Wieża.md",
+    "Budynki/Farma.md",
+    "Budynki/Gildia.md",
+    "Budynki/Dom.md",
+    "Ekonomia/Złoto.md",
+    "Ekonomia/Poborca podatkowy.md",
+    "zamku.md",
+    "Ekonomia",
+    "Budynki",
+    "Potwory",
+    "Przedmioty/Skrzynie z loot'em.md",
+    "Przedmioty/Przedmioty.md",
     "Mechaniki.md",
-    "2026-04-03.md",
+    "Przedmioty",
+    "Mechaniki graph.canvas",
     "Untitled 1.canvas",
-    "Untitled 2.canvas",
-    "create a link.md"
+    "Untitled 2.canvas"
   ]
 }
