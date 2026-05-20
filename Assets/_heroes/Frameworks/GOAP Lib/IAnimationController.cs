@@ -1,4 +1,4 @@
-﻿namespace Heroes.GOAP
+namespace Heroes.GOAP
 {
     public interface IAnimationController
     {
@@ -6,3 +6,4 @@
         public float GetAnimationLength(int hash);
     }
 }
+

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 namespace Heroes.GOAP.Core
@@ -111,3 +111,5 @@ namespace Heroes.GOAP.Core
         }
     }
 }
+
+

@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c947fd3f7afe474088173f5e29e05f2, type: 3}
+  m_Name: Unlock Simple Sword
+  m_EditorClassIdentifier: Game::Heroes.Content.Buildings.BuildingUpgradeDefinition
+  Id: 1c0b2a3d-4e5f-4a60-9b7c-1d2e3f405161
+  Name: Unlock Recruit's Sword
+  Description: Lets the blacksmith sell a basic sword.
+  IconPath: Items/Swords/T1_Icon
+  GoldCost: 50
+  Duration: 10
+  UsageLimit: 1
+  Effects:
+  - {fileID: 11400000, guid: 1a2b3c4d5e6f7081920a1b2c3d4e5f61, type: 2}
+  UpgradeRequirements: []
+  UnlocksUpgrades:
+  - {fileID: 11400000, guid: 1d2e3f405162738495a6b7c8d9e0f1a3, type: 2}

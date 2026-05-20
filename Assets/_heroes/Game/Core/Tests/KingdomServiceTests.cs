@@ -30,3 +30,5 @@ namespace Heroes.Tests.Core
         }
     }
 }
+
+

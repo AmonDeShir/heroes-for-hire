@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56bf6edaf2c6448448de3a2938f98781, type: 3}
+  m_Name: Shop
+  m_EditorClassIdentifier: Game::Heroes.Content.Buildings.BuildingDefinition
+  Id: 9b22c2f3-6c4e-49a8-8db8-5b33c0a1b202
+  DisplayName: Market
+  Category: 0
+  Description: Sells artifacts, amulets, and basic potions.
+  IconPath: Buildings/Market_Icon
+  AvailableUpgrades:
+  - {fileID: 11400000, guid: 3a3b3c3d3e3f40414243444546474849, type: 2}
+  - {fileID: 11400000, guid: 4a4b4c4d4e4f5051525354555657585a, type: 2}
+  - {fileID: 11400000, guid: 4a4b4c4d4e4f5051525354555657585c, type: 2}
+  - {fileID: 11400000, guid: 5a5b5c5d5e5f60616263646566676869, type: 2}
+  SellItems:
+  - {fileID: 11400000, guid: 33333333333333333333333333333333, type: 2}
+  - {fileID: 11400000, guid: 1b6168f038568c041a100a469f86601b, type: 2}
+  - {fileID: 11400000, guid: 5bc13e8261df819489c89239b0240737, type: 2}
+  GoldCost: 300
+  PopulationCost: 1
+  PopulationProvided: 0
+  IsPlayerBuildable: 1
+  RequiredCastleLevel: 2
+  MaxHp: 100
+  BuildHpPerSecond: 5
+  StartHp: 10
+  Prefab: {fileID: 4614395175014191564, guid: ca3ac50e2db3f9144b8ea95584169a46, type: 3}

@@ -1,4 +1,4 @@
-﻿using Heroes.GOAP.Core;
+using Heroes.GOAP.Core;
 
 namespace Heroes.Game.AI.Strategies
 {
@@ -51,3 +51,4 @@ namespace Heroes.Game.AI.Strategies
         }
     }
 }
+

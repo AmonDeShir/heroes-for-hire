@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edafbca716694eba8c40304faa1429ae, type: 3}
+  m_Name: Health Amulet
+  m_EditorClassIdentifier: Game::Heroes.Content.Heroes.ItemDefinition
+  Id: b18a29a6-8faf-4b9e-9d0a-4242f478b71d
+  DisplayName: Vitality Amulet
+  Description: Keeps a hero breathing through questionable decisions.
+  IconPath: Items/Necklace_Icon
+  GoldCost: 300
+  Tier: 1
+  Attack: 0
+  Defense: 0
+  Speed: 0
+  HpRegeneration: 0
+  Users: {fileID: 11400000, guid: a809778c804b2a14683e5b4da2685f55, type: 2}
+  Slot: 0
+  IsSingleUse: 0
+  Effects:
+  - Trigger: 0
+    Effect: {fileID: 11400000, guid: cabb03f87f932354da39daba89635a96, type: 2}
+  WeaponPrefab: {fileID: 0}

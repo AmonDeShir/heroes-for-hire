@@ -6,8 +6,10 @@ import { Resources, Texture2D } from 'UnityEngine'
 import { useTooltipBinding } from '../hooks/use-tooltip'
 import { DecorativeFrame } from '../components/decorative-frame'
 import { Icon } from '../components/icon'
+import { Arrow } from '../components/arrow'
 
 const WANDER_ICON = Resources.Load("Icons/all/lorc/treasure-map") as Texture2D;
+const DEFAULT_STEP_ICON = Resources.Load("Icons/all/lorc/brain") as Texture2D;
 
 export function GoapTabContent(props: { active: boolean, onAvailabilityChange: (hasGoapTab: boolean) => void }) {
   const [goap] = useEventfulState(selectionPanelPresenter, 'SelectedGoap')
@@ -50,11 +52,15 @@ export function GoapTabContent(props: { active: boolean, onAvailabilityChange: (
         <div class='flex flex-col justify-center h-full'>
           <div class='flex h-[90px] items-start justify-between'>
             {steps.length > 0 ? (
-              <div class='mt-1'>
+              <div class='flex flex-row flex-wrap items-start gap-y-1'>
                 {steps.map((step, index) => (
-                  <div class='mb-2'>
-                    <div>{index + 1}. {step.Name}</div>
-                    <div class={step.PreconditionsMet ? 'text-main/80' : 'text-disabled'}>{step.Description || 'No description'}</div>
+                  <div key={index} class='flex flex-row items-center'>
+                    <StepNode step={step} bindTooltip={bindTooltip} />
+                    {index < steps.length - 1 && (
+                      <div class='mx-1 mt-[-10px]'>
+                        <Arrow />
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -71,6 +77,29 @@ export function GoapTabContent(props: { active: boolean, onAvailabilityChange: (
           </div>
         </div>
       </div>
+    </div>
+  )
+}
+
+function StepNode(props: { step: any, bindTooltip: (text: string) => any }) {
+  const step = props.step as any
+  const icon = useMemo(() => {
+    const p = step?.Icon as string | null | undefined
+    return (p ? (Resources.Load(p) as Texture2D) : null) ?? DEFAULT_STEP_ICON
+  }, [step?.Icon])
+  const faded = !step?.PreconditionsMet
+
+  return (
+    <div
+      class={'flex-shrink-0 flex flex-col w-[78px] h-full justify-center items-center ' + (faded ? 'opacity-60' : '')}
+      {...props.bindTooltip(step?.Description)}
+    >
+      <DecorativeFrame>
+        <div class='w-full h-full p-2 bg-tertiary'>
+          <Icon icon={icon} />
+        </div>
+      </DecorativeFrame>
+      <div class={'text-[10px] mt-0.5 text-center ' + (faded ? 'text-disabled' : 'text-main')}>{step?.Name ?? ''}</div>
     </div>
   )
 }

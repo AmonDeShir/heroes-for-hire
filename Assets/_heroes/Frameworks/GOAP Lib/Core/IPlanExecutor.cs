@@ -1,4 +1,4 @@
-﻿namespace Heroes.GOAP.Core
+namespace Heroes.GOAP.Core
 {
     public interface IPlanExecutor
     {
@@ -8,3 +8,4 @@
         public event System.Action OnNextStepLoaded;
     }
 }
+

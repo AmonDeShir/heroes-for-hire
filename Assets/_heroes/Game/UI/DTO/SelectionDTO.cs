@@ -1,4 +1,5 @@
 using System;
+using Heroes.Presentation.UI.BuildingPanel;
 
 namespace Heroes.Presentation.UI.SelectionPanel
 {
@@ -48,13 +49,86 @@ namespace Heroes.Presentation.UI.SelectionPanel
         public bool IsAlive;
         public bool IsInHome;
 
-        public HeroSelectionDTO(int gold, float gearLevel, float dangerLevel, bool isAlive, bool isInHome)
+        public float Attack;
+        public float Defence;
+        public float Speed;
+
+        public HeroSelectionDTO(int gold, float gearLevel, float dangerLevel, bool isAlive, bool isInHome, float attack, float defence, float speed)
         {
             Gold = gold;
             GearLevel = gearLevel;
             DangerLevel = dangerLevel;
             IsAlive = isAlive;
             IsInHome = isInHome;
+
+            Attack = attack;
+            Defence = defence;
+            Speed = speed;
+        }
+    }
+
+    public class HeroEquipmentSelectionDTO
+    {
+        public EquipmentItemDTO Weapon;
+        public EquipmentItemDTO Armor;
+        public EquipmentItemDTO[] Artifacts;
+        public EquipmentItemDTO[] Consumables;
+        public EquipmentItemDTO[] Backpack;
+
+        public HeroEquipmentSelectionDTO(EquipmentItemDTO weapon, EquipmentItemDTO armor, EquipmentItemDTO[] artifacts, EquipmentItemDTO[] consumables, EquipmentItemDTO[] backpack)
+        {
+            Weapon = weapon;
+            Armor = armor;
+            Artifacts = artifacts ?? Array.Empty<EquipmentItemDTO>();
+            Consumables = consumables ?? Array.Empty<EquipmentItemDTO>();
+            Backpack = backpack ?? Array.Empty<EquipmentItemDTO>();
+        }
+    }
+
+    public class ShopItemSelectionDTO
+    {
+        public string Id;
+        public string Name;
+        public string Description;
+        public string Icon;
+        public int GoldCost;
+        public float Attack;
+        public float Defense;
+        public float Speed;
+        public float HpRegeneration;
+        public string Slot;
+        public bool IsSingleUse;
+        public bool IsUnlocked;
+        public string LockReason;
+
+        public ShopItemSelectionDTO(
+            string id,
+            string name,
+            string description,
+            string icon,
+            int goldCost,
+            float attack,
+            float defense,
+            float speed,
+            float hpRegeneration,
+            string slot,
+            bool isSingleUse,
+            bool isUnlocked,
+            string lockReason)
+        {
+            Id = id;
+            Name = name;
+            Description = description;
+            Icon = icon;
+            GoldCost = goldCost;
+            Attack = attack;
+            Defense = defense;
+            Speed = speed;
+            HpRegeneration = hpRegeneration;
+            Slot = slot;
+            IsSingleUse = isSingleUse;
+            IsUnlocked = isUnlocked;
+            LockReason = lockReason;
         }
     }
     
@@ -80,12 +154,14 @@ namespace Heroes.Presentation.UI.SelectionPanel
     {
         public string Name;
         public string Description;
+        public string Icon;
         public bool PreconditionsMet;
 
-        public GoapPlanStepSelectionDTO(string name, string description, bool preconditionsMet)
+        public GoapPlanStepSelectionDTO(string name, string description, string icon, bool preconditionsMet)
         {
             Name = name;
             Description = description;
+            Icon = icon;
             PreconditionsMet = preconditionsMet;
         }
     }
@@ -152,3 +228,5 @@ namespace Heroes.Presentation.UI.SelectionPanel
         }
     }
 }
+
+

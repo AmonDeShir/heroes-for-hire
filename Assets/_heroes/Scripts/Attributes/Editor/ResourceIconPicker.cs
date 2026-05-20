@@ -10,7 +10,7 @@ using System.Collections;
 public class ResourceIconPicker : EditorWindow
 {
     private static SerializedProperty _targetProperty;
-    private static string _resourceFolder;
+    private static string[] _resourceFolders;
 
     private List<string> _iconPaths = new();
     private ScrollView _scrollView;
@@ -18,13 +18,16 @@ public class ResourceIconPicker : EditorWindow
     
     private IEnumerator _loaderRoutine;
 
-    public static void Show(string folder, SerializedProperty property)
+    public static void Show(string[] folders, SerializedProperty property)
     {
         _targetProperty = property;
-        _resourceFolder = folder;
+        _resourceFolders = folders;
+        
+        Debug.Log("Folder " + string.Join(", ", _resourceFolders));
 
         var window = GetWindow<ResourceIconPicker>(true, "Select Icon");
         window.minSize = new Vector2(400, 500);
+        
         window.LoadIcons();
         window.RefreshList("");
         window.Show();
@@ -70,14 +73,32 @@ public class ResourceIconPicker : EditorWindow
 
     private void LoadIcons()
     {
-        var folderPath = $"Assets/Resources/{_resourceFolder}";
-        if (!AssetDatabase.IsValidFolder(folderPath)) return;
+        foreach (var folder in _resourceFolders)
+        {
+            var path = $"Assets/Resources/{folder}";
+            
+            Debug.Log($"Loading {path}");
+
+            var icons = ReadIconsFromFolder(path);
+            
+            Debug.Log("Loaded " + icons.Count);
+            
+            _iconPaths.AddRange(icons);
+        }
+    }
+
+    private List<string> ReadIconsFromFolder(string folderPath)
+    {
+        if (!AssetDatabase.IsValidFolder(folderPath))
+        {
+            return new();
+        }
 
         var guids = AssetDatabase.FindAssets("t:Texture2D t:VectorImage", new[] { folderPath });
         
-        _iconPaths = guids
+        return guids
             .Select(AssetDatabase.GUIDToAssetPath)
-            .Where(path => path.Contains($"/Resources/{_resourceFolder}/"))
+            .Where(path => path.Contains(folderPath))
             .Select(path => {
                 var idx = path.IndexOf("Resources/", StringComparison.Ordinal);
                 var cleanPath = path.Substring(idx + 10);
@@ -159,3 +180,4 @@ public class ResourceIconPicker : EditorWindow
         Close();
     }
 }
+

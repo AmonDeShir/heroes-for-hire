@@ -13,8 +13,8 @@ namespace Heroes.GOAP.Editor
 {
     public sealed class GoapDebuggerWindow : EditorWindow
     {
-        private const string UxmlPath = "Assets/_heroes/Systems/GOAP/Editor/GoapDebuggerWindow.uxml";
-        private const string UssPath = "Assets/_heroes/Systems/GOAP/Editor/GoapDebuggerWindow.uss";
+        private const string UxmlPath = "Assets/_heroes/Frameworks/GOAP Lib/Editor/GoapDebuggerWindow.uxml";
+        private const string UssPath = "Assets/_heroes/Frameworks/GOAP Lib/Editor/GoapDebuggerWindow.uss";
         private const float RefreshIntervalSeconds = 0.2f;
 
         private PopupField<AgentOption> agentDropdown;
@@ -908,3 +908,5 @@ namespace Heroes.GOAP.Editor
         }
     }
 }
+
+

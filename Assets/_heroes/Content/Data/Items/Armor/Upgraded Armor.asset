@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edafbca716694eba8c40304faa1429ae, type: 3}
+  m_Name: Upgraded Armor
+  m_EditorClassIdentifier: Game::Heroes.Content.Heroes.ItemDefinition
+  Id: a7840d3a-6f68-4a19-af79-9660d9c67cb4
+  DisplayName: Reinforced Cuirass
+  Description: For heroes who prefer dents over holes.
+  IconPath: Items/Armor/T2_Icon
+  GoldCost: 200
+  Tier: 2
+  Attack: 0
+  Defense: 4
+  Speed: -1
+  HpRegeneration: 0
+  Users: {fileID: 11400000, guid: a809778c804b2a14683e5b4da2685f55, type: 2}
+  Slot: 2
+  IsSingleUse: 0
+  Effects: []
+  WeaponPrefab: {fileID: 2232060803191291150, guid: 72a632a9495f96e41bb43165f5b6728e, type: 3}

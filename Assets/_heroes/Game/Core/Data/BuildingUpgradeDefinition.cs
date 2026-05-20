@@ -1,4 +1,4 @@
-﻿using Heroes.Content.Buildings.UpgradeEffects;
+using Heroes.Content.Buildings.UpgradeEffects;
 using UnityEngine;
 
 namespace Heroes.Content.Buildings
@@ -14,7 +14,7 @@ namespace Heroes.Content.Buildings
         [Multiline]
         public string Description;
         
-        [ResourceIcon("Icons")]
+        [ResourceIcon("Icons", "Items", "Heros")]
         public string IconPath;
         
         [Header("Stats")] 
@@ -30,3 +30,4 @@ namespace Heroes.Content.Buildings
         public BuildingUpgradeDefinition[] UnlocksUpgrades;
     }
 }
+

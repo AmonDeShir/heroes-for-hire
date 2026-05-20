@@ -1,4 +1,4 @@
-﻿namespace Heroes.GOAP.Core
+namespace Heroes.GOAP.Core
 {
     public interface IActionStrategy
     {
@@ -11,3 +11,4 @@
         public void Stop() { }
     }
 }
+

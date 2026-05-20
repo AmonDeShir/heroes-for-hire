@@ -55,6 +55,7 @@ namespace Heroes.GOAP.Core.Debug
     {
         public string Name { get; }
         public string Description { get; }
+        public string Icon { get; }
         public float EstimatedTime { get; }
         public bool PreconditionsMet { get; }
         public string PreconditionsLabel { get; }
@@ -64,11 +65,12 @@ namespace Heroes.GOAP.Core.Debug
         public bool GoalAchieved { get; }
         public float GoalHeuristic { get; }
 
-        public GoapDebugPlanStep(string name, string description, float estimatedTime, bool preconditionsMet, string preconditionsLabel, string effectLabel,
+        public GoapDebugPlanStep(string name, string description, string icon, float estimatedTime, bool preconditionsMet, string preconditionsLabel, string effectLabel,
             Vector2 previewLocation, IReadOnlyList<GoapDebugBelief> previewBeliefs, bool goalAchieved, float goalHeuristic)
         {
             Name = name;
             Description = description;
+            Icon = icon;
             EstimatedTime = estimatedTime;
             PreconditionsMet = preconditionsMet;
             PreconditionsLabel = preconditionsLabel;
@@ -162,3 +164,5 @@ namespace Heroes.GOAP.Core.Debug
         }
     }
 }
+
+

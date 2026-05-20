@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56bf6edaf2c6448448de3a2938f98781, type: 3}
+  m_Name: Chapel
+  m_EditorClassIdentifier: Game::Heroes.Content.Buildings.BuildingDefinition
+  Id: 9b22c2f3-6c4e-49a8-8db8-5b33c0a1b204
+  DisplayName: Chapel
+  Category: 1
+  Description: Revive fallen heroes for a price.
+  IconPath: Buildings/Holy Place_Icon
+  AvailableUpgrades:
+  - {fileID: 11400000, guid: 0b0c0d0e0f101112131415161718191a, type: 2}
+  SellItems: []
+  GoldCost: 500
+  PopulationCost: 1
+  PopulationProvided: 0
+  IsPlayerBuildable: 1
+  RequiredCastleLevel: 2
+  MaxHp: 180
+  BuildHpPerSecond: 9
+  StartHp: 10
+  Prefab: {fileID: 8746431578476170736, guid: 4c03f71e55cf07a4d93357d4089e264e, type: 3}

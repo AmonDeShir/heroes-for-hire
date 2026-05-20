@@ -144,7 +144,7 @@ namespace Heroes.GOAP.Core.Debug
                 }
             }
 
-            return new GoapDebugPlanStep(name, description, estimatedTime, preconditionsMet, preconditionsLabel, effectLabel,
+            return new GoapDebugPlanStep(name, description, action != null ? action.Icon : string.Empty, estimatedTime, preconditionsMet, preconditionsLabel, effectLabel,
                 previewLocation, previewBeliefs, goalAchieved, goalHeuristic);
         }
 
@@ -329,3 +329,5 @@ namespace Heroes.GOAP.Core.Debug
         }
     }
 }
+
+

@@ -1,4 +1,4 @@
-﻿namespace Heroes.GOAP.Core
+namespace Heroes.GOAP.Core
 {
     public class AgentContext<TSnapshot> where TSnapshot : IReadOnlyWorldSnapshot
     {
@@ -30,3 +30,5 @@
         }
     }
 }
+
+

@@ -1,5 +1,8 @@
 using System.Collections.Generic;
+using System;
 using Heroes.Game.Core.Models;
+using EventBus;
+using Heroes.Game.Core.Events;
 
 namespace Heroes.Game.Buildings
 {
@@ -14,7 +17,13 @@ namespace Heroes.Game.Buildings
         public BuildingState State { get; private set; }
         public bool IsCompleted { get; private set; }
 
+        public float GoldIncomeMultiplier { get; private set; }
+
+        public int PopulationProvided { get; private set; }
+
         public QueueModel UpgradeQueue { get; private set; }
+
+        private readonly HashSet<string> _unlockedSellItems = new();
 
         public BuildingModel(string instanceId, string definitionId, List<string> upgrades, float maxHp, float startHp)
         {
@@ -26,7 +35,50 @@ namespace Heroes.Game.Buildings
             State = BuildingState.UnderConstruction;
 
             UpgradeQueue = new QueueModel(upgrades);
+            GoldIncomeMultiplier = 1f;
+            PopulationProvided = 0;
         }
+
+        public void MultiplyGoldIncome(float multiplier)
+        {
+            if (multiplier <= 0f || float.IsNaN(multiplier) || float.IsInfinity(multiplier))
+            {
+                return;
+            }
+
+            GoldIncomeMultiplier *= multiplier;
+            if (GoldIncomeMultiplier < 0.01f)
+            {
+                GoldIncomeMultiplier = 0.01f;
+            }
+        }
+
+        public void SetPopulationProvided(int value)
+        {
+            PopulationProvided = value < 0 ? 0 : value;
+        }
+
+        public bool IsSellItemUnlocked(string itemId)
+        {
+            return !string.IsNullOrWhiteSpace(itemId) && _unlockedSellItems.Contains(itemId);
+        }
+
+        public void UnlockSellItem(string itemId)
+        {
+            if (string.IsNullOrWhiteSpace(itemId))
+            {
+                return;
+            }
+
+            _unlockedSellItems.Add(itemId);
+        }
+
+        public IReadOnlyCollection<string> GetUnlockedSellItems()
+        {
+            return _unlockedSellItems;
+        }
+
+        
 
         public void SyncFromHealth()
         {
@@ -79,3 +131,5 @@ namespace Heroes.Game.Buildings
         }
     }
 }
+
+

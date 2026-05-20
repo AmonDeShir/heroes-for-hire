@@ -8,3 +8,5 @@ namespace Heroes.GOAP.Editor
         void Render(object snapshot, VisualElement root);
     }
 }
+
+

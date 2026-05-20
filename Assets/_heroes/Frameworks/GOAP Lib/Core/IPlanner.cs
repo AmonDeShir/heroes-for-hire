@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace Heroes.GOAP.Core
 {
@@ -7,3 +7,5 @@ namespace Heroes.GOAP.Core
         public Plan<TAgent, TSnapshot> Plan(List<Action<TAgent, TSnapshot>> actions, List<Goal<TSnapshot>> goals, AgentContext<TSnapshot> ctx, int maxDepth);
     }
 }
+
+

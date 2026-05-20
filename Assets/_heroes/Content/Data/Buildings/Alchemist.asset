@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56bf6edaf2c6448448de3a2938f98781, type: 3}
+  m_Name: Alchemist
+  m_EditorClassIdentifier: Game::Heroes.Content.Buildings.BuildingDefinition
+  Id: 9b22c2f3-6c4e-49a8-8db8-5b33c0a1b203
+  DisplayName: Alchemist
+  Category: 0
+  Description: Sells potions. Smells like trouble.
+  IconPath: Buildings/Apotheke_Icon
+  AvailableUpgrades:
+  - {fileID: 11400000, guid: 6a6b6c6d6e6f70717273747576777879, type: 2}
+  - {fileID: 11400000, guid: 7a7b7c7d7e7f80818283848586878889, type: 2}
+  - {fileID: 11400000, guid: 8a8b8c8d8e8f90919293949596979899, type: 2}
+  - {fileID: 11400000, guid: 9a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9, type: 2}
+  SellItems:
+  - {fileID: 11400000, guid: 1b6168f038568c041a100a469f86601b, type: 2}
+  - {fileID: 11400000, guid: 527086d37a118ff4887582dce122e153, type: 2}
+  - {fileID: 11400000, guid: 0d2b2f2724e206c43999d4fab1e74059, type: 2}
+  GoldCost: 500
+  PopulationCost: 1
+  PopulationProvided: 0
+  IsPlayerBuildable: 1
+  RequiredCastleLevel: 3
+  MaxHp: 160
+  BuildHpPerSecond: 9
+  StartHp: 10
+  Prefab: {fileID: 2656048481957553928, guid: e796bf76793d5094e926822d12f3aa6b, type: 3}

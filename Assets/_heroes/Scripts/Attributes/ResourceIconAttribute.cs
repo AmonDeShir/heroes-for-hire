@@ -2,10 +2,11 @@ using UnityEngine;
 
 public class ResourceIconAttribute : PropertyAttribute
 {
-    public string Folder;
+    public string[] Folders;
 
-    public ResourceIconAttribute(string folder)
+    public ResourceIconAttribute(params string[] folders)
     {
-        Folder = folder;
+        Folders = folders;
     }
 }
+

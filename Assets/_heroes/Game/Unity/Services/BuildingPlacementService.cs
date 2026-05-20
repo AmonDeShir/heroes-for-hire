@@ -18,7 +18,12 @@ namespace Heroes.Game.Buildings
 
         public bool CanBuild(BuildingDefinition definition)
         {
-            return definition != null && definition.Prefab != null && _kingdom.CanAfford(definition.GoldCost);
+            return definition != null
+                   && definition.Prefab != null
+                   && definition.IsPlayerBuildable
+                   && _kingdom.CanAfford(definition.GoldCost)
+                   && _kingdom.Population >= Mathf.Max(0, definition.PopulationCost)
+                   && _kingdom.CastleLevel >= Mathf.Max(1, definition.RequiredCastleLevel);
         }
 
         public bool TryPlace(BuildingDefinition definition, Vector3 position, Quaternion rotation, out BuildingFacade building)
@@ -34,7 +39,7 @@ namespace Heroes.Game.Buildings
             {
                 return false;
             }
-            
+             
             building = UnityEngine.Object.Instantiate(definition.Prefab, position, rotation);
             
             var instanceId = Guid.NewGuid().ToString();
@@ -53,3 +58,5 @@ namespace Heroes.Game.Buildings
         }
     }
 }
+
+

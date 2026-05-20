@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 673c7d622b8f947449147c88b29e38f1, type: 3}
+  m_Name: Warrior
+  m_EditorClassIdentifier: Game::Heroes.Content.Heroes.HeroDefinition
+  Id: a84c75cc-036f-47a6-9939-259f388ab14e
+  DisplayName: Warrior
+  Description: I am just a simple warrior, i see a target, i attack 'em
+  IconPath: Heros/Warrior_Icon
+  MaxHp: 300
+  StartHp: 100
+  HpRegeneration: 2
+  Attack: 5
+  Defence: 5
+  Speed: 10
+  StartGold: 100
+  BaseGearLevel: 0
+  HomeRadius: 2
+  DangerSenseRadius: 12
+  StartingItems:
+  - {fileID: 11400000, guid: 08d1ca2b20a562642b6e34f8ce33e14b, type: 2}
+  Prefab: {fileID: 7477028025605634063, guid: 089e033b3389072408e17a3b207b4bad, type: 3}

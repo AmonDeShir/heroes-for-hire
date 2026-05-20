@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEditor;
 
 [InitializeOnLoad]
@@ -33,3 +33,5 @@ public static class HierarchyColorizer
         }
     }
 }
+
+

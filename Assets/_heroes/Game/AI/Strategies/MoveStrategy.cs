@@ -1,4 +1,4 @@
-﻿using Heroes.GOAP;
+using Heroes.GOAP;
 using Heroes.GOAP.Core;
 using UnityEngine;
 
@@ -35,3 +35,4 @@ namespace Heroes.Game.AI.Strategies
         }
     }
 }
+

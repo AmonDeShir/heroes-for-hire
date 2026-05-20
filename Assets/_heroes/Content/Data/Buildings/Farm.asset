@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56bf6edaf2c6448448de3a2938f98781, type: 3}
+  m_Name: Farm
+  m_EditorClassIdentifier: Game::Heroes.Content.Buildings.BuildingDefinition
+  Id: 3a7d2d94-2c8b-4e2a-8d4f-0b64b4a0b102
+  DisplayName: Farm
+  Category: 0
+  Description: Generates gold over time.
+  IconPath: Buildings/Farm_Icon
+  AvailableUpgrades:
+  - {fileID: 11400000, guid: 6d6b7fdc0c1e4aa2b3c4d5e6f7010203, type: 2}
+  SellItems: []
+  GoldCost: 100
+  PopulationCost: 1
+  PopulationProvided: 0
+  IsPlayerBuildable: 1
+  RequiredCastleLevel: 2
+  MaxHp: 140
+  BuildHpPerSecond: 8
+  StartHp: 10
+  GoldIncomePerTick: 30
+  GoldIncomeIntervalSeconds: 10
+  Prefab: {fileID: 6051952138876230296, guid: e2e6b29e4e8ed514788adaf0db106dae, type: 3}

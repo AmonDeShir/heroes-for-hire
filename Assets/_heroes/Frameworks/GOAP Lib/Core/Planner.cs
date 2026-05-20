@@ -1,9 +1,22 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 namespace Heroes.GOAP.Core
 {
+    
+    
+    public static class PlanningDebugSettings
+    {
+        public static bool Enabled;
+
+        
+        public static bool LogToFile = true;
+        public static int MaxPlansToLog = 10;
+        public static float FlushIntervalSeconds = 0.5f;
+        public static int MaxBufferedLines = 2000;
+    }
+
     public class Planner<TAgent, TSnapshot> : IPlanner<TAgent, TSnapshot> where TSnapshot : IReadOnlyWorldSnapshot
     {
         public Plan<TAgent, TSnapshot> Plan(List<Action<TAgent, TSnapshot>> actions, List<Goal<TSnapshot>> goals, AgentContext<TSnapshot> ctx, int maxDepth)
@@ -15,8 +28,21 @@ namespace Heroes.GOAP.Core
             
             foreach (var goal in orderedGoals)
             {
+                var planLogToken = GoapPlanFileLogger.BeginPlanIfNeeded(goal?.Name, PlanningDebugSettings.MaxPlansToLog);
+
                 var startWorld = new AgentContext<TSnapshot>(ctx);
-                var cutoff = goal.Heuristic(ctx);
+                
+                
+                
+                var h0 = goal.Heuristic(ctx);
+                var cutoff = h0 + 1f;
+
+                
+                
+                
+                
+                
+                
                 var transpositionTable = new TranspositionTable(size: 2048);
                 
                 while (cutoff >= 0f)
@@ -33,16 +59,26 @@ namespace Heroes.GOAP.Core
 
                     if (plan.Count > 0)
                     {
+                        DebugPlanEvent(planLogToken, $"FOUND steps={plan.Count}");
+                        GoapPlanFileLogger.FlushIfDue(Time.unscaledTime, PlanningDebugSettings.FlushIntervalSeconds, PlanningDebugSettings.MaxBufferedLines);
                         return new Plan<TAgent, TSnapshot>(goal, plan);
                     }
 
                     if (Mathf.Approximately(newCutoff, float.MaxValue))
                     {
+                        DebugPlanEvent(planLogToken, "NO_PLAN newCutoff=MaxValue");
+                        GoapPlanFileLogger.FlushIfDue(Time.unscaledTime, PlanningDebugSettings.FlushIntervalSeconds, PlanningDebugSettings.MaxBufferedLines);
                         break;
                     }
 
+                    DebugPlanEvent(planLogToken, $"DEEPEN cutoff {cutoff:0.###} -> {newCutoff:0.###}");
+                    GoapPlanFileLogger.FlushIfDue(Time.unscaledTime, PlanningDebugSettings.FlushIntervalSeconds, PlanningDebugSettings.MaxBufferedLines);
+
                     cutoff = newCutoff;
                 }
+
+                DebugPlanEvent(planLogToken, "END");
+                GoapPlanFileLogger.FlushIfDue(Time.unscaledTime, PlanningDebugSettings.FlushIntervalSeconds, PlanningDebugSettings.MaxBufferedLines);
             }
             
             return null;
@@ -86,6 +122,7 @@ namespace Heroes.GOAP.Core
                 
                 if (totalCost > cutoff)
                 {
+                    DebugStep(goal, cutoff, currentDepth, costs[currentDepth], estimate, null, "pruned by cutoff");
                     if (totalCost < smallestCutoff)
                     {
                         smallestCutoff = totalCost;
@@ -108,16 +145,21 @@ namespace Heroes.GOAP.Core
 
                 var nextAction = actions[actionIndex[currentDepth]];
                 
-                if (!nextAction.PreConditions(ctx))
+                var preOk = nextAction.PreConditions(ctx);
+                if (!preOk)
                 {
+                    DebugStep(goal, cutoff, currentDepth, costs[currentDepth], estimate, nextAction, "preconditions failed");
                     continue;
                 }
-                
+
+                DebugStep(goal, cutoff, currentDepth, costs[currentDepth], estimate, nextAction, "preconditions ok");
+                 
                 var nextCost = costs[currentDepth] + nextAction.Time(ctx);
                 var nextState = nextAction.Effect(ctx);
 
                 if (transposition.HasBetterOrEqual(nextState, nextCost))
                 {
+                    DebugStep(goal, cutoff, currentDepth, nextCost, estimate, nextAction, "pruned by transposition");
                     continue;
                 }
                 
@@ -145,5 +187,46 @@ namespace Heroes.GOAP.Core
             
             return stack;
         }
+
+        private static void DebugStep(Goal<TSnapshot> goal, float cutoff, int depth, float costSoFar, float estimate, Action<TAgent, TSnapshot> action, string reason)
+        {
+            if (!PlanningDebugSettings.Enabled)
+            {
+                return;
+            }
+
+            var actionName = action != null ? action.Name : "<null action>";
+            var preDesc = action != null ? action.PreconditionsDescription : string.Empty;
+
+            var msg = $"[GOAP-PLAN] goal='{goal?.Name}' depth={depth} cutoff={cutoff:0.###} cost={costSoFar:0.###} est={estimate:0.###} action='{actionName}' reason={reason} pre='{preDesc}'";
+            if (PlanningDebugSettings.LogToFile)
+            {
+                GoapPlanFileLogger.AppendLine(msg);
+            }
+            else
+            {
+                UnityEngine.Debug.Log(msg);
+            }
+        }
+
+        private static void DebugPlanEvent(int token, string msg)
+        {
+            if (!PlanningDebugSettings.Enabled)
+            {
+                return;
+            }
+
+            var line = $"[GOAP-PLAN] token={token} {msg}";
+            if (PlanningDebugSettings.LogToFile)
+            {
+                GoapPlanFileLogger.AppendLine(line);
+            }
+            else
+            {
+                UnityEngine.Debug.Log(line);
+            }
+        }
     }
 }
+
+

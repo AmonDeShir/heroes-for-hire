@@ -36,20 +36,46 @@ namespace Heroes.Game.AI
 
         private void SyncExistingBuildings()
         {
-            foreach (var building in Registry<BuildingFacade>.All())
+            
+            
+            var buildings = UnityEngine.Object.FindObjectsByType<BuildingFacade>(FindObjectsSortMode.None);
+
+            foreach (var building in buildings)
             {
                 if (building == null || building.Definition == null)
                 {
                     continue;
                 }
 
+                
+                Registry<BuildingFacade>.TryAdd(building);
+
                 State.RegisterLocation(new Location
                 {
                     ID = building.Id,
-                    Position = new Vector2(building.transform.position.x, building.transform.position.z),
+                    Position = new Vector2(building.DoorWorldPosition.x, building.DoorWorldPosition.z),
                     Definition = building.Definition,
+                    Radius = EstimateRadius(building),
                 });
             }
+        }
+
+        private static float EstimateRadius(BuildingFacade building)
+        {
+            if (building == null)
+            {
+                return 2f;
+            }
+
+            
+            var col = building.GetComponentInChildren<Collider>();
+            if (col != null)
+            {
+                var e = col.bounds.extents;
+                return Mathf.Max(1f, Mathf.Max(e.x, e.z));
+            }
+
+            return 2f;
         }
 
         private void HandleBuildingPlaced(BuildingPlacedEvent @event)
@@ -60,12 +86,32 @@ namespace Heroes.Game.AI
                 return;
             }
 
-            State.RegisterLocation(new Location
+            
+            Vector2 pos;
+            BuildingFacade placed = null;
+            foreach (var b in Registry.Registry<BuildingFacade>.All())
             {
-                ID = @event.InstanceId,
-                Position = new Vector2(@event.Position.x, @event.Position.z),
-                Definition = definition,
-            });
+                if (b != null && b.IsAlive && b.Model != null && b.Model.InstanceId == @event.InstanceId)
+                {
+                    placed = b;
+                    break;
+                }
+            }
+
+            var radius = 2f;
+
+            if (placed != null)
+            {
+                var p = placed.DoorWorldPosition;
+                pos = new Vector2(p.x, p.z);
+                radius = EstimateRadius(placed);
+            }
+            else
+            {
+                pos = new Vector2(@event.Position.x, @event.Position.z);
+            }
+
+            State.RegisterLocation(new Location { ID = @event.InstanceId, Position = pos, Definition = definition, Radius = radius });
         }
 
         private void HandleBuildingDestroyed(BuildingDestroyedEvent @event)
@@ -74,3 +120,5 @@ namespace Heroes.Game.AI
         }
     }
 }
+
+

@@ -5,3 +5,5 @@ namespace Heroes.GOAP.Core.Debug
         bool TryGetSnapshot(out GoapDebugSnapshot snapshot);
     }
 }
+
+

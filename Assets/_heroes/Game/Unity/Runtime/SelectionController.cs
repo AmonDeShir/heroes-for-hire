@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Heroes.Game.Abstractions;
 using Heroes.Game.Buildings;
 using UnityEngine;
@@ -62,3 +62,4 @@ namespace Heroes.Game.Runtime
         }
     }
 }
+

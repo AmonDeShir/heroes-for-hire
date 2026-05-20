@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c947fd3f7afe474088173f5e29e05f2, type: 3}
+  m_Name: Unlock Swift Amulet
+  m_EditorClassIdentifier: Game::Heroes.Content.Buildings.BuildingUpgradeDefinition
+  Id: 2c0b2a3d-4e5f-4a60-9b7c-1d2e3f405177
+  Name: Stock Swift Amulets
+  Description: Lets the market sell swift amulets.
+  IconPath: Items/Necklace2_Icon
+  GoldCost: 120
+  Duration: 12
+  UsageLimit: 1
+  Effects:
+  - {fileID: 11400000, guid: 9da3e954082de854c83f5ac05de9fd25, type: 2}
+  UpgradeRequirements: []
+  UnlocksUpgrades: []

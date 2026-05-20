@@ -32,7 +32,7 @@ public class ResourceIconDrawer : PropertyDrawer
             style = { flexDirection = FlexDirection.Row, justifyContent = Justify.FlexEnd, marginTop = 2 }
         };
 
-        var button = new Button(() => ResourceIconPicker.Show(attr.Folder, property))
+        var button = new Button(() => ResourceIconPicker.Show(attr.Folders, property))
         {
             text = "Select"
         };
@@ -75,3 +75,4 @@ public class ResourceIconDrawer : PropertyDrawer
         }
     }
 }
+

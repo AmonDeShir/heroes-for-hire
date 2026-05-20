@@ -1,4 +1,4 @@
-﻿using Heroes.GOAP;
+using Heroes.GOAP;
 using Heroes.GOAP.Core;
 using Heroes.Systems.GOAP.Demo;
 using UnityEngine;
@@ -205,3 +205,5 @@ namespace GOAP.Demo.Strategies
     }
 
 }
+
+
