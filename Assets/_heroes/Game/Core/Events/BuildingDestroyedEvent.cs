@@ -8,3 +8,5 @@ namespace Heroes.Game.Core.Events
         public string DefinitionId;
     }
 }
+
+

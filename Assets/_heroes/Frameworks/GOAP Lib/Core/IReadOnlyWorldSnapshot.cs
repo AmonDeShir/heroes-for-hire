@@ -6,3 +6,5 @@ namespace Heroes.GOAP.Core
         bool IsValid { get; }
     }
 }
+
+

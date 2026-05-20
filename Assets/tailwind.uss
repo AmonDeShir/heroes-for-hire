@@ -71,19 +71,18 @@
     margin-top: auto;
     margin-bottom: auto
 }
-.root .my-1 {
-    margin-top: 4px;
-    margin-bottom: 4px
-}
-.root .my-2 {
-    margin-top: 8px;
-    margin-bottom: 8px
+.root .mx-1 {
+    margin-left: 4px;
+    margin-right: 4px
 }
 .root .mb-2 {
     margin-bottom: 8px
 }
 .root .ml-2 {
     margin-left: 8px
+}
+.root .ml-3 {
+    margin-left: 12px
 }
 .root .ml-4 {
     margin-left: 16px
@@ -103,17 +102,20 @@
 .root .mr-_lb_2px_rb_ {
     margin-right: 2px
 }
+.root .mt-0_d_5 {
+    margin-top: 2px
+}
 .root .mt-1 {
     margin-top: 4px
 }
 .root .mt-2 {
     margin-top: 8px
 }
-.root .mt-0_d_5 {
-    margin-top: 2px
+.root .ml-1 {
+    margin-left: 4px
 }
-.root .ml-3 {
-    margin-left: 12px
+.root .mt-_lb_-10px_rb_ {
+    margin-top: -10px
 }
 .root .flex {
     display: flex
@@ -172,11 +174,17 @@
 .root .h-_lb_70px_rb_ {
     height: 70px
 }
+.root .h-_lb_90px_rb_ {
+    height: 90px
+}
 .root .h-full {
     height: 100%
 }
-.root .h-_lb_90px_rb_ {
-    height: 90px
+.root .h-_lb_30px_rb_ {
+    height: 30px
+}
+.root .h-0 {
+    height: 0px
 }
 .root .min-h-_lb_18px_rb_ {
     min-height: 18px
@@ -186,6 +194,9 @@
 }
 .root .w-0_d_5 {
     width: 2px
+}
+.root .w-20 {
+    width: 80px
 }
 .root .w-7 {
     width: 28px
@@ -204,9 +215,6 @@
 }
 .root .w-_lb_14px_rb_ {
     width: 14px
-}
-.root .w-_lb_150px_rb_ {
-    width: 150px
 }
 .root .w-_lb_18px_rb_ {
     width: 18px
@@ -241,6 +249,12 @@
 .root .w-full {
     width: 100%
 }
+.root .w-_lb_30px_rb_ {
+    width: 30px
+}
+.root .w-_lb_19px_rb_ {
+    width: 19px
+}
 .root .max-w-_lb_220px_rb_ {
     max-width: 220px
 }
@@ -265,6 +279,9 @@
 .root .items-center {
     align-items: center
 }
+.root .justify-start {
+    justify-content: flex-start
+}
 .root .justify-center {
     justify-content: center
 }
@@ -288,6 +305,9 @@
 }
 .root .border-r-2 {
     border-right-width: 2px
+}
+.root .border-t-2 {
+    border-top-width: 2px
 }
 .root .border-active {
     border-color: #00B6D7
@@ -371,26 +391,11 @@
 .root .pb-2 {
     padding-bottom: 8px
 }
-.root .pb-1 {
-    padding-bottom: 4px
-}
-.root .pt-1 {
-    padding-top: 4px
-}
-.root .pt-2 {
-    padding-top: 8px
-}
-.root .pt-2_d_5 {
-    padding-top: 10px
-}
-.root .pt-4 {
-    padding-top: 16px
-}
-.root .pt-3 {
-    padding-top: 12px
-}
 .root .text-_lb_10px_rb_ {
     font-size: 10px
+}
+.root .text-_lb_12px_rb_ {
+    font-size: 12px
 }
 .root .text-_lb_9px_rb_ {
     font-size: 9px
@@ -416,11 +421,11 @@
 .root .text-textInverse {
     color: #FFFFFF
 }
+.root .opacity-50 {
+    opacity: 0.5
+}
 .root .opacity-60 {
     opacity: 0.6
-}
-.root .font-bold {
-    -unity-font-style: bold
 }
 .root .transition-colors {
     transition-property: color, background-color, border-color;

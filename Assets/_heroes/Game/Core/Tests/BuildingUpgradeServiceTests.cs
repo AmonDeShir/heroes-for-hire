@@ -52,8 +52,8 @@ namespace Heroes.Tests.Core
             {
                 building.Model.SyncFromHealth();
 
-                var applyEffects = typeof(BuildingUpgradeService).GetMethod("ApplyEffects", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
-                applyEffects.Invoke(null, new object[] { building, upgrade });
+                var applyEffects = typeof(BuildingUpgradeService).GetMethod("ApplyEffects", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                applyEffects.Invoke(new BuildingUpgradeService(selectionService, kingdomService), new object[] { building, upgrade });
 
                 Assert.AreEqual(200f, building.Model.Health.Max);
                 Assert.AreEqual(BuildingState.UnderConstruction, building.Model.State);
@@ -188,11 +188,13 @@ namespace Heroes.Tests.Core
         {
             public float HealthMultiplier = 1f;
 
-            public override void ApplyEffect(BuildingModel model)
+            public override void ApplyEffect(in BuildingUpgradeContext ctx)
             {
-                model.Health.SetMax(model.Health.Max * HealthMultiplier);
+                ctx.Model.Health.SetMax(ctx.Model.Health.Max * HealthMultiplier);
             }
         }
 
     }
 }
+
+

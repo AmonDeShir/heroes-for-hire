@@ -1,5 +1,4 @@
 import { Fragment, h } from 'preact'
-import { IconButton } from '../components/icon-button'
 import { Resources, Texture2D } from 'UnityEngine'
 import { useEventfulState, useMemo } from 'onejs-preact/hooks'
 import System from 'System'
@@ -23,6 +22,7 @@ export function BuildingPanelContent(props: {
   const [buildings] = useEventfulState(buildingPanelPresenter, "Buildings")
   const [selectedId] = useEventfulState(buildingPanelPresenter, "Selected")
   const [gold] = useEventfulState(kingdomResourcesPanelPresenter, "Gold")
+  const [population] = useEventfulState(kingdomResourcesPanelPresenter, "Population")
 
   const bindTooltip = useTooltipBinding();
 
@@ -42,7 +42,7 @@ export function BuildingPanelContent(props: {
     <>
       <SideButtonGroup buttons={menuButtons} />
 
-      <div class='flex w-full h-full justify-center items-center'>
+      <div class='flex flex-row w-full h-full justify-evenly items-center'>
         {selectedBuildings.map((data: BuildingDTO) => (
           <ShopButton
             key={data.Id}
@@ -50,14 +50,44 @@ export function BuildingPanelContent(props: {
             price={data.Price}
             icon={Resources.Load(data.Icon) as Texture2D}
             active={selectedId == data.Id}
-            disabled={data.Price > gold}
-            onClick={() => buildingPanelPresenter.SelectBuilding(data.Id)}
-            {...bindTooltip(data.Description)}
+            disabled={!data.CanBuild}
+            onClick={data.CanBuild ? () => buildingPanelPresenter.SelectBuilding(data.Id) : undefined}
+            {...bindTooltip(buildBuildingTooltip(data, gold, population))}
           />
         ))}
       </div>
     </>
   )
+}
+
+function buildBuildingTooltip(data: any, gold: number, population: number): string {
+  if (!data) {
+    return ''
+  }
+
+  const lines: string[] = []
+  if (data.Description) {
+    lines.push(data.Description)
+  }
+
+  lines.push('')
+  lines.push(`Cost: ${data.Price} gold, ${data.PopulationCost} pop`)
+
+  if (data.LockReason) {
+    lines.push('')
+    lines.push(data.LockReason)
+  } else {
+    if (data.Price > gold) {
+      lines.push('')
+      lines.push('Not enough gold')
+    }
+    if (data.PopulationCost > population) {
+      lines.push('')
+      lines.push('Not enough population')
+    }
+  }
+
+  return lines.join('\n')
 }
 
 function toJsArray<T>(csArr: System.Array$1<T>): T[] {

@@ -15,7 +15,7 @@ namespace Game.UI
 
         private VisualElement rootParent;
 
-        // ------------------------------------------------------------------------------------------------------------
+        
 
         public BlurPanel()
             : base()
@@ -25,8 +25,8 @@ namespace Game.UI
 
         public void SetImage(Texture img, VisualElement geometryChangedWatch = null)
         {
-            // this is to get events when a parent panel is animated.
-            // registering to this element alone for that event was not enough.
+            
+            
             geometryChangedWatch?.RegisterCallback<GeometryChangedEvent>(UpdateImageRect);
 
             image = img;
@@ -69,6 +69,7 @@ namespace Game.UI
             MarkDirtyRepaint();
         }
 
-        // ============================================================================================================
+        
     }
 }
+

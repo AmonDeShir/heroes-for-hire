@@ -14,3 +14,5 @@ namespace Heroes.GOAP.Core
         public abstract TSnapshot CreateSnapshot();
     }
 }
+
+

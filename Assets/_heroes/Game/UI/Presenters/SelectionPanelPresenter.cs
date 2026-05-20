@@ -7,7 +7,9 @@ using Heroes.Game.AI;
 using Heroes.Game.Heroes;
 using Heroes.Game.Buildings;
 using Heroes.Game.Core.Events;
+using Heroes.Content.Heroes;
 using Heroes.GOAP.Core.Debug;
+using Heroes.Presentation.UI.BuildingPanel;
 using OneJS;
 using UnityEngine;
 using VContainer;
@@ -18,11 +20,13 @@ namespace Heroes.Presentation.UI.SelectionPanel
     {
         private SelectionService _selectionService;
         private BuildingUpgradeService _buildingUpgradeService;
+        private ItemCatalog _itemCatalog;
         private EventBinding<ObjectSelectedEvent> _objectSelectedEvent;
         private EventBinding<HealthChangedEvent> _healthChangedEvent;
         private EventBinding<MaxHealthChangedEvent> _maxHealthChangedEvent;
         private EventBinding<BuildingDestroyedEvent> _buildingDestroyedEvent;
         private EventBinding<GoldChangedEvent> _goldChangedEvent;
+        
         private EventBinding<UpgradeQueueChangedEvent> _upgradeQueueChangedEvent;
         private EventBinding<UpgradeQueueActiveChangedEvent> _upgradeQueueActiveChangedEvent;
         private EventBinding<UpgradeQueueProgressChangedEvent> _upgradeQueueProgressChangedEvent;
@@ -34,15 +38,18 @@ namespace Heroes.Presentation.UI.SelectionPanel
         [EventfulProperty] private DamageableSelectionDTO _selectedDamageable;
         [EventfulProperty] private BuildingSelectionDTO _selectedBuilding;
         [EventfulProperty] private HeroSelectionDTO _selectedHero;
+        [EventfulProperty] private HeroEquipmentSelectionDTO _selectedHeroEquipment;
         [EventfulProperty] private GoapSelectionDTO _selectedGoap;
+        [EventfulProperty] private ShopItemSelectionDTO[] _shopItems = System.Array.Empty<ShopItemSelectionDTO>();
         [EventfulProperty] private BuildingUpgradeSelectionDTO[] _buildingUpgrades = System.Array.Empty<BuildingUpgradeSelectionDTO>();
         [EventfulProperty] private QueuedBuildingUpgradeSelectionDTO[] _queuedBuildingUpgrades = System.Array.Empty<QueuedBuildingUpgradeSelectionDTO>();
 
         [Inject]
-        public void Construct(SelectionService selectionService, BuildingUpgradeService buildingUpgradeService)
+        public void Construct(SelectionService selectionService, BuildingUpgradeService buildingUpgradeService, ItemCatalog itemCatalog)
         {
             _selectionService = selectionService;
             _buildingUpgradeService = buildingUpgradeService;
+            _itemCatalog = itemCatalog;
 
             _objectSelectedEvent = new EventBinding<ObjectSelectedEvent>(HandleSelectionChanged);
             _healthChangedEvent = new EventBinding<HealthChangedEvent>(HandleHealthSelectionChanged);
@@ -73,6 +80,17 @@ namespace Heroes.Presentation.UI.SelectionPanel
             }
         }
 
+        private void RefreshSelectedBuilding()
+        {
+            if (_selectionService.Selected is not BuildingFacade building)
+            {
+                SelectedBuilding = null;
+                return;
+            }
+
+            SelectedBuilding = new BuildingSelectionDTO(building.IsAlive);
+        }
+
         public void SelectUpgrade(string upgradeId)
         {
             if (string.IsNullOrWhiteSpace(upgradeId))
@@ -91,7 +109,9 @@ namespace Heroes.Presentation.UI.SelectionPanel
                 SelectedDamageable = null;
                 SelectedBuilding = null;
                 SelectedHero = null;
+                SelectedHeroEquipment = null;
                 SelectedGoap = null;
+                ShopItems = System.Array.Empty<ShopItemSelectionDTO>();
                 BuildingUpgrades = System.Array.Empty<BuildingUpgradeSelectionDTO>();
                 QueuedBuildingUpgrades = System.Array.Empty<QueuedBuildingUpgradeSelectionDTO>();
                 
@@ -112,7 +132,9 @@ namespace Heroes.Presentation.UI.SelectionPanel
             {
                 SelectedBuilding = new BuildingSelectionDTO(building.IsAlive);
                 SelectedHero = null;
+                SelectedHeroEquipment = null;
                 SelectedGoap = null;
+                RefreshSelectedShopItems();
                 RefreshSelectedBuildingUpgrades();
                 return;
             }
@@ -125,7 +147,9 @@ namespace Heroes.Presentation.UI.SelectionPanel
 
             SelectedBuilding = null;
             SelectedHero = null;
+            SelectedHeroEquipment = null;
             SelectedGoap = null;
+            ShopItems = System.Array.Empty<ShopItemSelectionDTO>();
             BuildingUpgrades = System.Array.Empty<BuildingUpgradeSelectionDTO>();
             QueuedBuildingUpgrades = System.Array.Empty<QueuedBuildingUpgradeSelectionDTO>();
         }
@@ -184,17 +208,46 @@ namespace Heroes.Presentation.UI.SelectionPanel
         private void RefreshSelectedHero(HeroFacade hero)
         {
             SelectedBuilding = null;
+            ShopItems = System.Array.Empty<ShopItemSelectionDTO>();
             BuildingUpgrades = System.Array.Empty<BuildingUpgradeSelectionDTO>();
             QueuedBuildingUpgrades = System.Array.Empty<QueuedBuildingUpgradeSelectionDTO>();
 
             if (hero?.Model == null)
             {
                 SelectedHero = null;
+                SelectedHeroEquipment = null;
                 SelectedGoap = null;
                 return;
             }
 
-            SelectedHero = new HeroSelectionDTO(hero.Model.Gold, hero.Model.GearLevel, hero.Model.DangerLevel, hero.Model.IsAlive, hero.Model.IsInHome);
+            var baseAttack = hero.Definition != null ? hero.Definition.Attack : 0f;
+            var baseDefence = hero.Definition != null ? hero.Definition.Defence : 0f;
+            var baseSpeed = hero.Definition != null ? hero.Definition.Speed : 0f;
+
+            var eqAttack = hero.Model.EquipmentAttack;
+            var eqDefence = hero.Model.EquipmentDefence;
+            var eqSpeed = hero.Model.EquipmentSpeed;
+
+            var timedAttack = hero.Model.TimedAttack;
+            var timedDefence = hero.Model.TimedDefence;
+            var timedSpeed = hero.Model.TimedSpeed;
+
+            SelectedHero = new HeroSelectionDTO(
+                hero.Model.Gold,
+                hero.Model.GearLevel,
+                hero.Model.DangerLevel,
+                hero.Model.IsAlive,
+                hero.Model.IsInHome,
+                baseAttack + eqAttack + timedAttack,
+                baseDefence + eqDefence + timedDefence,
+                baseSpeed + eqSpeed + timedSpeed);
+
+            SelectedHeroEquipment = new HeroEquipmentSelectionDTO(
+                ResolveItem(hero.Model.EquippedWeaponId),
+                ResolveItem(hero.Model.EquippedArmorId),
+                ResolveItems(hero.Model.EquippedArtifacts),
+                ResolveItems(hero.Model.EquippedConsumables),
+                ResolveItems(hero.Model.Backpack));
 
             if (hero.TryGetComponent<HeroAgent>(out var heroAgent) && heroAgent.TryGetSnapshot(out var snapshot))
             {
@@ -213,9 +266,14 @@ namespace Heroes.Presentation.UI.SelectionPanel
                 return null;
             }
 
-            var goals = snapshot.Goals.OrderByDescending(item => item.Priority).Select(item => new GoapGoalSelectionDTO(item.Name,  item.Description, item.Icon, item.Heuristic, item.Name == snapshot?.Plan.GoalName)).ToArray()
+            
+            var goals = snapshot.Goals
+                    .Where(g => g != null && g.Importance > 0.001f)
+                    .OrderByDescending(item => item.Priority)
+                    .Select(item => new GoapGoalSelectionDTO(item.Name, item.Description, item.Icon, item.Heuristic, item.Name == snapshot?.Plan.GoalName))
+                    .ToArray()
                 ?? System.Array.Empty<GoapGoalSelectionDTO>();
-            var steps = snapshot.Plan?.Steps?.Select(item => new GoapPlanStepSelectionDTO(item.Name, item.Description, item.PreconditionsMet)).ToArray()
+            var steps = snapshot.Plan?.Steps?.Select(item => new GoapPlanStepSelectionDTO(item.Name, item.Description, item.Icon, item.PreconditionsMet)).ToArray()
                 ?? System.Array.Empty<GoapPlanStepSelectionDTO>();
 
             return new GoapSelectionDTO(goals, steps);
@@ -228,7 +286,94 @@ namespace Heroes.Presentation.UI.SelectionPanel
                 return;
             }
 
+            RefreshSelectedShopItems();
             RefreshSelectedBuildingUpgrades();
+        }
+
+        private EquipmentItemDTO ResolveItem(string itemId)
+        {
+            if (string.IsNullOrWhiteSpace(itemId) || _itemCatalog == null)
+            {
+                return null;
+            }
+            
+            var def = _itemCatalog.GetById(itemId);
+
+            if (def == null)
+            {
+                return null;
+            }
+            
+            return new EquipmentItemDTO
+            {
+                Icon = def.IconPath,
+                Name = def.DisplayName
+            };
+        }
+
+        private EquipmentItemDTO[] ResolveItems(IEnumerable<string> itemIds)
+        {
+            if (itemIds == null)
+            {
+                return System.Array.Empty<EquipmentItemDTO>();
+            }
+
+            var list = new List<EquipmentItemDTO>();
+            
+            foreach (var id in itemIds)
+            {
+                var name = ResolveItem(id);
+                
+                if (name != null)
+                {
+                    list.Add(name);
+                }
+            }
+
+            return list.ToArray();
+        }
+
+        private void RefreshSelectedShopItems()
+        {
+            if (_selectionService.Selected is not BuildingFacade building || building.Definition == null || building.Model == null)
+            {
+                ShopItems = System.Array.Empty<ShopItemSelectionDTO>();
+                return;
+            }
+
+            var sellItems = building.Definition.SellItems;
+            if (sellItems == null || sellItems.Length == 0)
+            {
+                ShopItems = System.Array.Empty<ShopItemSelectionDTO>();
+                return;
+            }
+
+            var items = new List<ShopItemSelectionDTO>(sellItems.Length);
+            foreach (var item in sellItems)
+            {
+                if (item == null || string.IsNullOrWhiteSpace(item.Id))
+                {
+                    continue;
+                }
+
+                var unlocked = building.Model.IsSellItemUnlocked(item.Id);
+                items.Add(new ShopItemSelectionDTO(
+                    item.Id,
+                    item.DisplayName,
+                    item.Description,
+                    item.IconPath,
+                    item.GoldCost,
+                    item.Attack,
+                    item.Defense,
+                    item.Speed,
+                    item.HpRegeneration,
+                    item.Slot.ToString(),
+                    item.IsSingleUse,
+                    unlocked,
+                    unlocked ? null : "Requires research"));
+            }
+
+            ShopItems = items.ToArray();
         }
 
         private void RefreshSelectedBuildingUpgrades()
@@ -239,6 +384,8 @@ namespace Heroes.Presentation.UI.SelectionPanel
                 QueuedBuildingUpgrades = System.Array.Empty<QueuedBuildingUpgradeSelectionDTO>();
                 return;
             }
+
+            RefreshSelectedBuilding();
 
             var items = new List<BuildingUpgradeSelectionDTO>();
             var queuedIds = building.Model.UpgradeQueue.Queue.ToArray();
@@ -348,3 +495,5 @@ namespace Heroes.Presentation.UI.SelectionPanel
         }
     }
 }
+
+

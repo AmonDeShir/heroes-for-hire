@@ -7,3 +7,5 @@ namespace Heroes.Game.Core.Events
         public int Value { get; set; }
     }
 }
+
+

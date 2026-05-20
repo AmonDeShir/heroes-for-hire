@@ -7,3 +7,4 @@ namespace _heroes.Game.Core.Models
         public bool IsMultiuse { get; }
     }
 }
+

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 public class IntervalTimer : Timer
 {
@@ -52,3 +52,5 @@ public class IntervalTimer : Timer
         }
     }
 }
+
+

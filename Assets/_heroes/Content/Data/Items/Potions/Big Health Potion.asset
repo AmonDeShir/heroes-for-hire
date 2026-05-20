@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edafbca716694eba8c40304faa1429ae, type: 3}
+  m_Name: Big Health Potion
+  m_EditorClassIdentifier: Game::Heroes.Content.Heroes.ItemDefinition
+  Id: b8de4f02-54e8-48c9-991a-15d28ef03cd4
+  DisplayName: Greater Health Potion
+  Description: For when "walk it off" stops working.
+  IconPath: Items/Potion Bottle2_Icon
+  GoldCost: 400
+  Attack: 0
+  Defense: 0
+  Speed: 0
+  HpRegeneration: 0
+  Users: {fileID: 11400000, guid: a809778c804b2a14683e5b4da2685f55, type: 2}
+  Slot: 0
+  IsSingleUse: 1
+  Effects: []
+  WeaponPrefab: {fileID: 0}

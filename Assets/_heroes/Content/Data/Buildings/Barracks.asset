@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56bf6edaf2c6448448de3a2938f98781, type: 3}
+  m_Name: Barracks
+  m_EditorClassIdentifier: Game::Heroes.Content.Buildings.BuildingDefinition
+  Id: 9b22c2f3-6c4e-49a8-8db8-5b33c0a1b201
+  DisplayName: Guild
+  Category: 3
+  Description: Hire heroes to fight for your kingdom.
+  IconPath: Buildings/Barracks_Icon
+  AvailableUpgrades:
+  - {fileID: 11400000, guid: e08fa6f9969ad03419440a6405700f86, type: 2}
+  - {fileID: 11400000, guid: 2a2b2c2d2e2f30313233343536373839, type: 2}
+  SellItems: []
+  GoldCost: 100
+  PopulationCost: 1
+  PopulationProvided: 0
+  IsPlayerBuildable: 1
+  RequiredCastleLevel: 1
+  MaxHp: 100
+  BuildHpPerSecond: 5
+  StartHp: 10
+  Prefab: {fileID: 3714646239772070877, guid: b91e8fd7ec44ec44c910ea3db98120bd, type: 3}

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 public class Timer
 {
@@ -61,3 +61,5 @@ public class Timer
         }
     }
 }
+
+

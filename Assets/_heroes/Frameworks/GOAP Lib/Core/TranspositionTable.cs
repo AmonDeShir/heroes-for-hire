@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Heroes.GOAP.Core
 {
@@ -101,3 +101,5 @@ namespace Heroes.GOAP.Core
         }
     }
 }
+
+

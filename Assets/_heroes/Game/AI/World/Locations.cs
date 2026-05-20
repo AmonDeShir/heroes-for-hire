@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Heroes.Content.Buildings;
 using UnityEngine;
@@ -10,6 +10,7 @@ namespace Heroes.Game.AI
         public string ID;
         public Vector2 Position;
         public BuildingDefinition Definition;
+        public float Radius;
     }
 
     public class Locations
@@ -63,6 +64,34 @@ namespace Heroes.Game.AI
 
                 closestDistance = distance;
                 position = location.Position;
+                found = true;
+            }
+
+            return found;
+        }
+
+        public bool TryGetClosestLocation(string definitionId, Vector2 from, out Location location)
+        {
+            location = default;
+
+            if (!Values.TryGetValue(definitionId, out var locations))
+            {
+                return false;
+            }
+
+            var closestDistance = float.MaxValue;
+            var found = false;
+
+            foreach (var loc in locations)
+            {
+                var distance = (loc.Position - from).sqrMagnitude;
+                if (distance >= closestDistance)
+                {
+                    continue;
+                }
+
+                closestDistance = distance;
+                location = loc;
                 found = true;
             }
 
@@ -167,3 +196,5 @@ namespace Heroes.Game.AI
         }
     }
 }
+
+

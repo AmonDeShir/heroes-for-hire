@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56bf6edaf2c6448448de3a2938f98781, type: 3}
+  m_Name: Blacksmith
+  m_EditorClassIdentifier: Game::Heroes.Content.Buildings.BuildingDefinition
+  Id: 3a7d2d94-2c8b-4e2a-8d4f-0b64b4a0b104
+  DisplayName: Blacksmith
+  Category: 0
+  Description: Sells weapons and armor to heroes.
+  IconPath: Buildings/Forge_Icon
+  AvailableUpgrades:
+  - {fileID: 11400000, guid: 1d2e3f405162738495a6b7c8d9e0f1a2, type: 2}
+  - {fileID: 11400000, guid: 1d2e3f405162738495a6b7c8d9e0f1a3, type: 2}
+  - {fileID: 11400000, guid: 2d3e4f506172839405162738495a6b7c, type: 2}
+  - {fileID: 11400000, guid: 3d4e5f607182930415263748596a7b8c, type: 2}
+  SellItems:
+  - {fileID: 11400000, guid: 11111111111111111111111111111111, type: 2}
+  - {fileID: 11400000, guid: 2dc61f93f57c93f498f9c37f7b13d4a0, type: 2}
+  - {fileID: 11400000, guid: 66dc8465561a8be4ba64e708d8390c95, type: 2}
+  - {fileID: 11400000, guid: d887b516706fb3f4483f9368c5322bc7, type: 2}
+  - {fileID: 11400000, guid: 93861db2015444246a9a095cfe82a10b, type: 2}
+  - {fileID: 11400000, guid: ba3a4b4225d6f3647914e8ea08ec5527, type: 2}
+  GoldCost: 300
+  PopulationCost: 1
+  PopulationProvided: 0
+  IsPlayerBuildable: 1
+  RequiredCastleLevel: 2
+  MaxHp: 180
+  BuildHpPerSecond: 9
+  StartHp: 10
+  Prefab: {fileID: 2412033430844315594, guid: a8ac78ec90d5acd488cde7989f969ffe, type: 3}

@@ -1,4 +1,4 @@
-﻿using Heroes.GOAP;
+using Heroes.GOAP;
 using WebLess;
 
 namespace Heroes.Game.AI
@@ -8,3 +8,4 @@ namespace Heroes.Game.AI
         
     }
 }
+

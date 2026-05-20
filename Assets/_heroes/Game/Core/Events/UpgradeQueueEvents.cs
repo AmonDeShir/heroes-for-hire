@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using EventBus;
 
 namespace Heroes.Game.Core.Events
@@ -33,3 +33,4 @@ namespace Heroes.Game.Core.Events
         public string Value { get; set; }
     }
 }
+

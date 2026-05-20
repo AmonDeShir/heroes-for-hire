@@ -14,6 +14,10 @@ namespace Heroes.Game.Buildings
         [SerializeField] private BuildingVisuals constructionVisuals;
         [SerializeField] private BuildingDestructionVisuals destructionVisuals;
 
+        [Header("Navigation")]
+        [Tooltip("Optional. If set, this is the preferred approach point for units (door/entrance).")]
+        [SerializeField] private Transform doorPoint;
+
         public BuildingDefinition Definition { get; private set; }
         public BuildingModel Model { get; private set; }
 
@@ -38,6 +42,38 @@ namespace Heroes.Game.Buildings
         
         public bool IsAlive => Model.State != BuildingState.Destroyed;
 
+        public Vector3 DoorWorldPosition
+        {
+            get
+            {
+                if (doorPoint != null)
+                {
+                    return doorPoint.position;
+                }
+
+                
+                var t = transform.Find("Door");
+                if (t != null)
+                {
+                    doorPoint = t;
+                    return t.position;
+                }
+
+                
+                
+                var col = GetComponentInChildren<Collider>();
+                if (col != null)
+                {
+                    var b = col.bounds;
+                    var forward = transform.forward;
+                    var ext = Mathf.Max(b.extents.x, b.extents.z);
+                    return b.center + forward * (ext + 0.25f);
+                }
+
+                return transform.position;
+            }
+        }
+
         public void Initialize(BuildingDefinition definition, string instanceId)
         {
             var upgrades = definition.AvailableUpgrades.Select(item => item.Id).ToList();
@@ -50,9 +86,21 @@ namespace Heroes.Game.Buildings
             
             Model.SyncFromHealth();
 
+            Registry<BuildingFacade>.TryAdd(this);
+
             constructionVisuals?.RefreshImmediate(Model);
             destructionVisuals?.Refresh(Model);
         }
+
+#if UNITY_EDITOR
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.cyan;
+            var p = DoorWorldPosition;
+            Gizmos.DrawSphere(p, 0.2f);
+            Gizmos.DrawLine(transform.position, p);
+        }
+#endif
 
         private void Update()
         {
@@ -111,3 +159,5 @@ namespace Heroes.Game.Buildings
         }
     }
 }
+
+

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace Heroes.GOAP.Core
 {
@@ -67,6 +67,24 @@ namespace Heroes.GOAP.Core
                 Step = null;
             }
         }
+
+        public void Abort()
+        {
+            if (strategy != null)
+            {
+                strategy.Stop();
+            }
+
+            strategy = null;
+            Step = null;
+
+            while (steps.Count > 0)
+            {
+                steps.Pop();
+            }
+        }
     }
 
 }
+
+

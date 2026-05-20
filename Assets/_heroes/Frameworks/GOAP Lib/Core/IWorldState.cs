@@ -5,3 +5,5 @@ namespace Heroes.GOAP.Core
         TSnapshot CreateSnapshot();
     }
 }
+
+

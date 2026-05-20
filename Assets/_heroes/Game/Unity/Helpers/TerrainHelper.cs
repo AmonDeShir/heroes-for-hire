@@ -367,3 +367,4 @@ namespace Heroes
         }
     }
 }
+

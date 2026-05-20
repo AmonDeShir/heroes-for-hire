@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Heroes.Systems.GOAP.Demo;
 using UnityEngine;
 
@@ -32,3 +32,4 @@ namespace GOAP.Demo
         }
     }
 }
+

@@ -14,3 +14,5 @@ namespace Heroes.Game.Core.Events
         public float Value { get; set; }
     }
 }
+
+

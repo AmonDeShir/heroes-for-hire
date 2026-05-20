@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c947fd3f7afe474088173f5e29e05f2, type: 3}
+  m_Name: Upgrade Building
+  m_EditorClassIdentifier: Game::Heroes.Content.Buildings.BuildingUpgradeDefinition
+  Id: 29557431-c16b-4f45-8fe6-aefbc3bc2744
+  Name: 
+  Description: 
+  IconPath: Icons/all/delapouite/ancient-columns
+  GoldCost: 200
+  Duration: 30
+  UsageLimit: 1
+  Effects:
+  - {fileID: 11400000, guid: 128ec9bb1c0063f43ac48c0c29ebadf6, type: 2}
+  UpgradeRequirements: []
+  UnlocksUpgrades: []

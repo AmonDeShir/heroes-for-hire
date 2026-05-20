@@ -1,4 +1,3 @@
-﻿using Heroes.Game.Buildings;
 using UnityEngine;
 
 namespace Heroes.Content.Buildings.UpgradeEffects
@@ -8,9 +7,16 @@ namespace Heroes.Content.Buildings.UpgradeEffects
     {
         public float HealthModifier;
 
-        public override void ApplyEffect(BuildingModel model)
+        public override void ApplyEffect(in BuildingUpgradeContext ctx)
         {
-            model.Health.SetMax(model.Health.Max * HealthModifier);
+            if (ctx.Model?.Health == null)
+            {
+                return;
+            }
+
+            ctx.Model.Health.SetMax(ctx.Model.Health.Max * HealthModifier);
         }
     }
 }
+
+

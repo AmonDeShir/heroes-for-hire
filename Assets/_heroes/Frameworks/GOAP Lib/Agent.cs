@@ -1,4 +1,4 @@
-﻿using Heroes.GOAP.Core;
+using Heroes.GOAP.Core;
 using Heroes.GOAP.Core.Debug;
 using UnityEngine;
 using UnityEngine.AI;
@@ -71,3 +71,5 @@ namespace Heroes.GOAP
         }
     }
 }
+
+

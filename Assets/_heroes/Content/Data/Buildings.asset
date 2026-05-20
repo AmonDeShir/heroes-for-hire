@@ -13,4 +13,12 @@ MonoBehaviour:
   m_Name: Buildings
   m_EditorClassIdentifier: Game::Heroes.Content.Buildings.BuildingCatalog
   buildings:
+  - {fileID: 11400000, guid: 7a0b5d1e8f9a2c54f8d9c1a2b3c4d5e6, type: 2}
   - {fileID: 11400000, guid: cd244ae9abf7635498bba76bd50a1319, type: 2}
+  - {fileID: 11400000, guid: c6ad2810b6abbbf4da3fdd797863017d, type: 2}
+  - {fileID: 11400000, guid: 5a3c2d1e0f9a8b7c6d5e4f3a2b1c0d0e, type: 2}
+  - {fileID: 11400000, guid: 6f1e2d3c4b5a69788796a5b4c3d2e1f0, type: 2}
+  - {fileID: 11400000, guid: 7c6b5a4938271605f4e3d2c1b0a9f8e7, type: 2}
+  - {fileID: 11400000, guid: 8a9b0c1d2e3f405162738495a6b7c8d9, type: 2}
+  - {fileID: 11400000, guid: 1a191817161514131211100f0e0d0c0b, type: 2}
+  - {fileID: 11400000, guid: 0a9b8c7d6e5f4a3b2c1d0e0f1a2b3c4d, type: 2}

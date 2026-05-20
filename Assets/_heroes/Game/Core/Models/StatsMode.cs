@@ -7,3 +7,4 @@ namespace Heroes.Game.Equipment
         public float Speed;
     }
 }
+

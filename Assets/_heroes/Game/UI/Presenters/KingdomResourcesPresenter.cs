@@ -46,3 +46,5 @@ namespace Heroes.Presentation.UI.ResourcesPanel
         }
     }
 }
+
+

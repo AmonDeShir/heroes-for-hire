@@ -8,3 +8,5 @@ namespace Heroes.Content.Buildings
         Guilds
     }
 }
+
+

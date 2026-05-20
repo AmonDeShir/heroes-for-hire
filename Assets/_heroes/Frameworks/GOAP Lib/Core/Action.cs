@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Heroes.GOAP.Core
 {
@@ -6,6 +6,7 @@ namespace Heroes.GOAP.Core
     {
         public string Name { get; private set; }
         public string Description { get; private set; }
+        public string Icon { get; private set; }
         public string PreconditionsDescription { get; private set; }
         public string EffectDescription { get; private set; }
         
@@ -18,6 +19,7 @@ namespace Heroes.GOAP.Core
         {
             Name = string.Empty;
             Description = string.Empty;
+            Icon = string.Empty;
             PreconditionsDescription = string.Empty;
             EffectDescription = string.Empty;
             Effect = (_) => new AgentState();
@@ -55,6 +57,12 @@ namespace Heroes.GOAP.Core
             public Builder WithDescription(string description)
             {
                 action.Description = description;
+                return this;
+            }
+
+            public Builder WithIcon(string icon)
+            {
+                action.Icon = icon;
                 return this;
             }
 
@@ -96,3 +104,5 @@ namespace Heroes.GOAP.Core
         }
     }
 }
+
+

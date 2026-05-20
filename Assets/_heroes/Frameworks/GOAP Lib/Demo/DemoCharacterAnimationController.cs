@@ -1,4 +1,4 @@
-﻿using Heroes.GOAP;
+using Heroes.GOAP;
 using WebLess;
 
 namespace Heroes.Systems.GOAP.Demo
@@ -7,3 +7,4 @@ namespace Heroes.Systems.GOAP.Demo
     {
     }
 }
+

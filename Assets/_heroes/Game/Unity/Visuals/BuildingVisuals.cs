@@ -194,3 +194,4 @@ namespace Heroes.Game.Buildings
         }
     }
 }
+

@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56bf6edaf2c6448448de3a2938f98781, type: 3}
+  m_Name: Castle
+  m_EditorClassIdentifier: Game::Heroes.Content.Buildings.BuildingDefinition
+  Id: 1c5b4b30-9e9d-4d9f-9e89-9c2a8fbf7a4c
+  DisplayName: Castle
+  Category: 2
+  Description: The heart of your kingdom. If it falls, all is lost.
+  IconPath: Buildings/Castle_Icon
+  AvailableUpgrades:
+  - {fileID: 11400000, guid: edcb36e76e1b30644b29c2942a39e2dd, type: 2}
+  - {fileID: 11400000, guid: f1e2d3c4b5a69788796a5b4c3d2e1f0a, type: 2}
+  SellItems: []
+  GoldCost: 0
+  PopulationCost: 0
+  PopulationProvided: 0
+  IsPlayerBuildable: 0
+  RequiredCastleLevel: 1
+  MaxHp: 1000
+  BuildHpPerSecond: 20
+  StartHp: 800
+  GoldIncomePerTick: 100
+  GoldIncomeIntervalSeconds: 60
+  Prefab: {fileID: 7501558980350989193, guid: 5d1f4816bf1d11848b66f5823e049f9b, type: 3}

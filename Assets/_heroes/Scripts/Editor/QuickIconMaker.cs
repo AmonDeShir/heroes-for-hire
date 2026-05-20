@@ -479,3 +479,4 @@ public class QuickIconMaker : EditorWindow
         Close();
     }
 }
+

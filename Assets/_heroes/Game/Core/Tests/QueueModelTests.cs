@@ -78,3 +78,5 @@ namespace Heroes.Tests.Core
         }
     }
 }
+
+

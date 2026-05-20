@@ -1,4 +1,4 @@
-﻿using Heroes.GOAP.Core;
+using Heroes.GOAP.Core;
 
 namespace Heroes.Game.AI
 {
@@ -29,3 +29,5 @@ namespace Heroes.Game.AI
         }
     }
 }
+
+

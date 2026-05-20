@@ -9,3 +9,5 @@ namespace Heroes.Game.Abstractions
         void ApplyDamage(float amount);
     }
 }
+
+

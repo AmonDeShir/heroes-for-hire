@@ -1,4 +1,4 @@
-﻿using EventBus;
+using EventBus;
 using Heroes.Game.Abstractions;
 using Heroes.Game.Core.Events;
 
@@ -27,3 +27,4 @@ namespace Heroes.Game.Buildings
         }
     }
 }
+

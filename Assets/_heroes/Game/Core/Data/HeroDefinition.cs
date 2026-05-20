@@ -30,8 +30,14 @@ namespace Heroes.Content.Heroes
         public float BaseGearLevel;
         public float HomeRadius = 2f;
         public float DangerSenseRadius = 12f;
+
+        [Header("Starting Items")]
+        [Tooltip("Items granted to the hero on spawn (auto-equipped when possible).")]
+        public ItemDefinition[] StartingItems;
         
         [Header("Prefab")]
         public HeroFacade Prefab;
     }
 }
+
+

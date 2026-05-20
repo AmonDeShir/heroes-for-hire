@@ -1,4 +1,4 @@
-﻿namespace Heroes.Systems.GOAP.Demo
+namespace Heroes.Systems.GOAP.Demo
 {
     public static class DemoConsts
     {
@@ -12,3 +12,4 @@
         public const string STORE = "store";
     }
 }
+

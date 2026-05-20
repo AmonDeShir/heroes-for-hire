@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edafbca716694eba8c40304faa1429ae, type: 3}
+  m_Name: Upgraded Sword
+  m_EditorClassIdentifier: Game::Heroes.Content.Heroes.ItemDefinition
+  Id: cc260f4c-f239-4aa6-aa6a-e35299c8d26b
+  DisplayName: Tempered Sword
+  Description: Sharper, straighter, and less embarrassing.
+  IconPath: Items/Swords/T2_Icon
+  GoldCost: 200
+  Tier: 2
+  Attack: 8
+  Defense: 0
+  Speed: 0
+  HpRegeneration: 0
+  Users: {fileID: 11400000, guid: a809778c804b2a14683e5b4da2685f55, type: 2}
+  Slot: 1
+  IsSingleUse: 0
+  Effects: []
+  WeaponPrefab: {fileID: 2136885209654066695, guid: 2a56a5a54939c934796bba2b073974ed, type: 3}

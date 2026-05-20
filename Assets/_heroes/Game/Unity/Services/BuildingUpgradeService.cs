@@ -185,27 +185,10 @@ namespace Heroes.Game.Buildings
 
         private void SpawnHeroes(BuildingFacade building, BuildingUpgradeDefinition upgrade)
         {
-            if (_heroSpawnService == null || upgrade?.Effects == null)
-            {
-                return;
-            }
-
-            foreach (var effect in upgrade.Effects)
-            {
-                if (effect is not SpawnHeroEffect spawnEffect || spawnEffect.Hero == null)
-                {
-                    continue;
-                }
-
-                var count = spawnEffect.Count <= 0 ? 1 : spawnEffect.Count;
-                for (var i = 0; i < count; i++)
-                {
-                    _heroSpawnService.Spawn(spawnEffect.Hero, building);
-                }
-            }
+            
         }
 
-        private static void ApplyEffects(BuildingFacade building, BuildingUpgradeDefinition upgrade)
+        private void ApplyEffects(BuildingFacade building, BuildingUpgradeDefinition upgrade)
         {
             if (upgrade.Effects == null)
             {
@@ -214,6 +197,8 @@ namespace Heroes.Game.Buildings
 
             var previousMaxHp = building.Model.Health.Max;
 
+            var ctx = new BuildingUpgradeContext(building, _kingdomService, _heroSpawnService);
+
             foreach (var effect in upgrade.Effects)
             {
                 if (effect == null)
@@ -221,7 +206,7 @@ namespace Heroes.Game.Buildings
                     continue;
                 }
 
-                effect.ApplyEffect(building.Model);
+                effect.ApplyEffect(ctx);
             }
 
             if (building.Model.Health.Max > previousMaxHp && building.Model.Health.Current < building.Model.Health.Max)
@@ -317,3 +302,5 @@ namespace Heroes.Game.Buildings
         }
     }
 }
+
+

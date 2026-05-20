@@ -1,4 +1,4 @@
-﻿namespace Heroes.Game.Abstractions
+namespace Heroes.Game.Abstractions
 {
     public interface ISelectable
     {
@@ -8,3 +8,5 @@
         public string Icon { get; }
     }
 }
+
+

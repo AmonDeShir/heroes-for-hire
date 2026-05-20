@@ -21,6 +21,9 @@ declare namespace CS.Heroes.Presentation.UI.BuildingPanel {
     public get Name(): string;
     public get Description(): string;
     public get Price(): number;
+    public get PopulationCost(): number;
+    public get CanBuild(): boolean;
+    public get LockReason(): string;
     public get Icon(): string;
     public get Category(): string;
   }
@@ -69,6 +72,41 @@ declare namespace CS.Heroes.Presentation.UI.SelectionPanel {
     public get DangerLevel(): number;
     public get IsAlive(): boolean;
     public get IsInHome(): boolean;
+    public get Attack(): number;
+    public get Defence(): number;
+    public get Speed(): number;
+  }
+
+  class HeroEquipmentItemDTO extends CS.System.Object {
+    protected [__keep_incompatibility]: never;
+    public get Name(): string;
+    public get Icon(): string;
+  }
+
+  class HeroEquipmentSelectionDTO extends CS.System.Object {
+    protected [__keep_incompatibility]: never;
+    public get Weapon(): HeroEquipmentItemDTO;
+    public get Armor(): HeroEquipmentItemDTO;
+    public get Artifacts(): System.Array$1<HeroEquipmentItemDTO>;
+    public get Consumables(): System.Array$1<HeroEquipmentItemDTO>;
+    public get Backpack(): System.Array$1<HeroEquipmentItemDTO>;
+  }
+
+  class ShopItemSelectionDTO extends CS.System.Object {
+    protected [__keep_incompatibility]: never;
+    public get Id(): string;
+    public get Name(): string;
+    public get Description(): string;
+    public get Icon(): string;
+    public get GoldCost(): number;
+    public get Attack(): number;
+    public get Defense(): number;
+    public get Speed(): number;
+    public get HpRegeneration(): number;
+    public get Slot(): string;
+    public get IsSingleUse(): boolean;
+    public get IsUnlocked(): boolean;
+    public get LockReason(): string;
   }
 
   class GoapGoalSelectionDTO extends CS.System.Object {
@@ -124,7 +162,9 @@ declare namespace CS.Heroes.Presentation.UI.SelectionPanel {
     public get SelectedDamageable(): null | DamageableSelectionDTO;
     public get SelectedBuilding(): null | BuildingSelectionDTO;
     public get SelectedHero(): null | HeroSelectionDTO;
+    public get SelectedHeroEquipment(): null | HeroEquipmentSelectionDTO;
     public get SelectedGoap(): null | GoapSelectionDTO;
+    public get ShopItems(): System.Array$1<Heroes.Presentation.UI.SelectionPanel.ShopItemSelectionDTO>;
     public get BuildingUpgrades(): System.Array$1<Heroes.Presentation.UI.SelectionPanel.BuildingUpgradeSelectionDTO>;
     public get QueuedBuildingUpgrades(): System.Array$1<Heroes.Presentation.UI.SelectionPanel.QueuedBuildingUpgradeSelectionDTO>;
     public SelectUpgrade ($upgradeId: string) : void

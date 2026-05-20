@@ -5,3 +5,5 @@ namespace Heroes.GOAP.Core.Debug
         bool TryGetBeliefName(int index, out string name);
     }
 }
+
+

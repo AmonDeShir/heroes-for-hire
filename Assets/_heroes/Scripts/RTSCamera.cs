@@ -1,4 +1,4 @@
-// Source https://www.reddit.com/r/Unity3D/comments/1jrj3yh/made_a_tutorial_on_rtscitybuilder_camera_system/
+
 
 using Unity.Cinemachine;
 using UnityEngine;
@@ -49,7 +49,6 @@ public class RTSCamera : MonoBehaviour
     
     private Vector3 Velocity = Vector3.zero;
 
-    /// value between 0 (zoomed in) and 1 (zoomed out)
     public float ZoomLevel 
     {
         get
@@ -222,3 +221,4 @@ public class RTSCamera : MonoBehaviour
         OrbitalFollow.RadialAxis = axis;
     }
 }
+
