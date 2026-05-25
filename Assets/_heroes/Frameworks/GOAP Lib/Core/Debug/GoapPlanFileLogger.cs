@@ -14,6 +14,7 @@ namespace Heroes.GOAP.Core
         private static string _path;
         private static float _nextFlushAt;
         private static bool _announcedPath;
+        private static bool _clearedThisSession;
 
         public static int BeginPlanIfNeeded(string goalName, int maxPlans)
         {
@@ -33,6 +34,7 @@ namespace Heroes.GOAP.Core
                 _plansStarted++;
 
                 EnsurePath();
+                ClearFileOnce_NoLock();
                 AppendLine_NoLock($"\n=== GOAP PLAN START #{_plansStarted} goal='{goalName ?? string.Empty}' t={Time.unscaledTime:0.###} ===");
 
                 if (_plansStarted == maxPlans)
@@ -111,6 +113,26 @@ namespace Heroes.GOAP.Core
 
             
             _path = Path.Combine(Application.persistentDataPath, "goap_plans.log");
+        }
+
+        private static void ClearFileOnce_NoLock()
+        {
+            if (_clearedThisSession)
+            {
+                return;
+            }
+
+            _clearedThisSession = true;
+
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(_path) ?? Application.persistentDataPath);
+                File.WriteAllText(_path, string.Empty, Encoding.UTF8);
+            }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.LogError($"[GOAP-PLAN] Failed to clear log file: {e.Message}");
+            }
         }
 
         private static void AppendLine_NoLock(string line)

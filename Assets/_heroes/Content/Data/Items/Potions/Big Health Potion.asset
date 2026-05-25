@@ -24,5 +24,7 @@ MonoBehaviour:
   Users: {fileID: 11400000, guid: a809778c804b2a14683e5b4da2685f55, type: 2}
   Slot: 0
   IsSingleUse: 1
-  Effects: []
+  Effects:
+  - Trigger: 1
+    Effect: {fileID: 11400000, guid: afa02f8459ecded43972b7d879623da7, type: 2}
   WeaponPrefab: {fileID: 0}

@@ -16,6 +16,11 @@ namespace Heroes.Game.Heroes
             hero = Registry<HeroFacade>.Get(items => items.FirstOrDefault(item => item != null && item.Id == id));
             return hero != null;
         }
+
+        public string GetIconById(string id)
+        {
+            return TryGetById(id, out var hero) && hero != null ? hero.Icon : string.Empty;
+        }
     }
 }
 

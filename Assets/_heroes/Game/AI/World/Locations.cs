@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Heroes.Content.Buildings;
 using UnityEngine;
 
 namespace Heroes.Game.AI
@@ -9,7 +8,7 @@ namespace Heroes.Game.AI
     {
         public string ID;
         public Vector2 Position;
-        public BuildingDefinition Definition;
+        public string DefinitionId;
         public float Radius;
     }
 
@@ -144,7 +143,7 @@ namespace Heroes.Game.AI
 
         public void RegisterLocation(Location location)
         {
-            var definitionId = location.Definition.Id;
+            var definitionId = location.DefinitionId;
 
             if (!Values.TryGetValue(definitionId, out var locations))
             {

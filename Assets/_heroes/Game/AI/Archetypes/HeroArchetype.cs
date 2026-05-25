@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Heroes.Game.Heroes;
 using Heroes.Game.AI.Strategies;
 using Heroes.GOAP.Core;
@@ -7,6 +8,10 @@ using UnityEngine;
 using Heroes.Content.Heroes;
 using Heroes.Content.Heroes.ItemEffects;
 using Heroes.Game.Buildings;
+using Heroes.Game.Monsters;
+using Heroes.Game.Runtime;
+using Heroes.Game.Core.Events;
+using Heroes.Game.Quests;
 using Registry;
 
 namespace Heroes.Game.AI
@@ -14,11 +19,14 @@ namespace Heroes.Game.AI
         public class HeroArchetype :  Archetype<Agent<GameWorldSnapshot, HeroAnimationController>, GameWorldSnapshot>
         {
             private const float WanderRadius = 6f;
+            private const float HuntRadius = 80f;
             private const int DesiredConsumables = 3;
+            private const int HuntExpectedGold = 50;
         private readonly string _homeBuildingInstanceId;
         private readonly GoapBuildingReferences _buildings;
         private readonly HeroFacade _hero;
         private float _nextDebugLogAt;
+        private string _lastDebugReason;
 
         public HeroArchetype(HeroFacade hero, GoapBuildingReferences buildings) : base(
             new List<Action<Agent<GameWorldSnapshot, HeroAnimationController>, GameWorldSnapshot>>(),
@@ -44,7 +52,9 @@ namespace Heroes.Game.AI
                 state.SetLocation(hero.transform.position);
                 state.SetBelieve(Consts.GOLD, hero.Model.Gold);
                 state.SetBelieve(Consts.HEALTH, hero.Model.Health.Current);
-                state.SetBelieve(Consts.DANGER_LEVEL, hero.Model.DangerLevel);
+                var maxHp = hero.Model.Health.Max;
+                state.SetBelieve(Consts.HEALTH_PCT, maxHp > 0.001f ? hero.Model.Health.Current / maxHp : 1f);
+                state.SetBelieve(Consts.ENEMIES_NEARBY, 0f);
                 state.SetBelieve(Consts.CONSUMABLES, hero.Model.EquippedConsumables != null ? hero.Model.EquippedConsumables.Count : 0);
                 state.SetBelieve(Consts.WEAPON_TIER, hero.Model.WeaponTier);
                 state.SetBelieve(Consts.ARMOR_TIER, hero.Model.ArmorTier);
@@ -64,23 +74,63 @@ namespace Heroes.Game.AI
             var hasBlacksmith = _buildings != null && _buildings.Blacksmith != null && !string.IsNullOrWhiteSpace(_buildings.Blacksmith.Id);
 
             Goals.Add(CreateGoal()
+                .WithName("Defend Building")
+                .WithPriority(6)
+                .WithImportance(ctx => ctx.state.GetBelieve(Consts.DEFEND_ACTIVE) > 0.5f ? 5f : 0f)
+                .WithAchieved(ctx => ctx.state.GetBelieve(Consts.DEFEND_ACTIVE) <= 0.5f)
+                .WithHeuristic(ctx => ctx.state.GetBelieve(Consts.DEFEND_ACTIVE) > 0.5f ? 1f : 0f)
+                .WithIcon("Icons/all/lorc/shield")
+                .Build());
+
+            Goals.Add(CreateGoal()
                 .WithName("Be Alive")
                 .WithPriority(5)
-                .WithImportance(ctx => ctx.state.GetBelieve(Consts.DANGER_LEVEL) * Mathf.Clamp(70f - ctx.state.GetBelieve(Consts.HEALTH), 0f, 100f))
-                .WithAchieved(ctx => ctx.state.GetBelieve(Consts.DANGER_LEVEL) <= 0.01f || ctx.state.GetBelieve(Consts.HEALTH) >= 85f)
+                .WithImportance(ctx => Mathf.Clamp(70f - ctx.state.GetBelieve(Consts.HEALTH), 0f, 100f) / 100f)
+                .WithAchieved(ctx => ctx.state.GetBelieve(Consts.HEALTH) >= 85f)
                 
                 .WithHeuristic(ctx =>
                 {
-                    if (ctx.state.GetBelieve(Consts.DANGER_LEVEL) <= 0.01f || ctx.state.GetBelieve(Consts.HEALTH) >= 85f)
+                    if (ctx.state.GetBelieve(Consts.HEALTH) >= 85f)
                     {
                         return 0f;
                     }
 
-                    var progress = (1f - ctx.state.GetBelieve(Consts.DANGER_LEVEL) + ctx.state.GetBelieve(Consts.HEALTH) / 85f) / 2f;
-                    return Mathf.Clamp01(1f - progress);
+                    var progress = Mathf.Clamp01(ctx.state.GetBelieve(Consts.HEALTH) / 85f);
+                    return 1f - progress;
                 })
                 .Build()
             );
+
+            Goals.Add(CreateGoal()
+                .WithName("Defend")
+                .WithPriority(4)
+                .WithImportance(ctx => ctx.state.GetBelieve(Consts.ENEMIES_NEARBY) > 0.1f ? 1.5f : 0f)
+                .WithAchieved(ctx => ctx.state.GetBelieve(Consts.ENEMIES_NEARBY) <= 0.1f)
+                .WithHeuristic(ctx => ctx.state.GetBelieve(Consts.ENEMIES_NEARBY) > 0.1f ? 1f : 0f)
+                .WithIcon("Icons/all/lorc/shield")
+                .Build());
+
+            Goals.Add(CreateGoal()
+                .WithName("Get Gold")
+                .WithPriority(3)
+                .WithImportance(ctx =>
+                {
+                    var g = ctx.state.GetBelieve(Consts.GOLD);
+                    if (g >= 200f)
+                    {
+                        return 0f;
+                    }
+                    return Mathf.Clamp01((200f - g) / 200f);
+                })
+                .WithAchieved(ctx => ctx.state.GetBelieve(Consts.GOLD) >= 200f)
+                .WithHeuristic(ctx =>
+                {
+                    var g = ctx.state.GetBelieve(Consts.GOLD);
+                    var progress = Mathf.Clamp01(g / 200f);
+                    return 1f - progress;
+                })
+                .WithIcon("Icons/coin")
+                .Build());
             
             if (hasBlacksmith)
             {
@@ -174,7 +224,7 @@ namespace Heroes.Game.AI
 
             if (!string.IsNullOrWhiteSpace(guildId))
             {
-                Actions.Add(MakeMoveAction($"Go to {guildName}", guildId, guildName));
+                // Guild is currently not a functional destination; avoid it as a generic move step.
             }
 
             if (!string.IsNullOrWhiteSpace(marketId))
@@ -191,7 +241,229 @@ namespace Heroes.Game.AI
                 Actions.Add(MakeBuyArmorAction(blacksmithId, "Buy Better Armor"));
             }
 
-            Actions.Add(MakeMoveHomeAction());
+            
+
+            Actions.Add(MakeDefendBuildingAction());
+            Actions.Add(MakeUseHealingConsumableAction());
+            Actions.Add(MakeAcceptBestQuestAction());
+            Actions.Add(MakeDoActiveQuestAction());
+            Actions.Add(MakeFightMonsterAction());
+            Actions.Add(MakeHuntMonsterForGoldAction());
+        }
+
+        private Action<Agent<GameWorldSnapshot, HeroAnimationController>, GameWorldSnapshot> MakeAcceptBestQuestAction()
+        {
+            return CreateAction()
+                .WithName("Accept Quest")
+                .WithIcon("Icons/all/lorc/contract")
+                .WithPreCondition(ctx =>
+                {
+                    if (ctx.state.GetBelieve(Consts.HAS_ACTIVE_QUEST) > 0.5f)
+                    {
+                        return false;
+                    }
+
+                    if (ctx.state.GetBelieve(Consts.BEST_QUEST_EXISTS) <= 0.5f)
+                    {
+                        return false;
+                    }
+
+                    return ctx.state.GetBelieve(Consts.BEST_QUEST_SCORE) >= 0.75f;
+                })
+                .WithPreConditionsDescription("Quest available")
+                .WithTime(_ => 0.1f)
+                .WithEffect(ctx => ctx.state.Clone().Mutate((ref AgentState s) =>
+                {
+                    s.SetBelieve(Consts.HAS_ACTIVE_QUEST, 1f);
+                    s.SetBelieve(Consts.ACTIVE_QUEST_TARGET_X, s.GetBelieve(Consts.BEST_QUEST_TARGET_X));
+                    s.SetBelieve(Consts.ACTIVE_QUEST_TARGET_Z, s.GetBelieve(Consts.BEST_QUEST_TARGET_Z));
+                }))
+                .WithEffectDescription("Accept quest")
+                .WithImplementation((agent, ctx) => new Strategies.QuestAcceptStrategy(agent, QuestRuntimeConfig.Service))
+                .Build();
+        }
+
+        private Action<Agent<GameWorldSnapshot, HeroAnimationController>, GameWorldSnapshot> MakeDoActiveQuestAction()
+        {
+            return CreateAction()
+                .WithName("Do Quest")
+                .WithIcon("Icons/all/lorc/crossed-swords")
+                .WithPreCondition(ctx => ctx.state.GetBelieve(Consts.HAS_ACTIVE_QUEST) > 0.5f)
+                .WithPreConditionsDescription("Have active quest")
+                .WithTime(_ => 1.0f)
+                .WithEffect(ctx => ctx.state.Clone().Mutate((ref AgentState s) =>
+                {
+                    s.SetBelieve(Consts.GOLD, s.GetBelieve(Consts.GOLD) + Mathf.Max(0f, s.GetBelieve(Consts.BEST_QUEST_SHARE)));
+                }))
+                .WithEffectDescription("Complete quest")
+                .WithImplementation((agent, ctx) =>
+                {
+                    var hero = agent != null ? agent.GetComponent<HeroFacade>() : null;
+                    if (hero?.Model == null || QuestRuntimeConfig.Service == null)
+                    {
+                        return null;
+                    }
+
+                    if (!QuestRuntimeConfig.Service.TryGetById(hero.Model.ActiveQuestId, out var q) || q == null)
+                    {
+                        return null;
+                    }
+
+                    if (q.TargetKind == QuestTargetKind.Building)
+                    {
+                        var building = Registry<BuildingFacade>.Get(items => items.FirstOrDefault(x => x != null && x.Id == q.TargetInstanceId));
+                        return building != null ? new Strategies.AttackBuildingStrategy(agent, ctx, building) : null;
+                    }
+
+                    var monster = Registry<MonsterFacade>.Get(items => items.FirstOrDefault(x => x != null && x.InstanceId == q.TargetInstanceId));
+                    return monster != null ? new Strategies.FightMonsterStrategy(agent, ctx, monster, null) : null;
+                })
+                .Build();
+        }
+
+        private Action<Agent<GameWorldSnapshot, HeroAnimationController>, GameWorldSnapshot> MakeUseHealingConsumableAction()
+        {
+            return CreateAction()
+                .WithName("Use Health Potion")
+                .WithIcon("Icons/all/lorc/standing-potion")
+                .WithPreCondition(ctx =>
+                {
+                    if (ctx.state.GetBelieve(Consts.CONSUMABLES) <= 0.1f)
+                    {
+                        return false;
+                    }
+
+                    return ctx.state.GetBelieve(Consts.HEALTH_PCT) <= 0.40f;
+                })
+                .WithPreConditionsDescription("Have potion and HP < 40%")
+                .WithTime(_ => 0.1f)
+                .WithEffect(ctx =>
+                    ctx.state.Clone().Mutate((ref AgentState s) =>
+                    {
+                        s.SetBelieve(Consts.CONSUMABLES, Mathf.Max(0f, s.GetBelieve(Consts.CONSUMABLES) - 1f));
+                        s.SetBelieve(Consts.HEALTH_PCT, Mathf.Max(s.GetBelieve(Consts.HEALTH_PCT), 0.75f));
+                    }))
+                .WithEffectDescription("Heal")
+                .WithImplementation((agent, ctx) => new UseHealingConsumableStrategy(agent))
+                .Build();
+        }
+
+        private Action<Agent<GameWorldSnapshot, HeroAnimationController>, GameWorldSnapshot> MakeDefendBuildingAction()
+        {
+            return CreateAction()
+                .WithName("Defend Building")
+                .WithIcon("Icons/all/lorc/shield")
+                .WithPreCondition(ctx =>
+                {
+                    return ctx.state.GetBelieve(Consts.DEFEND_ACTIVE) > 0.5f;
+                })
+                .WithPreConditionsDescription("Have building defense target")
+                .WithTime(_ => 0.5f)
+                .WithEffect(ctx => ctx.state.Clone().Mutate((ref AgentState s) =>
+                {
+                    var x = ctx.state.GetBelieve(Consts.DEFEND_X);
+                    var z = ctx.state.GetBelieve(Consts.DEFEND_Z);
+                    s.SetLocation(x, z);
+                }))
+                .WithEffectDescription("Move to attacked building")
+                .WithImplementation((agent, ctx) =>
+                {
+                    if (_hero?.Model == null)
+                    {
+                        return null;
+                    }
+
+                    var building = Registry<BuildingFacade>.Get(items => items.FirstOrDefault(b => b != null && b.Id == _hero.Model.DefendBuildingInstanceId));
+                    if (building == null)
+                    {
+                        return null;
+                    }
+
+                    return new DefendBuildingStrategy(agent, ctx, building);
+                })
+                .Build();
+        }
+
+        private Action<Agent<GameWorldSnapshot, HeroAnimationController>, GameWorldSnapshot> MakeFightMonsterAction()
+        {
+            return CreateAction()
+                .WithName("Fight Monster")
+                .WithIcon("Icons/all/lorc/crossed-swords")
+                .WithPreCondition(ctx =>
+                {
+                    return ctx.state.GetBelieve(Consts.ENEMIES_NEARBY) > 0.1f;
+                })
+                .WithPreConditionsDescription("Monster nearby")
+                .WithTime(_ => 1.0f)
+                .WithEffect(ctx => ctx.state)
+                .WithEffectDescription("Fight monster")
+                .WithImplementation((agent, ctx) =>
+                {
+                    if (!TryFindNearestMonster(out var monster))
+                    {
+                        return null;
+                    }
+
+                    return new FightMonsterStrategy(agent, ctx, monster, null);
+                })
+                .Build();
+        }
+
+        private Action<Agent<GameWorldSnapshot, HeroAnimationController>, GameWorldSnapshot> MakeHuntMonsterForGoldAction()
+        {
+            return CreateAction()
+                .WithName("Hunt Monster")
+                .WithIcon("Icons/all/lorc/crossed-swords")
+                .WithPreCondition(ctx =>
+                {
+                    if (ctx.state.GetBelieve(Consts.DEFEND_ACTIVE) > 0.5f)
+                    {
+                        return false;
+                    }
+
+                    return ctx.state.GetBelieve(Consts.ENEMIES_NEARBY) > 0.1f;
+                })
+                .WithPreConditionsDescription("Monster exists")
+                .WithTime(_ => 1.0f)
+                .WithEffect(ctx =>
+                    ctx.state.Clone().Mutate((ref AgentState s) =>
+                    {
+                        s.SetBelieve(Consts.GOLD, s.GetBelieve(Consts.GOLD) + HuntExpectedGold);
+                    }))
+                .WithEffectDescription("Earn gold from monster")
+                .WithImplementation((agent, ctx) =>
+                {
+                    if (!TryFindNearestMonster(out var monster))
+                    {
+                        return null;
+                    }
+
+                    return new FightMonsterStrategy(agent, ctx, monster, null);
+                })
+                .Build();
+        }
+
+        private bool TryFindNearestMonster(out MonsterFacade monster)
+        {
+            monster = null;
+            if (_hero == null || _hero.Model == null)
+            {
+                return false;
+            }
+
+            var sensor = _hero != null ? _hero.EnemySensor : null;
+            if (sensor == null)
+            {
+                return false;
+            }
+
+            if (!sensor.TryGetNearestEnemy(_hero.transform.position, out var t))
+            {
+                return false;
+            }
+
+            monster = t != null ? t.GetComponentInParent<MonsterFacade>() : null;
+            return monster != null && monster.IsAlive;
         }
 
         private Action<Agent<GameWorldSnapshot, HeroAnimationController>, GameWorldSnapshot> MakeBuyConsumableAction(string buildingDefinitionId, string actionName)
@@ -543,37 +815,9 @@ namespace Heroes.Game.AI
 
         private void DebugGoap(AgentContext<GameWorldSnapshot> ctx, string reason, string buildingDefinitionId = null)
         {
-            if (_buildings == null || !_buildings.EnableGoapDebugLogs)
-            {
-                return;
-            }
-
-            var now = Time.unscaledTime;
-            
-            if (now < _nextDebugLogAt)
-            {
-                return;
-            }
-
-            _nextDebugLogAt = now + 1.0f;
-
-            var gold = ctx.state.GetBelieve(Consts.GOLD);
-            var weaponTier = ctx.state.GetBelieve(Consts.WEAPON_TIER);
-            var armorTier = ctx.state.GetBelieve(Consts.ARMOR_TIER);
-            var amuletTier = ctx.state.GetBelieve(Consts.AMULET_TIER);
-            var loc = ctx.state.Location;
-            var weapon = _hero?.Model != null ? _hero.Model.EquippedWeaponId : string.Empty;
-            var armor = _hero?.Model != null ? _hero.Model.EquippedArmorId : string.Empty;
-
-            var hasAny = !string.IsNullOrWhiteSpace(buildingDefinitionId) && ctx.world.Locations.HasAny(buildingDefinitionId);
-            var isAt = !string.IsNullOrWhiteSpace(buildingDefinitionId) && IsAt(ctx, buildingDefinitionId);
-            var closest = "-";
-            if (!string.IsNullOrWhiteSpace(buildingDefinitionId) && ctx.world.Locations.TryGetClosestLocation(buildingDefinitionId, ctx.state.Location, out var l))
-            {
-                closest = $"id={l.ID} pos={l.Position} r={l.Radius:0.##}";
-            }
-
-            UnityEngine.Debug.Log($"[GOAP] {(_hero != null ? _hero.Name : "<hero>")} {reason} gold={gold:0} tiers(w={weaponTier:0} a={armorTier:0} am={amuletTier:0}) loc={loc} weaponId={weapon} armorId={armor} hasAny={hasAny} isAt={isAt} closest=({closest}) defId={buildingDefinitionId}");
+            _ = ctx;
+            _ = reason;
+            _ = buildingDefinitionId;
         }
 
         private bool IsConsumableCandidate(ItemDefinition item)
@@ -600,6 +844,7 @@ namespace Heroes.Game.AI
                 .WithEffect(ctx =>
                     ctx.state.Clone().Mutate((ref AgentState s) =>
                     {
+                        // Use the closest known location marker, not the current simulated position.
                         if (ctx.world.Locations.TryGetClosest(locationId, ctx.state.Location, out var pos))
                         {
                             s.SetLocation(pos);
@@ -621,37 +866,6 @@ namespace Heroes.Game.AI
                 .Build();
         }
 
-        private Action<Agent<GameWorldSnapshot, HeroAnimationController>, GameWorldSnapshot> MakeMoveHomeAction()
-        {
-            return CreateAction()
-                .WithName("Go Home")
-                .WithIcon("Icons/all/lorc/treasure-map")
-                .WithPreCondition(ctx => ctx.state.GetBelieve(Consts.DANGER_LEVEL) > 0.2f && ctx.world.Locations.TryGetPositionByInstanceId(_homeBuildingInstanceId, out _))
-                .WithPreConditionsDescription("Danger above 0.2 and home exists")
-                .WithTime(_ => 0.5f)
-                .WithEffect(ctx =>
-                    ctx.state.Clone().Mutate((ref AgentState s) =>
-                    {
-                        if (ctx.world.Locations.TryGetPositionByInstanceId(_homeBuildingInstanceId, out var pos))
-                        {
-                            s.SetLocation(pos);
-                            s.SetBelieve(Consts.DANGER_LEVEL, 0f);
-                        }
-                    }))
-                .WithEffectDescription("Move to home")
-                .WithImplementation((agent, ctx) =>
-                {
-                    if (!ctx.world.Locations.TryGetPositionByInstanceId(_homeBuildingInstanceId, out var dest2d))
-                    {
-                        return null;
-                    }
-
-                    var destination = new Vector3(dest2d.x, agent.transform.position.y, dest2d.y);
-                    return new MoveStrategy<GameWorldSnapshot, HeroAnimationController>(destination, agent, ctx);
-                })
-                .Build();
-        }
-        
         private void CreateWanderIdleAction()
         {
             IdleActions.Add(new IdleAction<Agent<GameWorldSnapshot, HeroAnimationController>, GameWorldSnapshot>(

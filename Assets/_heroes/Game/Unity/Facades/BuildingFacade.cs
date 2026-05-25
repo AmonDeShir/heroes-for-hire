@@ -31,6 +31,10 @@ namespace Heroes.Game.Buildings
         
         private BuildingConstructionLogic _constructionLogic;
         private Core.Health.DamageLogic _damageLogic;
+        private bool _destroyQueued;
+
+        private float _nextAttackedEventAt;
+        private float _lastAttackedEventHp;
         
         private QueueLogic<
             UpgradeQueueProgressChangedEvent, 
@@ -123,6 +127,32 @@ namespace Heroes.Game.Buildings
             _damageLogic.Apply(amount);
             Model.SyncFromHealth();
 
+            _nextAttackedEventAt = 0f;
+            _lastAttackedEventHp = Model.Health.Current;
+
+            if (amount > 0f && previousState != BuildingState.Destroyed && Model.State != BuildingState.Destroyed)
+            {
+                var now = Time.unscaledTime;
+                var max = Model.Health.Max;
+                var hp = Model.Health.Current;
+                var step = max > 0.001f ? max * 0.10f : 0f;
+
+                var crossedStep = step > 0.001f && (_lastAttackedEventHp - hp) >= step;
+                if (now >= _nextAttackedEventAt || crossedStep)
+                {
+                    _nextAttackedEventAt = now + 0.5f;
+                    _lastAttackedEventHp = hp;
+
+                    EventBus<BuildingAttackedEvent>.Invoke(new BuildingAttackedEvent
+                    {
+                        InstanceId = Model.InstanceId,
+                        DefinitionId = Model.DefinitionId,
+                        Position = transform.position,
+                        Damage = amount,
+                    });
+                }
+            }
+
             RefreshVisuals();
             PublishDestroyedEventIfNeeded(previousState);
         }
@@ -151,6 +181,12 @@ namespace Heroes.Game.Buildings
                 InstanceId = Model.InstanceId,
                 DefinitionId = Model.DefinitionId
             });
+
+            if (!_destroyQueued)
+            {
+                _destroyQueued = true;
+                Destroy(gameObject, 0.25f);
+            }
         }
 
         private void OnDestroy()

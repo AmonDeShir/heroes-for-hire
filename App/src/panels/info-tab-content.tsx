@@ -19,6 +19,7 @@ export function InfoTabContent(props: {
   const [hero] = useEventfulState(selectionPanelPresenter, 'SelectedHero')
   const [building] = useEventfulState(selectionPanelPresenter, 'SelectedBuilding')
   const [heroEq] = useEventfulState(selectionPanelPresenter, 'SelectedHeroEquipment')
+  const [chapelRevivesCs] = useEventfulState(selectionPanelPresenter, 'ChapelRevives')
   
   const icon = useMemo(
     () => props.selected ? Resources.Load(props.selected.Icon) as Texture2D : HEART_ICON,
@@ -26,6 +27,8 @@ export function InfoTabContent(props: {
   )
 
   const bindTooltip = useTooltipBinding();
+
+  const chapelRevives = useMemo(() => toJsArray(chapelRevivesCs as any), [chapelRevivesCs])
 
   return (
     <div class='flex w-full h-full flex-row justify-center items-start'>
@@ -41,15 +44,13 @@ export function InfoTabContent(props: {
         <div class='w-0.5 h-[70px] bg-main ml-4 mr-4 my-auto' />
       )}
 
-      { hero && (
-        <div class='text-[10px] w-20 h-full flex flex-col justify-center'>
-          <div class='flex flex-row justify-between w-20'>Attack: {hero.Attack}</div>
-          <div class='flex flex-row justify-between w-20'>Defence: {hero.Defence}</div>
-          <div class='flex flex-row justify-between w-20'>Speed: {hero.Speed}</div>
-          <div class='flex flex-row justify-between w-20'>Gear: {hero.GearLevel.toFixed(1)}</div>
-          <div class='flex flex-row justify-between w-20'>Danger: {hero.DangerLevel.toFixed(1)}</div>
-        </div>
-      )}
+        { hero && (
+         <div class='text-[10px] w-20 h-full flex flex-col justify-center'>
+           <div class='flex flex-row justify-between w-20'>Attack: {hero.Attack}</div>
+           <div class='flex flex-row justify-between w-20'>Defence: {hero.Defence}</div>
+           <div class='flex flex-row justify-between w-20'>Speed: {hero.Speed}</div>
+         </div>
+       )}
       
       <div class='w-0.5 h-[70px] bg-main ml-4 mr-4 my-auto' />
 

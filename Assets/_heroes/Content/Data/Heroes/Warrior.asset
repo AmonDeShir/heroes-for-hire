@@ -25,7 +25,7 @@ MonoBehaviour:
   StartGold: 100
   BaseGearLevel: 0
   HomeRadius: 2
-  DangerSenseRadius: 12
+  DangerSenseRadius: 15
   StartingItems:
   - {fileID: 11400000, guid: 08d1ca2b20a562642b6e34f8ce33e14b, type: 2}
   Prefab: {fileID: 7477028025605634063, guid: 089e033b3389072408e17a3b207b4bad, type: 3}

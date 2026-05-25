@@ -20,6 +20,48 @@ namespace Heroes
         private Terrain terrain;
         private TerrainData data;
 
+        public static TerrainHelper FindForPosition(Vector3 worldPosition)
+        {
+            var helpers = UnityEngine.Object.FindObjectsByType<TerrainHelper>(FindObjectsSortMode.None);
+            if (helpers == null || helpers.Length == 0)
+            {
+                return null;
+            }
+
+            TerrainHelper best = null;
+            var bestDist = float.MaxValue;
+
+            for (var i = 0; i < helpers.Length; i++)
+            {
+                var h = helpers[i];
+                if (h == null || h.terrain == null || h.data == null)
+                {
+                    continue;
+                }
+
+                var tp = h.terrain.transform.position;
+                var size = h.data.size;
+                var min = new Vector2(tp.x, tp.z);
+                var max = new Vector2(tp.x + size.x, tp.z + size.z);
+                var p2 = new Vector2(worldPosition.x, worldPosition.z);
+
+                if (p2.x >= min.x && p2.x <= max.x && p2.y >= min.y && p2.y <= max.y)
+                {
+                    return h;
+                }
+
+                var clamped = new Vector2(Mathf.Clamp(p2.x, min.x, max.x), Mathf.Clamp(p2.y, min.y, max.y));
+                var d = (clamped - p2).sqrMagnitude;
+                if (d < bestDist)
+                {
+                    bestDist = d;
+                    best = h;
+                }
+            }
+
+            return best;
+        }
+
         private void Awake()
         {
             terrain = GetComponent<Terrain>();
@@ -204,6 +246,11 @@ namespace Heroes
         private float GetTerrainWorldHeight(Vector3 worldPoint)
         {
             return terrain.SampleHeight(worldPoint) + terrain.transform.position.y;
+        }
+
+        public float GetWorldHeight(Vector3 worldPoint)
+        {
+            return GetTerrainWorldHeight(worldPoint);
         }
 
         private float WorldHeightToNormalized(float worldY)

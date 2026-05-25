@@ -8,8 +8,11 @@ using Heroes.Game.Heroes;
 using Heroes.Game.Buildings;
 using Heroes.Game.Core.Events;
 using Heroes.Content.Heroes;
+using Heroes.Game.Monsters;
+using Heroes.Game.Runtime;
 using Heroes.GOAP.Core.Debug;
 using Heroes.Presentation.UI.BuildingPanel;
+using Heroes.Game.Quests;
 using OneJS;
 using UnityEngine;
 using VContainer;
@@ -21,6 +24,10 @@ namespace Heroes.Presentation.UI.SelectionPanel
         private SelectionService _selectionService;
         private BuildingUpgradeService _buildingUpgradeService;
         private ItemCatalog _itemCatalog;
+        private HeroRosterService _heroRoster;
+        private HeroReviveService _heroRevive;
+        private QuestService _quests;
+        private KingdomService _kingdom;
         private EventBinding<ObjectSelectedEvent> _objectSelectedEvent;
         private EventBinding<HealthChangedEvent> _healthChangedEvent;
         private EventBinding<MaxHealthChangedEvent> _maxHealthChangedEvent;
@@ -40,16 +47,26 @@ namespace Heroes.Presentation.UI.SelectionPanel
         [EventfulProperty] private HeroSelectionDTO _selectedHero;
         [EventfulProperty] private HeroEquipmentSelectionDTO _selectedHeroEquipment;
         [EventfulProperty] private GoapSelectionDTO _selectedGoap;
+        [EventfulProperty] private CombatSelectionDTO _selectedCombat;
+        [EventfulProperty] private ChapelReviveItemDTO[] _chapelRevives = System.Array.Empty<ChapelReviveItemDTO>();
+        [EventfulProperty] private QuestSelectionDTO _selectedQuest;
         [EventfulProperty] private ShopItemSelectionDTO[] _shopItems = System.Array.Empty<ShopItemSelectionDTO>();
         [EventfulProperty] private BuildingUpgradeSelectionDTO[] _buildingUpgrades = System.Array.Empty<BuildingUpgradeSelectionDTO>();
         [EventfulProperty] private QueuedBuildingUpgradeSelectionDTO[] _queuedBuildingUpgrades = System.Array.Empty<QueuedBuildingUpgradeSelectionDTO>();
 
+        private EventBinding<QuestUpdatedEvent> _questUpdated;
+        private EventBinding<QuestCompletedEvent> _questCompleted;
+
         [Inject]
-        public void Construct(SelectionService selectionService, BuildingUpgradeService buildingUpgradeService, ItemCatalog itemCatalog)
+        public void Construct(SelectionService selectionService, BuildingUpgradeService buildingUpgradeService, ItemCatalog itemCatalog, HeroRosterService heroRoster, HeroReviveService heroRevive, QuestService quests, KingdomService kingdom)
         {
             _selectionService = selectionService;
             _buildingUpgradeService = buildingUpgradeService;
             _itemCatalog = itemCatalog;
+            _heroRoster = heroRoster;
+            _heroRevive = heroRevive;
+            _quests = quests;
+            _kingdom = kingdom;
 
             _objectSelectedEvent = new EventBinding<ObjectSelectedEvent>(HandleSelectionChanged);
             _healthChangedEvent = new EventBinding<HealthChangedEvent>(HandleHealthSelectionChanged);
@@ -61,6 +78,9 @@ namespace Heroes.Presentation.UI.SelectionPanel
             _upgradeQueueProgressChangedEvent = new EventBinding<UpgradeQueueProgressChangedEvent>(@event => HandleUpgradeQueueEvent(@event.Id));
             _upgradeQueueAvailableListChangedEvent = new EventBinding<UpgradeQueueAvailableListChangedEvent>(@event => HandleUpgradeQueueEvent(@event.Id));
             _upgradeQueueUpgradeCompletedEvent = new EventBinding<UpgradeQueueUpgradeCompletedEvent>(@event => HandleUpgradeQueueEvent(@event.Id));
+
+            _questUpdated = new EventBinding<QuestUpdatedEvent>(_ => RefreshSelectedQuest());
+            _questCompleted = new EventBinding<QuestCompletedEvent>(_ => RefreshSelectedQuest());
             
             EventBus<ObjectSelectedEvent>.Register(_objectSelectedEvent);
             EventBus<HealthChangedEvent>.Register(_healthChangedEvent);
@@ -72,6 +92,9 @@ namespace Heroes.Presentation.UI.SelectionPanel
             EventBus<UpgradeQueueProgressChangedEvent>.Register(_upgradeQueueProgressChangedEvent);
             EventBus<UpgradeQueueAvailableListChangedEvent>.Register(_upgradeQueueAvailableListChangedEvent);
             EventBus<UpgradeQueueUpgradeCompletedEvent>.Register(_upgradeQueueUpgradeCompletedEvent);
+
+            EventBus<QuestUpdatedEvent>.Register(_questUpdated);
+            EventBus<QuestCompletedEvent>.Register(_questCompleted);
 
             if (selectionService.Selected != null)
             {
@@ -88,7 +111,7 @@ namespace Heroes.Presentation.UI.SelectionPanel
                 return;
             }
 
-            SelectedBuilding = new BuildingSelectionDTO(building.IsAlive);
+            SelectedBuilding = new BuildingSelectionDTO(building.IsAlive, IsChapel(building));
         }
 
         public void SelectUpgrade(string upgradeId)
@@ -111,6 +134,9 @@ namespace Heroes.Presentation.UI.SelectionPanel
                 SelectedHero = null;
                 SelectedHeroEquipment = null;
                 SelectedGoap = null;
+                SelectedCombat = null;
+                ChapelRevives = System.Array.Empty<ChapelReviveItemDTO>();
+                SelectedQuest = null;
                 ShopItems = System.Array.Empty<ShopItemSelectionDTO>();
                 BuildingUpgrades = System.Array.Empty<BuildingUpgradeSelectionDTO>();
                 QueuedBuildingUpgrades = System.Array.Empty<QueuedBuildingUpgradeSelectionDTO>();
@@ -130,10 +156,13 @@ namespace Heroes.Presentation.UI.SelectionPanel
             
             if (obj.Value is BuildingFacade building)
             {
-                SelectedBuilding = new BuildingSelectionDTO(building.IsAlive);
+                SelectedBuilding = new BuildingSelectionDTO(building.IsAlive, IsChapel(building));
                 SelectedHero = null;
                 SelectedHeroEquipment = null;
                 SelectedGoap = null;
+                SelectedCombat = null;
+                RefreshChapelRevives();
+                RefreshSelectedQuest();
                 RefreshSelectedShopItems();
                 RefreshSelectedBuildingUpgrades();
                 return;
@@ -145,10 +174,20 @@ namespace Heroes.Presentation.UI.SelectionPanel
                 return;
             }
 
+            if (obj.Value is MonsterFacade monster)
+            {
+                RefreshSelectedMonster(monster);
+                RefreshSelectedQuest();
+                return;
+            }
+
             SelectedBuilding = null;
             SelectedHero = null;
             SelectedHeroEquipment = null;
             SelectedGoap = null;
+            SelectedCombat = null;
+            ChapelRevives = System.Array.Empty<ChapelReviveItemDTO>();
+            SelectedQuest = null;
             ShopItems = System.Array.Empty<ShopItemSelectionDTO>();
             BuildingUpgrades = System.Array.Empty<BuildingUpgradeSelectionDTO>();
             QueuedBuildingUpgrades = System.Array.Empty<QueuedBuildingUpgradeSelectionDTO>();
@@ -203,6 +242,118 @@ namespace Heroes.Presentation.UI.SelectionPanel
             {
                 RefreshSelectedHero(hero);
             }
+
+            if (_selectionService?.Selected is MonsterFacade monster)
+            {
+                RefreshSelectedMonster(monster);
+            }
+
+            if (_selectionService?.Selected is BuildingFacade)
+            {
+                RefreshChapelRevives();
+                RefreshSelectedQuest();
+            }
+        }
+
+        public void IncreaseSelectedQuestGold()
+        {
+            if (_quests == null || SelectedQuest == null)
+            {
+                return;
+            }
+
+            _ = _quests.TryIncreaseOffer(SelectedQuest.QuestId, 100);
+            RefreshSelectedQuest();
+        }
+
+        private void RefreshSelectedQuest()
+        {
+            if (_quests == null || _selectionService?.Selected == null)
+            {
+                SelectedQuest = null;
+                return;
+            }
+
+            string targetId = null;
+            if (_selectionService.Selected is BuildingFacade b)
+            {
+                targetId = b.Id;
+            }
+            else if (_selectionService.Selected is MonsterFacade m)
+            {
+                targetId = m.InstanceId;
+            }
+
+            if (string.IsNullOrWhiteSpace(targetId) || !_quests.TryGetByTarget(targetId, out var q) || q == null || q.State != QuestState.Active)
+            {
+                SelectedQuest = null;
+                return;
+            }
+
+            var canIncrease = _kingdom != null && _kingdom.CanAfford(100);
+
+            var parts = q.Participants.Count == 0
+                ? System.Array.Empty<QuestParticipantDTO>()
+                : q.Participants
+                    .Select(id =>
+                    {
+                        if (_heroRoster != null && _heroRoster.TryGetById(id, out var hero) && hero != null)
+                        {
+                            return new QuestParticipantDTO(id, hero.Icon);
+                        }
+                        return new QuestParticipantDTO(id, string.Empty);
+                    })
+                    .ToArray();
+
+            SelectedQuest = new QuestSelectionDTO(q.QuestId, q.PoolGold, canIncrease, parts);
+        }
+
+        private void RefreshChapelRevives()
+        {
+            if (_selectionService?.Selected is not BuildingFacade building || !IsChapel(building) || _heroRevive == null || _heroRoster == null)
+            {
+                ChapelRevives = System.Array.Empty<ChapelReviveItemDTO>();
+                return;
+            }
+
+            if (_heroRevive.PendingHeroIds == null || _heroRevive.PendingHeroIds.Count == 0)
+            {
+                ChapelRevives = System.Array.Empty<ChapelReviveItemDTO>();
+                return;
+            }
+
+            var list = new List<ChapelReviveItemDTO>(_heroRevive.PendingHeroIds.Count);
+
+            foreach (var id in _heroRevive.PendingHeroIds)
+            {
+                if (!_heroRevive.TryGetPending(id, out var remaining, out var total))
+                {
+                    continue;
+                }
+
+                if (!_heroRoster.TryGetById(id, out var hero) || hero == null)
+                {
+                    continue;
+                }
+
+                list.Add(new ChapelReviveItemDTO(id, hero.Icon, remaining, total));
+            }
+
+            ChapelRevives = list.OrderBy(x => x.RemainingSeconds).ToArray();
+        }
+
+        private static bool IsChapel(BuildingFacade building)
+        {
+            if (building == null || building.Definition == null)
+            {
+                return false;
+            }
+
+            var defId = GoapRuntimeConfig.Buildings != null && GoapRuntimeConfig.Buildings.Chapel != null
+                ? GoapRuntimeConfig.Buildings.Chapel.Id
+                : string.Empty;
+
+            return !string.IsNullOrWhiteSpace(defId) && building.Definition.Id == defId;
         }
 
         private void RefreshSelectedHero(HeroFacade hero)
@@ -217,6 +368,7 @@ namespace Heroes.Presentation.UI.SelectionPanel
                 SelectedHero = null;
                 SelectedHeroEquipment = null;
                 SelectedGoap = null;
+                SelectedCombat = null;
                 return;
             }
 
@@ -251,15 +403,130 @@ namespace Heroes.Presentation.UI.SelectionPanel
 
             if (hero.TryGetComponent<HeroAgent>(out var heroAgent) && heroAgent.TryGetSnapshot(out var snapshot))
             {
-                SelectedGoap = ToGoapSelection(snapshot);
+                SelectedGoap = ToGoapSelection(snapshot, heroAgent != null && heroAgent.IsPlanning);
             }
             else
             {
                 SelectedGoap = null;
             }
+
+            SelectedCombat = BuildCombatForHero(hero);
         }
 
-        private static GoapSelectionDTO ToGoapSelection(GoapDebugSnapshot snapshot)
+        private void RefreshSelectedMonster(MonsterFacade monster)
+        {
+            SelectedBuilding = null;
+            SelectedHero = null;
+            SelectedHeroEquipment = null;
+            SelectedGoap = null;
+            ShopItems = System.Array.Empty<ShopItemSelectionDTO>();
+            BuildingUpgrades = System.Array.Empty<BuildingUpgradeSelectionDTO>();
+            QueuedBuildingUpgrades = System.Array.Empty<QueuedBuildingUpgradeSelectionDTO>();
+
+            if (monster == null)
+            {
+                SelectedCombat = null;
+                return;
+            }
+
+            SelectedCombat = BuildCombatForMonster(monster);
+        }
+
+        private CombatSelectionDTO BuildCombatForHero(HeroFacade hero)
+        {
+            if (hero == null || hero.Model == null || !hero.Model.IsAlive)
+            {
+                return null;
+            }
+
+            var target = hero.CurrentCombatTarget;
+            if (target == null || !target.IsAlive)
+            {
+                return null;
+            }
+
+            if (target is not ISelectable sel)
+            {
+                return null;
+            }
+
+            return new CombatSelectionDTO(
+                hero.Id,
+                hero.Name,
+                hero.Description,
+                hero.Icon,
+                hero.Health,
+                hero.MaxHealth,
+                sel.Id,
+                sel.Name,
+                sel.Description,
+                sel.Icon,
+                target.Health,
+                target.MaxHealth);
+        }
+
+        private CombatSelectionDTO BuildCombatForMonster(MonsterFacade monster)
+        {
+            if (monster == null || !monster.IsAlive)
+            {
+                return null;
+            }
+
+            var t = monster.CurrentTarget;
+            if (t == null)
+            {
+                return null;
+            }
+
+            IDamageable dmg = null;
+            ISelectable sel = null;
+
+            var hero = t.GetComponentInParent<HeroFacade>();
+            if (hero != null)
+            {
+                dmg = hero;
+                sel = hero;
+            }
+            else
+            {
+                var building = t.GetComponentInParent<BuildingFacade>();
+                if (building != null)
+                {
+                    dmg = building;
+                    sel = building;
+                }
+                else
+                {
+                    var otherMonster = t.GetComponentInParent<MonsterFacade>();
+                    if (otherMonster != null)
+                    {
+                        dmg = otherMonster;
+                        sel = otherMonster;
+                    }
+                }
+            }
+
+            if (dmg == null || sel == null || !dmg.IsAlive)
+            {
+                return null;
+            }
+
+            return new CombatSelectionDTO(
+                monster.Id,
+                monster.Name,
+                monster.Description,
+                monster.Icon,
+                monster.Health,
+                monster.MaxHealth,
+                sel.Id,
+                sel.Name,
+                sel.Description,
+                sel.Icon,
+                dmg.Health,
+                dmg.MaxHealth);
+        }
+
+        private static GoapSelectionDTO ToGoapSelection(GoapDebugSnapshot snapshot, bool isThinking)
         {
             if (snapshot == null)
             {
@@ -276,7 +543,7 @@ namespace Heroes.Presentation.UI.SelectionPanel
             var steps = snapshot.Plan?.Steps?.Select(item => new GoapPlanStepSelectionDTO(item.Name, item.Description, item.Icon, item.PreconditionsMet)).ToArray()
                 ?? System.Array.Empty<GoapPlanStepSelectionDTO>();
 
-            return new GoapSelectionDTO(goals, steps);
+            return new GoapSelectionDTO(goals, steps, isThinking);
         }
 
         private void HandleUpgradeQueueEvent(string buildingId)
@@ -492,6 +759,9 @@ namespace Heroes.Presentation.UI.SelectionPanel
             EventBus<UpgradeQueueProgressChangedEvent>.Unregister(_upgradeQueueProgressChangedEvent);
             EventBus<UpgradeQueueAvailableListChangedEvent>.Unregister(_upgradeQueueAvailableListChangedEvent);
             EventBus<UpgradeQueueUpgradeCompletedEvent>.Unregister(_upgradeQueueUpgradeCompletedEvent);
+
+            EventBus<QuestUpdatedEvent>.Unregister(_questUpdated);
+            EventBus<QuestCompletedEvent>.Unregister(_questCompleted);
         }
     }
 }

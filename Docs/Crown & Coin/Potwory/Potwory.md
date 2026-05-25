@@ -1,2 +1,0 @@
-
-Wrogowie, o ograniczonej inteligencji. Atakują gracza ich celem jest zniszczenie [[Zamek | zamku]]. Potwory mogą spawnić się w [[Spawner Potworów]]. Potwory po zabicu dodają do bohatera który je zabił [[Loot z potworów]]. Jeżeli zginały z ręki strażnika loot przepada.

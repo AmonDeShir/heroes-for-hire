@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using EventBus;
+using Heroes;
 using Heroes.Content.Buildings;
 using Heroes.Game.Abstractions;
 using Heroes.Game.Core.Events;
@@ -19,12 +20,8 @@ namespace Heroes.Game.Buildings
 
         [Header("Follow")]
         [SerializeField] private Camera worldCamera;
-        [SerializeField] private LayerMask groundMask;
         [SerializeField] private float maxRayDistance = 500f;
         [SerializeField] private float yOffset = 0.02f;
-
-        [Header("Obstacles")]
-        [SerializeField] private LayerMask obstacleMask = ~0;
 
         private readonly List<GameObject> obstacles = new();
 
@@ -48,6 +45,11 @@ namespace Heroes.Game.Buildings
             cachedRenderer = GetComponent<Renderer>();
             cachedCollider = GetComponent<BoxCollider>();
             material = cachedRenderer.material;
+
+            if (cachedCollider != null)
+            {
+                cachedCollider.isTrigger = true;
+            }
 
             if (worldCamera == null)
             {
@@ -93,7 +95,8 @@ namespace Heroes.Game.Buildings
 
             ChangeSize(ReadBuildingSize(definition.Prefab.gameObject));
             RefreshVisibility();
-            RecalculateObstacles();
+            obstacles.Clear();
+            UpdateColor();
         }
 
         private void FollowMouse()
@@ -105,13 +108,27 @@ namespace Heroes.Game.Buildings
 
             var ray = worldCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
-            if (!Physics.Raycast(ray, out var hit, maxRayDistance, groundMask, QueryTriggerInteraction.Ignore))
+            if (Mathf.Abs(ray.direction.y) < 0.0001f)
             {
                 return;
             }
 
-            var position = hit.point;
-            position.y += yOffset;
+            var t = -ray.origin.y / ray.direction.y;
+            if (t <= 0f || t > maxRayDistance)
+            {
+                return;
+            }
+
+            var position = ray.origin + ray.direction * t;
+            var helper = TerrainHelper.FindForPosition(position);
+            if (helper != null)
+            {
+                position.y = helper.GetWorldHeight(position) + yOffset;
+            }
+            else
+            {
+                position.y = yOffset;
+            }
 
             if ((transform.position - position).sqrMagnitude < 0.000001f)
             {
@@ -119,7 +136,6 @@ namespace Heroes.Game.Buildings
             }
 
             transform.position = position;
-            RecalculateObstacles();
         }
 
         private void ChangeSize(Vector3 size)
@@ -164,37 +180,43 @@ namespace Heroes.Game.Buildings
             material.color = HasObstacle() ? errorColor : successColor;
         }
 
-        private void RecalculateObstacles()
+        private void OnTriggerEnter(Collider other)
         {
-            obstacles.Clear();
-
-            var bounds = cachedCollider.bounds;
-            var hits = Physics.OverlapBox(
-                bounds.center,
-                bounds.extents,
-                transform.rotation,
-                obstacleMask,
-                QueryTriggerInteraction.Ignore
-            );
-
-            for (var i = 0; i < hits.Length; i++)
+            if (other == null)
             {
-                var hit = hits[i];
-
-                if (!IsObstacle(hit.gameObject))
-                {
-                    continue;
-                }
-
-                if (obstacles.Contains(hit.gameObject))
-                {
-                    continue;
-                }
-
-                obstacles.Add(hit.gameObject);
+                return;
             }
 
-            UpdateColor();
+            var obj = other.gameObject;
+            if (obj == null || !IsObstacle(obj))
+            {
+                return;
+            }
+
+            if (!obstacles.Contains(obj))
+            {
+                obstacles.Add(obj);
+                UpdateColor();
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other == null)
+            {
+                return;
+            }
+
+            var obj = other.gameObject;
+            if (obj == null)
+            {
+                return;
+            }
+
+            if (obstacles.Remove(obj))
+            {
+                UpdateColor();
+            }
         }
 
         public Bounds GetCursorBounds()

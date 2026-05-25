@@ -26,8 +26,6 @@ namespace Heroes.GOAP.Core
         {
             if (believe < 0 || believe >= believes.Length)
             {
-                UnityEngine.Debug.LogWarning($"GOAP ERROR: believe id is incorrect. {believe} is not in range (0..{believes.Length-1})");
-
                 return 0f;
             }
 

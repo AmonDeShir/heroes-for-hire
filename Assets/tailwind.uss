@@ -67,16 +67,17 @@
 .root .m-1 {
     margin: 4px
 }
-.root .my-auto {
-    margin-top: auto;
-    margin-bottom: auto
-}
 .root .mx-1 {
     margin-left: 4px;
     margin-right: 4px
 }
-.root .mb-2 {
-    margin-bottom: 8px
+.root .my-auto {
+    margin-top: auto;
+    margin-bottom: auto
+}
+.root .mx-auto {
+    margin-left: auto;
+    margin-right: auto
 }
 .root .ml-2 {
     margin-left: 8px
@@ -105,23 +106,29 @@
 .root .mt-0_d_5 {
     margin-top: 2px
 }
-.root .mt-1 {
-    margin-top: 4px
-}
 .root .mt-2 {
     margin-top: 8px
 }
-.root .ml-1 {
-    margin-left: 4px
-}
 .root .mt-_lb_-10px_rb_ {
     margin-top: -10px
+}
+.root .mt-1 {
+    margin-top: 4px
+}
+.root .mb-0_d_5 {
+    margin-bottom: 2px
+}
+.root .mb-1 {
+    margin-bottom: 4px
 }
 .root .flex {
     display: flex
 }
 .root .hidden {
     display: none
+}
+.root .h-0 {
+    height: 0px
 }
 .root .h-7 {
     height: 28px
@@ -159,6 +166,9 @@
 .root .h-_lb_2px_rb_ {
     height: 2px
 }
+.root .h-_lb_30px_rb_ {
+    height: 30px
+}
 .root .h-_lb_31px_rb_ {
     height: 31px
 }
@@ -180,11 +190,23 @@
 .root .h-full {
     height: 100%
 }
-.root .h-_lb_30px_rb_ {
-    height: 30px
+.root .h-_lb_26px_rb_ {
+    height: 26px
 }
-.root .h-0 {
-    height: 0px
+.root .h-_lb_6px_rb_ {
+    height: 6px
+}
+.root .h-_lb_5px_rb_ {
+    height: 5px
+}
+.root .h-_lb_22px_rb_ {
+    height: 22px
+}
+.root .h-_lb_120px_rb_ {
+    height: 120px
+}
+.root .h-_lb_8px_rb_ {
+    height: 8px
 }
 .root .min-h-_lb_18px_rb_ {
     min-height: 18px
@@ -207,6 +229,9 @@
 .root .w-_lb_106px_rb_ {
     width: 106px
 }
+.root .w-_lb_120px_rb_ {
+    width: 120px
+}
 .root .w-_lb_12px_rb_ {
     width: 12px
 }
@@ -219,11 +244,17 @@
 .root .w-_lb_18px_rb_ {
     width: 18px
 }
+.root .w-_lb_19px_rb_ {
+    width: 19px
+}
 .root .w-_lb_21px_rb_ {
     width: 21px
 }
 .root .w-_lb_2px_rb_ {
     width: 2px
+}
+.root .w-_lb_30px_rb_ {
+    width: 30px
 }
 .root .w-_lb_31px_rb_ {
     width: 31px
@@ -233,6 +264,9 @@
 }
 .root .w-_lb_39px_rb_ {
     width: 39px
+}
+.root .w-_lb_40px_rb_ {
+    width: 40px
 }
 .root .w-_lb_4px_rb_ {
     width: 4px
@@ -249,11 +283,23 @@
 .root .w-full {
     width: 100%
 }
-.root .w-_lb_30px_rb_ {
-    width: 30px
+.root .w-_lb_26px_rb_ {
+    width: 26px
 }
-.root .w-_lb_19px_rb_ {
-    width: 19px
+.root .w-_lb_52px_rb_ {
+    width: 52px
+}
+.root .w-_lb_22px_rb_ {
+    width: 22px
+}
+.root .w-_lb_160px_rb_ {
+    width: 160px
+}
+.root .w-_lb_280px_rb_ {
+    width: 280px
+}
+.root .min-w-0 {
+    min-width: 0px
 }
 .root .max-w-_lb_220px_rb_ {
     max-width: 220px
@@ -263,6 +309,9 @@
 }
 .root .flex-shrink-0 {
     flex-shrink: 0
+}
+.root .cursor-pointer {
+    cursor: pointer
 }
 .root .flex-row {
     flex-direction: row
@@ -309,6 +358,9 @@
 .root .border-t-2 {
     border-top-width: 2px
 }
+.root .border-b {
+    border-bottom-width: 1px
+}
 .root .border-active {
     border-color: #00B6D7
 }
@@ -317,6 +369,12 @@
 }
 .root .border-secondary {
     border-color: #FDDB1D
+}
+.root .border-main_s_40 {
+    border-color: rgba(107 13 5 0.4)
+}
+.root .border-disabled {
+    border-color: #222222
 }
 .root .bg-_lb__n_4a4330_rb_ {
     background-color: #4a4330
@@ -348,6 +406,21 @@
 .root .bg-tertiaryLight {
     background-color: #FFF7C6
 }
+.root .bg-mainDark_s_20 {
+    background-color: rgba(69 8 3 0.2)
+}
+.root .bg-tertiary_s_20 {
+    background-color: rgba(232 224 178 0.2)
+}
+.root .bg-transparent {
+    background-color: transparent
+}
+.root .bg-black_s_25 {
+    background-color: rgba(0 0 0 0.25)
+}
+.root .bg-tertiary_s_10 {
+    background-color: rgba(232 224 178 0.1)
+}
 .root .bg-contain {
     background-size: contain
 }
@@ -372,6 +445,9 @@
 .root .p-_lb_2px_rb_ {
     padding: 2px
 }
+.root .p-3 {
+    padding: 12px
+}
 .root .px-2 {
     padding-left: 8px;
     padding-right: 8px
@@ -387,6 +463,10 @@
 .root .py-_lb_3px_rb_ {
     padding-top: 3px;
     padding-bottom: 3px
+}
+.root .px-1 {
+    padding-left: 4px;
+    padding-right: 4px
 }
 .root .pb-2 {
     padding-bottom: 8px
@@ -405,6 +485,12 @@
 }
 .root .text-xs {
     font-size: 12px
+}
+.root .text-_lb_8px_rb_ {
+    font-size: 8px
+}
+.root .text-_lb_14px_rb_ {
+    font-size: 14px
 }
 .root .text-disabled {
     color: #222222
@@ -439,6 +525,9 @@
 }
 .root .text-center {
     -unity-text-align: middle-center
+}
+.root .text-right {
+    -unity-text-align: middle-right
 }
 .root .inset-0 {
     top: 0px;

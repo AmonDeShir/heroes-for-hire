@@ -6,6 +6,7 @@ using Heroes.Game.Buildings;
 using Heroes.Game.Core.Events;
 using Heroes.Game.Core.Health;
 using Heroes.Game.Runtime;
+using Heroes.Game.Combat;
 using Registry;
 using UnityEngine;
 using UnityEngine.AI;
@@ -16,18 +17,11 @@ namespace Heroes.Game.Heroes
     public class HeroFacade : MonoBehaviour, ISelectable, IDamageable
     {
         [SerializeField] private HeroAgent heroAgent;
-        [SerializeField] private HeroDangerEvaluator dangerEvaluator;
+        [Header("Sensors")]
+        [SerializeField] private HeroEnemySensor enemySensor;
         [SerializeField] private NavMeshAgent navMeshAgent;
         [SerializeField] private GameObject aliveVisuals;
         [SerializeField] private GameObject graveVisuals;
-
-        [Header("Equipment Visuals")]
-        [SerializeField] private GameObject helmetVisual;
-        [SerializeField] private Transform weaponSocket;
-        [SerializeField] private GameObject defaultWeaponVisual;
-
-        private GameObject _weaponInstance;
-        private string _weaponItemId;
 
         private DamageLogic _damageLogic;
         private HealLogic _healLogic;
@@ -45,6 +39,11 @@ namespace Heroes.Game.Heroes
         public float Health => Model != null ? Model.Health.Current : 0f;
         public float MaxHealth => Model != null ? Model.Health.Max : 0f;
         public bool IsAlive => Model != null && Model.IsAlive;
+
+        public HeroEnemySensor EnemySensor => enemySensor;
+
+        private IDamageable _currentCombatTarget;
+        public IDamageable CurrentCombatTarget => _currentCombatTarget;
 
         public void Initialize(HeroDefinition definition, string instanceId, string homeBuildingInstanceId, GameWorldStateManager worldStateManager)
         {
@@ -73,10 +72,6 @@ namespace Heroes.Game.Heroes
             }
 
             UpdateHomeState();
-            if (dangerEvaluator != null)
-            {
-                Model.SetDangerLevel(dangerEvaluator.Evaluate(this));
-            }
 
             
             if (navMeshAgent != null && Definition != null)
@@ -129,57 +124,6 @@ namespace Heroes.Game.Heroes
             _healLogic.Apply(amount);
         }
 
-        public void ApplyEquippedItemVisual(ItemDefinition item)
-        {
-            if (Model == null || item == null)
-            {
-                return;
-            }
-
-            if (item.Slot == EquipmentSlot.Armor)
-            {
-                
-                if (helmetVisual != null)
-                {
-                    helmetVisual.SetActive(!string.IsNullOrWhiteSpace(Model.EquippedArmorId));
-                }
-
-                return;
-            }
-
-            if (item.Slot == EquipmentSlot.Weapon)
-            {
-                
-                if (weaponSocket == null)
-                {
-                    return;
-                }
-
-                if (string.IsNullOrWhiteSpace(Model.EquippedWeaponId) || Model.EquippedWeaponId != item.Id)
-                {
-                    return;
-                }
-
-                if (item.WeaponPrefab == null)
-                {
-                    return;
-                }
-
-                if (_weaponInstance != null)
-                {
-                    Destroy(_weaponInstance);
-                }
-
-                _weaponInstance = Instantiate(item.WeaponPrefab, weaponSocket);
-                _weaponItemId = item.Id;
-
-                if (defaultWeaponVisual != null)
-                {
-                    defaultWeaponVisual.SetActive(false);
-                }
-            }
-        }
-
         public void ApplyDamage(float amount)
         {
             if (Model == null || !Model.IsAlive || Model.IsInHome)
@@ -187,11 +131,70 @@ namespace Heroes.Game.Heroes
                 return;
             }
 
-            
-            
+            if (amount > 0f && CombatRuntimeConfig.Service != null)
+            {
+                var current = Model.Health.Current;
+                if (current - amount <= 0.001f)
+                {
+                    CombatRuntimeConfig.Service.TryUseHealingConsumable(this);
+                }
+            }
+
+            if (amount > 0f)
+            {
+                EventBus<HeroAttackedEvent>.Invoke(new HeroAttackedEvent
+                {
+                    HeroInstanceId = Model.InstanceId,
+                    Position = transform.position,
+                    Damage = amount,
+                });
+            }
 
             _damageLogic.Apply(amount);
+
             RefreshLifeState();
+        }
+
+        public void ReviveAt(Vector3 worldPosition, float hpPct)
+        {
+            if (Model == null)
+            {
+                return;
+            }
+
+            var max = Model.Health.Max;
+            var hp = Mathf.Clamp(max * Mathf.Clamp01(hpPct), 0.1f, max);
+            Model.Health.SetCurrent(hp);
+            Model.SetInHome(false);
+
+            if (navMeshAgent != null)
+            {
+                if (NavMesh.SamplePosition(worldPosition, out var hit, 6f, NavMesh.AllAreas))
+                {
+                    navMeshAgent.Warp(hit.position);
+                }
+                else
+                {
+                    navMeshAgent.Warp(worldPosition);
+                }
+            }
+            else
+            {
+                transform.position = worldPosition;
+            }
+
+            RefreshLifeState();
+            EventBus<HealthChangedEvent>.Invoke(new HealthChangedEvent { Id = Model.InstanceId, Value = hp });
+        }
+
+        public void SetCombatTarget(IDamageable target)
+        {
+            _currentCombatTarget = target;
+        }
+
+        public void ClearCombatTarget()
+        {
+            _currentCombatTarget = null;
         }
 
         public void AddGold(int amount)
@@ -251,10 +254,7 @@ namespace Heroes.Game.Heroes
                 graveVisuals.SetActive(!isAlive);
             }
 
-            if (!isAlive)
-            {
-                EventBus<HeroDangerChangedEvent>.Invoke(new HeroDangerChangedEvent { Id = Model.InstanceId, Value = 0f });
-            }
+            
         }
 
         private void OnDestroy()

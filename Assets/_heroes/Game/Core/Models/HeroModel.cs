@@ -59,6 +59,13 @@ namespace Heroes.Game.Heroes
         public float HomeRadius { get; }
         public float DangerSenseRadius { get; }
 
+        public string DefendBuildingInstanceId { get; private set; }
+        public float DefendBuildingUntilTime { get; private set; }
+
+        public string ActiveQuestId { get; private set; }
+        public string ActiveQuestTargetInstanceId { get; private set; }
+        public Quests.QuestTargetKind ActiveQuestTargetKind { get; private set; }
+
         public HeroModel(string instanceId, HeroDefinition definition, string homeBuildingInstanceId)
         {
             InstanceId = instanceId;
@@ -70,6 +77,13 @@ namespace Heroes.Game.Heroes
             Gold = definition != null ? definition.StartGold : 0;
             GearLevel = definition != null ? definition.BaseGearLevel : 0f;
             DangerLevel = 0f;
+
+            DefendBuildingInstanceId = string.Empty;
+            DefendBuildingUntilTime = 0f;
+
+            ActiveQuestId = string.Empty;
+            ActiveQuestTargetInstanceId = string.Empty;
+            ActiveQuestTargetKind = Quests.QuestTargetKind.Building;
 
             WeaponTier = 0;
             ArmorTier = 0;
@@ -238,6 +252,23 @@ namespace Heroes.Game.Heroes
             return true;
         }
 
+        public bool RemoveConsumable(string itemId)
+        {
+            if (string.IsNullOrWhiteSpace(itemId))
+            {
+                return false;
+            }
+
+            var idx = _consumables.IndexOf(itemId);
+            if (idx < 0)
+            {
+                return false;
+            }
+
+            _consumables.RemoveAt(idx);
+            return true;
+        }
+
         private static float GetItemPower(ItemDefinition item)
         {
             
@@ -268,8 +299,31 @@ namespace Heroes.Game.Heroes
 
         public void SetDangerLevel(float value)
         {
-            DangerLevel = Mathf.Clamp01(value);
-            EventBus<HeroDangerChangedEvent>.Invoke(new HeroDangerChangedEvent { Id = InstanceId, Value = DangerLevel });
+            DangerLevel = 0f;
+        }
+
+        public void SetDefendBuilding(string instanceId, float untilTime)
+        {
+            DefendBuildingInstanceId = string.IsNullOrWhiteSpace(instanceId) ? string.Empty : instanceId;
+            DefendBuildingUntilTime = untilTime;
+        }
+
+        public void SetActiveQuest(string questId, string targetInstanceId, Quests.QuestTargetKind kind)
+        {
+            ActiveQuestId = questId ?? string.Empty;
+            ActiveQuestTargetInstanceId = targetInstanceId ?? string.Empty;
+            ActiveQuestTargetKind = kind;
+        }
+
+        public void ClearActiveQuest(string questId)
+        {
+            if (!string.IsNullOrWhiteSpace(questId) && questId != ActiveQuestId)
+            {
+                return;
+            }
+
+            ActiveQuestId = string.Empty;
+            ActiveQuestTargetInstanceId = string.Empty;
         }
 
         public void SetInHome(bool value)

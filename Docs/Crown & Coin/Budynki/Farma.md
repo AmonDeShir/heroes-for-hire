@@ -1,1 +1,0 @@
-Generuje złoto co okręśloną ilość czasu.

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfacd444a792aac4785e90f162015206, type: 3}
+  m_Name: Skeleton
+  m_EditorClassIdentifier: 
+  Id: c6ad2626-5eed-4ece-aa62-7c6a7cd60b6c
+  DisplayName: Skeleton
+  Description: "Skeleton, no food, no drink, yet still on the attack,\nIt never needs
+    to sleep\u2026 and it always comes back"
+  IconPath: Monsters/Skeleton_Icon
+  Prefab: {fileID: 7812259782633418852, guid: 4065ffbf6b912e948a6d5d6b077a4f06, type: 3}
+  MaxHp: 100
+  MoveSpeed: 5
+  AttackDamage: 12
+  AttackIntervalSeconds: 1
+  AttackRange: 2
+  AggroRange: 15
+  WanderRadius: 20
+  FleeHpPct: 0.2
+  GoldMin: 80
+  GoldMax: 200

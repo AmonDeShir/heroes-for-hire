@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace WebLess
 {
@@ -9,7 +10,9 @@ namespace WebLess
         protected Animator _animator;
         protected Timer _timer;
 
-        protected float _animationLength;
+        private readonly Dictionary<int, float> _lengthByHash = new();
+        private int _activeTimedClipHash;
+        private int _activeTimedExitHash;
 
         protected void Awake()
         {
@@ -23,36 +26,73 @@ namespace WebLess
         
         protected void PlayAnimationUsingTimer(int clipHash, int exitHash)
         {
+            if (_timer != null && !_timer.Stopped && _activeTimedClipHash == clipHash && _activeTimedExitHash == exitHash)
+            {
+                return;
+            }
+
+            if (_animator == null)
+            {
+                return;
+            }
+
+            if (!_animator.HasState(0, clipHash))
+            {
+                return;
+            }
+
             var length = GetAnimationLength(clipHash);
             if (length <= 0f)
             {
                 length = 0.1f;
             }
 
+            _activeTimedClipHash = clipHash;
+            _activeTimedExitHash = exitHash;
             _timer = new Timer(length, oneShoot: true);
             _timer.OnStart += () => _animator.CrossFade(clipHash, _crossfadeDuration);
-            _timer.OnTimeOut += () => _animator.CrossFade(exitHash, _crossfadeDuration);
+            _timer.OnTimeOut += () =>
+            {
+                var resolvedExit = exitHash;
+                if (!_animator.HasState(0, resolvedExit))
+                {
+                    var current = _animator.GetCurrentAnimatorStateInfo(0).shortNameHash;
+                    if (_animator.HasState(0, current) && current != clipHash)
+                    {
+                        resolvedExit = current;
+                    }
+                }
+
+                if (_animator.HasState(0, resolvedExit))
+                {
+                    _animator.CrossFade(resolvedExit, _crossfadeDuration);
+                }
+            };
             _timer.Start();
         }
         
         protected void PlayAnimation(int clipHash)
         {
+            if (_animator == null || !_animator.HasState(0, clipHash))
+            {
+                return;
+            }
             _animator.CrossFade(clipHash, _crossfadeDuration);
         }
 
         public float GetAnimationLength(int hash)
         {
-            if (_animationLength > 0)
+            if (_lengthByHash.TryGetValue(hash, out var cached) && cached > 0f)
             {
-                return _animationLength;
+                return cached;
             }
 
             foreach (AnimationClip clip in _animator.runtimeAnimatorController.animationClips)
             {
                 if (Animator.StringToHash(clip.name) == hash)
                 {
-                    _animationLength = clip.length;
-                    return clip.length;
+                    _lengthByHash[hash] = clip.length;
+                    return _lengthByHash[hash];
                 }
             }
 

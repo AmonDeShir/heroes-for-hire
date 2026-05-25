@@ -1,6 +1,8 @@
 using Heroes.Content.Buildings;
+using Heroes;
 using Heroes.Game.Buildings;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using VContainer;
 
@@ -10,7 +12,6 @@ namespace Heroes.Game.Runtime
     {
         [SerializeField] private Camera worldCamera;
         [SerializeField] private LayerMask groundMask;
-        [SerializeField] private TerrainHelper terrainHelper;
         [SerializeField] private BuildingCursor buildingCursor;
 
         [Header("FX")]
@@ -68,14 +69,12 @@ namespace Heroes.Game.Runtime
                 return;
             }
 
-            if (buildingCursor.HasObstacle())
+            if (IsPointerOverUi())
             {
                 return;
             }
 
-            var ray = worldCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
-
-            if (!Physics.Raycast(ray, out var hit, 500f, groundMask))
+            if (buildingCursor.HasObstacle())
             {
                 return;
             }
@@ -92,8 +91,28 @@ namespace Heroes.Game.Runtime
                 return;
             }
 
-            var placement = terrainHelper.GetPreparedPlacement(buildingCursor.GetCursorBounds(), buildingCursor.transform.position);
+            var helper = TerrainHelper.FindForPosition(buildingCursor.transform.position);
+            if (helper == null)
+            {
+                return;
+            }
+
+            var placement = helper.GetPreparedPlacement(buildingCursor.GetCursorBounds(), buildingCursor.transform.position);
             await RunPlacementSequence(definition, placement);
+        }
+
+        private static bool IsPointerOverUi()
+        {
+            if (Input.touchCount > 0)
+            {
+                if (EventSystem.current == null)
+                {
+                    return false;
+                }
+                return EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
+            }
+
+            return UiInputGate.CursorOnBlockingUi;
         }
 
         private async Awaitable RunPlacementSequence(BuildingDefinition definition, TerrainHelper.PreparedPlacement placement)
@@ -106,7 +125,8 @@ namespace Heroes.Game.Runtime
             {
                 PlayPlacementEffects(placement.BuildingPosition);
                 await Awaitable.WaitForSecondsAsync(0.5f);
-                terrainHelper.PrepareAreaForBuilding(placement);
+                var helper = TerrainHelper.FindForPosition(placement.BuildingPosition);
+                helper?.PrepareAreaForBuilding(placement);
                 PlacementService.TryPlace(definition, placement.BuildingPosition, Quaternion.identity, out _);
             }
             finally

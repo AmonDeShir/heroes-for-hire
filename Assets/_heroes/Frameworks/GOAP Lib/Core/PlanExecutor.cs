@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Heroes.GOAP.Core
 {
     public class PlanExecutor<TAgent, TSnapshot> : IPlanExecutor where TSnapshot : IReadOnlyWorldSnapshot
     {
-        private const float IdlePlanCooldownSeconds = 10f;
-        private const float ReplanThrottleSeconds = 5f;
+        private const float IdlePlanCooldownSeconds = 20f;
+        private const float ReplanThrottleSeconds = 15f;
         private const float ImportanceHysteresis = 0.25f;
 
         protected TAgent agent;
@@ -26,6 +27,10 @@ namespace Heroes.GOAP.Core
         private int _lastFailedWorldVersion = -1;
         private bool _replanRequestedDeferred;
         private bool _replanRequestedImmediate;
+
+        private Task<Plan<TAgent, TSnapshot>> _planningTask;
+
+        public bool IsPlanning => _planningTask != null;
 
         public Goal<TSnapshot> Goal => plan.Goal;
 
@@ -57,13 +62,43 @@ namespace Heroes.GOAP.Core
             var snapshot = worldState.CreateSnapshot();
             context = new AgentContext<TSnapshot>(context.state, snapshot);
 
+            if (_planningTask != null)
+            {
+                if (_planningTask.IsCompleted)
+                {
+                    if (_planningTask.Status == TaskStatus.RanToCompletion)
+                    {
+                        var res = _planningTask.Result;
+                        if (res is { IsEmpty: false })
+                        {
+                            plan = res;
+                        }
+                    }
+
+                    _planningTask = null;
+                    _replanRequestedImmediate = false;
+                    _replanRequestedDeferred = false;
+                    _nextReplanAt = now + ReplanThrottleSeconds;
+                }
+                else
+                {
+                    if (plan == null)
+                    {
+                        UpdateIdle(deltaTime);
+                    }
+                    else
+                    {
+                        plan.Update(deltaTime);
+                    }
+
+                    return;
+                }
+            }
+
             if (_replanRequestedImmediate)
             {
-                AbortPlan();
-                CalculatePlanInternal(snapshot.Version);
-                _replanRequestedImmediate = false;
-                _replanRequestedDeferred = false;
-                _nextReplanAt = now + ReplanThrottleSeconds;
+                StartPlanningAsync(onlyBetterThanCurrentGoal: false);
+                return;
             }
 
             if (plan == null)
@@ -71,8 +106,8 @@ namespace Heroes.GOAP.Core
                 var worldChangedSinceFail = snapshot.Version != _lastFailedWorldVersion;
                 if (worldChangedSinceFail || now >= _nextIdlePlanAttemptAt)
                 {
-                    var planned = CalculatePlanInternal(snapshot.Version);
-                    if (!planned)
+                    StartPlanningAsync(onlyBetterThanCurrentGoal: false);
+                    if (_planningTask == null)
                     {
                         _lastFailedWorldVersion = snapshot.Version;
                         _nextIdlePlanAttemptAt = now + IdlePlanCooldownSeconds;
@@ -83,9 +118,8 @@ namespace Heroes.GOAP.Core
             {
                 if (_replanRequestedDeferred && now >= _nextReplanAt)
                 {
-                    CalculatePlanInternal(snapshot.Version);
-                    _replanRequestedDeferred = false;
-                    _nextReplanAt = now + ReplanThrottleSeconds;
+                    StartPlanningAsync(onlyBetterThanCurrentGoal: true);
+                    return;
                 }
 
                 if (now >= _nextImportanceCheckAt)
@@ -138,6 +172,9 @@ namespace Heroes.GOAP.Core
 
                 if (!plan.StartNextStep(context, agent))
                 {
+                    // Avoid hot-loop replanning if a step cannot start (eg. implementation returned null).
+                    _lastFailedWorldVersion = snapshot.Version;
+                    _nextIdlePlanAttemptAt = now + IdlePlanCooldownSeconds;
                     AbortPlan();
                 }
             }
@@ -152,7 +189,7 @@ namespace Heroes.GOAP.Core
         
         public void CalculatePlan()
         {
-            CalculatePlanInternal(worldState.CreateSnapshot().Version);
+            StartPlanningAsync(onlyBetterThanCurrentGoal: false);
         }
 
         public void RequestReplan(bool immediate)
@@ -174,29 +211,33 @@ namespace Heroes.GOAP.Core
             StopIdle();
         }
 
-        private bool CalculatePlanInternal(int worldVersion)
+        private void StartPlanningAsync(bool onlyBetterThanCurrentGoal)
         {
             if (archetype == null || planner == null)
             {
-                return false;
+                return;
             }
 
-            var currentLevel = plan?.Goal?.Importance(context) ?? 0f;
-            var goalsToCheck = archetype.Goals;
-
-            if (plan?.Goal != null)
+            if (_planningTask != null)
             {
-                goalsToCheck = new List<Goal<TSnapshot>>(archetype.Goals.Where(g => g.Importance(context) > currentLevel));
+                return;
             }
 
-            var newPlan = planner.Plan(archetype.Actions, goalsToCheck, context, 50);
-            if (newPlan is { IsEmpty: false })
+            var current = context;
+            var currentPlan = plan;
+            var currentLevel = onlyBetterThanCurrentGoal ? (currentPlan?.Goal?.Importance(current) ?? 0f) : 0f;
+            var actions = archetype.Actions;
+            var goals = archetype.Goals;
+
+            var goalsToCheck = goals;
+            if (onlyBetterThanCurrentGoal && currentPlan?.Goal != null)
             {
-                plan = newPlan;
-                return true;
+                goalsToCheck = new List<Goal<TSnapshot>>(goals.Where(g => g.Importance(current) > currentLevel));
             }
 
-            return false;
+            var ctxCopy = new AgentContext<TSnapshot>(current);
+            var goalsCopy = goalsToCheck;
+            _planningTask = Task.Run(() => planner.Plan(actions, goalsCopy, ctxCopy, 50));
         }
 
         private void UpdateIdle(float deltaTime)

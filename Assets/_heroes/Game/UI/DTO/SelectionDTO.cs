@@ -34,10 +34,12 @@ namespace Heroes.Presentation.UI.SelectionPanel
     public class BuildingSelectionDTO
     {
         public bool IsAlive;
+        public bool IsChapel;
 
-        public BuildingSelectionDTO(bool isAlive)
+        public BuildingSelectionDTO(bool isAlive, bool isChapel)
         {
             IsAlive = isAlive;
+            IsChapel = isChapel;
         }
     }
 
@@ -170,11 +172,13 @@ namespace Heroes.Presentation.UI.SelectionPanel
     {
         public GoapPlanStepSelectionDTO[] Steps;
         public GoapGoalSelectionDTO[] Goals;
+        public bool IsThinking;
 
-        public GoapSelectionDTO(GoapGoalSelectionDTO[] goals, GoapPlanStepSelectionDTO[] steps)
+        public GoapSelectionDTO(GoapGoalSelectionDTO[] goals, GoapPlanStepSelectionDTO[] steps, bool isThinking)
         {
             Goals = goals ?? Array.Empty<GoapGoalSelectionDTO>();
             Steps = steps ?? Array.Empty<GoapPlanStepSelectionDTO>();
+            IsThinking = isThinking;
         }
     }
 

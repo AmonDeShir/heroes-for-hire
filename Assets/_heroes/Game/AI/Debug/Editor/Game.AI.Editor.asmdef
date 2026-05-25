@@ -8,14 +8,7 @@
         "GUID:1360a9862c8a89649bd4987c5984ac00"
     ],
     "includePlatforms": [
-        "Editor",
-        "WindowsStandalone32",
-        "WindowsStandalone64",
-        "WindowsStandalone32Server",
-        "WindowsStandalone64Server",
-        "GameCoreXboxOne",
-        "XboxOne",
-        "GameCoreScarlett"
+        "Editor"
     ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

@@ -42,7 +42,6 @@ namespace Heroes.Game.Buildings
                 return false;
             }
 
-            hero.ApplyEquippedItemVisual(item);
             hero.ApplyItemEffects(item, ItemEffectTrigger.Equip);
 
             hero.Model.SetGold(hero.Model.Gold - cost);

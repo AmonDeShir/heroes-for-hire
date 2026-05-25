@@ -46,8 +46,15 @@ namespace Heroes.GOAP.Core
             }
 
             strategy = Step.Implementation(agent, ctx);
+            if (strategy == null)
+            {
+                Step = null;
+                strategy = null;
+                return false;
+            }
+
             strategy.Start();
-            
+             
             return true;
         }
 

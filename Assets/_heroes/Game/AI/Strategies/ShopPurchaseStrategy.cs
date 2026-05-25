@@ -86,6 +86,10 @@ namespace Heroes.Game.AI.Strategies
                 {
                     return;
                 }
+
+                var p = _building.DoorWorldPosition;
+                
+                _context.MutateState((ref AgentState s) => s.SetLocation(new Vector2(p.x, p.z)));
             }
             else if (_agent.NavAgent.remainingDistance > 2f)
             {
@@ -93,6 +97,7 @@ namespace Heroes.Game.AI.Strategies
             }
 
             TryPurchase();
+            _agent?.Animator?.PlayBuy();
             Complete = true;
         }
 
@@ -135,8 +140,6 @@ namespace Heroes.Game.AI.Strategies
             {
                 return;
             }
-
-            heroFacade.ApplyEquippedItemVisual(_item);
             heroFacade.ApplyItemEffects(_item, ItemEffectTrigger.Equip);
 
             heroFacade.Model.SetGold(heroFacade.Model.Gold - cost);

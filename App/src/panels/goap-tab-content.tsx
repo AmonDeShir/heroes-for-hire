@@ -18,6 +18,7 @@ export function GoapTabContent(props: { active: boolean, onAvailabilityChange: (
   const goals = useMemo(() => toJsArray(goap?.Goals), [goap])
   const steps = useMemo(() => toJsArray(goap?.Steps), [goap])
   const hasGoapTab = !!hero && !!goap
+  const isThinking = !!(goap as any)?.IsThinking
 
   const bindTooltip = useTooltipBinding();
 
@@ -71,7 +72,10 @@ export function GoapTabContent(props: { active: boolean, onAvailabilityChange: (
                     <Icon icon={WANDER_ICON} />
                   </div>
                 </DecorativeFrame>
-                <div class='text-xs mt-0.5'>Wander</div>
+                <div class='text-xs mt-0.5'>{isThinking ? 'Thinking' : 'Wander'}</div>
+                {!isThinking && (
+                  <div class='text-[10px] text-disabled mt-0.5'>No plan</div>
+                )}
               </div>
             )}
           </div>

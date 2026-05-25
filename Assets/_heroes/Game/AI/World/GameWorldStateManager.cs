@@ -54,7 +54,7 @@ namespace Heroes.Game.AI
                 {
                     ID = building.Id,
                     Position = new Vector2(building.DoorWorldPosition.x, building.DoorWorldPosition.z),
-                    Definition = building.Definition,
+                    DefinitionId = building.Definition.Id,
                     Radius = EstimateRadius(building),
                 });
             }
@@ -80,12 +80,6 @@ namespace Heroes.Game.AI
 
         private void HandleBuildingPlaced(BuildingPlacedEvent @event)
         {
-            var definition = buildingCatalog != null ? buildingCatalog.GetById(@event.DefinitionId) : null;
-            if (definition == null)
-            {
-                return;
-            }
-
             
             Vector2 pos;
             BuildingFacade placed = null;
@@ -111,7 +105,7 @@ namespace Heroes.Game.AI
                 pos = new Vector2(@event.Position.x, @event.Position.z);
             }
 
-            State.RegisterLocation(new Location { ID = @event.InstanceId, Position = pos, Definition = definition, Radius = radius });
+            State.RegisterLocation(new Location { ID = @event.InstanceId, Position = pos, DefinitionId = @event.DefinitionId, Radius = radius });
         }
 
         private void HandleBuildingDestroyed(BuildingDestroyedEvent @event)

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
 using UnityEngine;
 
 namespace Heroes.GOAP.Core
@@ -15,6 +16,8 @@ namespace Heroes.GOAP.Core
         public static int MaxPlansToLog = 10;
         public static float FlushIntervalSeconds = 0.5f;
         public static int MaxBufferedLines = 2000;
+
+        public static float MaxPlannerTimeMs = 2.5f;
     }
 
     public class Planner<TAgent, TSnapshot> : IPlanner<TAgent, TSnapshot> where TSnapshot : IReadOnlyWorldSnapshot
@@ -60,25 +63,37 @@ namespace Heroes.GOAP.Core
                     if (plan.Count > 0)
                     {
                         DebugPlanEvent(planLogToken, $"FOUND steps={plan.Count}");
-                        GoapPlanFileLogger.FlushIfDue(Time.unscaledTime, PlanningDebugSettings.FlushIntervalSeconds, PlanningDebugSettings.MaxBufferedLines);
+                        if (PlanningDebugSettings.Enabled && PlanningDebugSettings.LogToFile)
+                        {
+                            GoapPlanFileLogger.FlushIfDue(Time.unscaledTime, PlanningDebugSettings.FlushIntervalSeconds, PlanningDebugSettings.MaxBufferedLines);
+                        }
                         return new Plan<TAgent, TSnapshot>(goal, plan);
                     }
 
                     if (Mathf.Approximately(newCutoff, float.MaxValue))
                     {
                         DebugPlanEvent(planLogToken, "NO_PLAN newCutoff=MaxValue");
-                        GoapPlanFileLogger.FlushIfDue(Time.unscaledTime, PlanningDebugSettings.FlushIntervalSeconds, PlanningDebugSettings.MaxBufferedLines);
+                        if (PlanningDebugSettings.Enabled && PlanningDebugSettings.LogToFile)
+                        {
+                            GoapPlanFileLogger.FlushIfDue(Time.unscaledTime, PlanningDebugSettings.FlushIntervalSeconds, PlanningDebugSettings.MaxBufferedLines);
+                        }
                         break;
                     }
 
                     DebugPlanEvent(planLogToken, $"DEEPEN cutoff {cutoff:0.###} -> {newCutoff:0.###}");
-                    GoapPlanFileLogger.FlushIfDue(Time.unscaledTime, PlanningDebugSettings.FlushIntervalSeconds, PlanningDebugSettings.MaxBufferedLines);
+                    if (PlanningDebugSettings.Enabled && PlanningDebugSettings.LogToFile)
+                    {
+                        GoapPlanFileLogger.FlushIfDue(Time.unscaledTime, PlanningDebugSettings.FlushIntervalSeconds, PlanningDebugSettings.MaxBufferedLines);
+                    }
 
                     cutoff = newCutoff;
                 }
 
                 DebugPlanEvent(planLogToken, "END");
-                GoapPlanFileLogger.FlushIfDue(Time.unscaledTime, PlanningDebugSettings.FlushIntervalSeconds, PlanningDebugSettings.MaxBufferedLines);
+                if (PlanningDebugSettings.Enabled && PlanningDebugSettings.LogToFile)
+                {
+                    GoapPlanFileLogger.FlushIfDue(Time.unscaledTime, PlanningDebugSettings.FlushIntervalSeconds, PlanningDebugSettings.MaxBufferedLines);
+                }
             }
             
             return null;
@@ -86,6 +101,8 @@ namespace Heroes.GOAP.Core
 
         private Stack<Action<TAgent, TSnapshot>> DoDepthFirst(AgentContext<TSnapshot> world, Goal<TSnapshot> goal, List<Action<TAgent, TSnapshot>> actions, TranspositionTable transposition, int maxDepth, float cutoff, out float smallestCutoff)
         {
+            var sw = Stopwatch.StartNew();
+
             var models = new AgentState[maxDepth+1];
             var plan = new Action<TAgent, TSnapshot>[maxDepth];
             var costs = new float[maxDepth + 1];
@@ -104,6 +121,12 @@ namespace Heroes.GOAP.Core
             
             while (currentDepth >= 0)
             {
+                if (PlanningDebugSettings.MaxPlannerTimeMs > 0f && sw.Elapsed.TotalMilliseconds >= PlanningDebugSettings.MaxPlannerTimeMs)
+                {
+                    smallestCutoff = float.MaxValue;
+                    return new Stack<Action<TAgent, TSnapshot>>();
+                }
+
                 var ctx = new AgentContext<TSnapshot>(models[currentDepth], world.world);
                 
                 if (goal.IsAchieved(ctx))

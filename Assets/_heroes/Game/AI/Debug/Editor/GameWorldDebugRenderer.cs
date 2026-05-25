@@ -31,15 +31,16 @@ namespace Heroes.Game.AI.Debug
             {
                 var defId = kvp.Key;
                 var count = kvp.Value != null ? kvp.Value.Length : 0;
+                
                 root.Add(new Label($"{FormatDefinitionId(defId, kvp.Value)}: {count}"));
 
                 if (kvp.Value == null)
                 {
                     continue;
                 }
-
                 
                 var shown = 0;
+                
                 for (var i = 0; i < kvp.Value.Length && shown < 6; i++)
                 {
                     var loc = kvp.Value[i];
@@ -62,11 +63,6 @@ namespace Heroes.Game.AI.Debug
             }
 
             
-            if (locations != null && locations.Length > 0 && locations[0].Definition != null && !string.IsNullOrWhiteSpace(locations[0].Definition.DisplayName))
-            {
-                return locations[0].Definition.DisplayName;
-            }
-
             var refs = GoapRuntimeConfig.Buildings;
             if (refs != null)
             {
