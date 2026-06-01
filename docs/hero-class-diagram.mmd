@@ -1,0 +1,365 @@
+```mermaid
+classDiagram
+direction LR
+
+class HeroDefinition {
+  <<ScriptableObject>>
+  +string Id
+  +string DisplayName
+  +string Description
+  +string IconPath
+  +float MaxHp
+  +float StartHp
+  +float HpRegeneration
+  +float Attack
+  +float Defence
+  +float Speed
+  +int StartGold
+  +float BaseGearLevel
+  +float HomeRadius
+  +float DangerSenseRadius
+  +ItemDefinition[] StartingItems
+  +HeroFacade Prefab
+}
+
+class HeroFacade {
+  <<MonoBehaviour>>
+  +HeroDefinition Definition
+  +HeroModel Model
+  +string Id
+  +string Name
+  +string Description
+  +string Icon
+  +float Health
+  +float MaxHealth
+  +bool IsAlive
+  +IDamageable CurrentCombatTarget
+  +Initialize(HeroDefinition, instanceId, homeBuildingId, GameWorldStateManager)
+  +ApplyDamage(float)
+  +ReviveAt(Vector3, float)
+  +SetCombatTarget(IDamageable)
+  +ClearCombatTarget()
+  +AddGold(int)
+  +SetGearLevel(float)
+  <<emits events>>
+}
+
+class HeroModel {
+  +string InstanceId
+  +string DefinitionId
+  +string HomeBuildingInstanceId
+  +HealthModel Health
+  +int Gold
+  +float GearLevel
+  +bool IsAlive
+  +bool IsInHome
+  +float HomeRadius
+  +float DangerSenseRadius
+  +TryAddAndAutoEquip(ItemDefinition) bool
+  +RemoveConsumable(string) bool
+  +SetGold(int)
+  +SetInHome(bool)
+  +SetTimedBonuses(float,float,float)
+  +SetTimedHpRegeneration(float)
+  <<emits events>>
+}
+
+class HealthModel {
+  +string Id
+  +float Current
+  +float Max
+  +SetMax(float)
+  +SetCurrent(float)
+}
+
+class DamageLogic {
+  +Apply(float)
+  <<emits events>>
+}
+
+class HealLogic {
+  +Apply(float)
+  <<emits events>>
+}
+
+class TimedEffectRunner {
+  <<MonoBehaviour>>
+  +Initialize(HeroFacade, DamageLogic)
+  +AddDamageOverTime(float,float)
+  +AddTimedStatBuff(float,float,float,float)
+  +AddTimedHpRegeneration(float,float)
+}
+
+class HeroAgent {
+  <<GOAP Agent>>
+  +Initialize(HeroFacade, GameWorldStateManager)
+  +IsInsideHome() bool
+  +Update()
+  <<listens to events>>
+}
+
+class HeroEnemySensor {
+  <<MonoBehaviour>>
+  +GetEnemyCount() int
+}
+
+class HeroSpawnService {
+  +Spawn(HeroDefinition, BuildingFacade) HeroFacade
+}
+
+class HeroRosterService {
+  +GetAll() IReadOnlyList~HeroFacade~
+  +TryGetById(string, out HeroFacade) bool
+  +GetIconById(string) string
+}
+
+class HeroReviveService {
+  <<MonoBehaviour>>
+  +TryGetPending(string, out float, out float) bool
+  +PendingHeroIds IReadOnlyCollection~string~
+  <<listens to events>>
+}
+
+%% =====================
+%% Buildings / Placement / Upgrades
+%% =====================
+
+class BuildingCatalog {
+  <<ScriptableObject>>
+  +GetAll() IReadOnlyList~BuildingDefinition~
+  +GetById(string) BuildingDefinition
+}
+
+class BuildingDefinition {
+  <<ScriptableObject>>
+  +string Id
+  +string DisplayName
+  +string Description
+  +string IconPath
+  +BuildingUpgradeDefinition[] AvailableUpgrades
+  +ItemDefinition[] SellItems
+  +int GoldCost
+  +int PopulationCost
+  +int PopulationProvided
+  +bool IsPlayerBuildable
+  +int RequiredCastleLevel
+  +float MaxHp
+  +float BuildHpPerSecond
+  +float StartHp
+  +int GoldIncomePerTick
+  +float GoldIncomeIntervalSeconds
+  +BuildingFacade Prefab
+}
+
+class BuildingFacade {
+  <<MonoBehaviour>>
+  +BuildingDefinition Definition
+  +BuildingModel Model
+  +string Id
+  +string Name
+  +string Description
+  +string Icon
+  +float Health
+  +float MaxHealth
+  +bool IsAlive
+  +Vector3 DoorWorldPosition
+  +Initialize(BuildingDefinition, instanceId)
+  +ApplyDamage(float)
+  <<emits events>>
+}
+
+class BuildingModel {
+  +string InstanceId
+  +string DefinitionId
+  +HealthModel Health
+  +int ConstructionStage
+  +BuildingState State
+  +bool IsCompleted
+  +float GoldIncomeMultiplier
+  +int PopulationProvided
+  +QueueModel UpgradeQueue
+  +SyncFromHealth()
+  +RestartConstruction()
+  +MultiplyGoldIncome(float)
+  +SetPopulationProvided(int)
+  +UnlockSellItem(string)
+}
+
+class BuildingConstructionLogic {
+  +Tick(float)
+}
+
+class BuildingPlacementSelectionService {
+  +string Selected
+  +Select(string)
+  +Clear()
+  <<emits events>>
+}
+
+class BuildingPlacementService {
+  +CanBuild(BuildingDefinition) bool
+  +TryPlace(BuildingDefinition, Vector3, Quaternion, out BuildingFacade) bool
+  <<emits events>>
+}
+
+class BuildingPlacementController {
+  <<MonoBehaviour>>
+  +BuildingPlacementService PlacementService
+  +BuildingPlacementSelectionService SelectionService
+}
+
+class KingdomService {
+  +int Gold
+  +int Population
+  +int CastleLevel
+  +TrySetCastleLevel(int) bool
+  +TrySpendGold(int) bool
+  +AddGold(int)
+  +AddPeople(int)
+  +RemovePeople(int)
+  +SetPopulationContribution(string,int) bool
+  +RemovePopulationContribution(string) bool
+  <<emits events>>
+}
+
+class BuildingIncomeService {
+  <<MonoBehaviour>>
+  +Initialize(KingdomService)
+}
+
+class BuildingPopulationService {
+  +BuildingPopulationService(KingdomService)
+  <<listens to events>>
+}
+
+class BuildingUpgradeDefinition {
+  <<ScriptableObject>>
+  +string Id
+  +string Name
+  +string Description
+  +string IconPath
+  +float GoldCost
+  +float Duration
+  +int UsageLimit
+  +BuildingUpgradeEffect[] Effects
+  +BuildingUpgradeDefinition[] UpgradeRequirements
+  +BuildingUpgradeDefinition[] UnlocksUpgrades
+}
+
+class BuildingUpgradeService {
+  +TryQueueSelectedUpgrade(string) bool
+  +TryQueueUpgrade(string,string) bool
+  +TryQueueUpgrade(BuildingFacade,string) bool
+  +CanQueueSelectedUpgrade(string) bool
+  +CanQueueUpgrade(BuildingFacade,string) bool
+  +GetQueueLockReason(BuildingFacade,string) string
+  <<listens to events>>
+}
+
+class QueueModel {
+  +string active
+  +float progress
+  +IReadOnlyList~string~ Queue
+  +IReadOnlyList~string~ Available
+  +IReadOnlyList~string~ Completed
+  +MakeAvailable(List~string~)
+  +Enqueue(string,float,bool)
+  +Progress(float)
+  +GetCompletedCount(string) int
+  <<C# events>>
+}
+
+class QueueLogic~TProgress,TQueue,TActive,TAvailable,TCompleted~ {
+  +Tick(float)
+  <<bridges QueueModel events -> EventBus>>
+}
+
+class BuildingUpgradeEffect {
+  <<ScriptableObject>>
+  +ApplyEffect(in BuildingUpgradeContext)
+}
+
+class BuildingUpgradeContext {
+  +BuildingFacade Building
+  +BuildingModel Model
+  +BuildingDefinition Definition
+  +KingdomService Kingdom
+  +HeroSpawnService HeroSpawn
+}
+
+class SpawnHeroEffect {
+  <<BuildingUpgradeEffect>>
+  +HeroDefinition Hero
+  +int Count
+}
+
+%% external / skrócone zależności
+class ItemDefinition
+class BuildingFacade
+class GameWorldStateManager
+class IDamageable
+class NavMeshAgent
+class ProximitySensor
+class MonsterFacade
+
+HeroDefinition --> HeroFacade : Prefab
+HeroFacade *-- HeroModel
+HeroModel *-- HealthModel
+HeroFacade o-- HeroAgent
+HeroFacade o-- HeroEnemySensor
+HeroFacade o-- TimedEffectRunner
+HeroFacade o-- DamageLogic
+HeroFacade o-- HealLogic
+HeroFacade o-- NavMeshAgent
+
+HeroModel ..> ItemDefinition : equip/bonuses
+
+TimedEffectRunner --> HeroFacade : writes timed stats
+TimedEffectRunner --> DamageLogic : DoT
+
+HeroSpawnService --> HeroDefinition
+HeroSpawnService --> BuildingFacade
+HeroSpawnService --> GameWorldStateManager
+HeroSpawnService --> HeroFacade : Instantiate+Initialize
+
+HeroRosterService ..> HeroFacade : via Registry
+
+HeroReviveService --> HeroRosterService
+HeroReviveService ..> BuildingFacade : chapel spawn
+
+HeroEnemySensor --|> ProximitySensor
+HeroEnemySensor ..> MonsterFacade : detects
+HeroAgent --> GameWorldStateManager : world snapshot/state
+HeroAgent --> HeroFacade : reads Model/Definition/Sensor
+
+%% Buildings graph
+BuildingCatalog --> BuildingDefinition
+BuildingDefinition --> BuildingFacade : Prefab
+BuildingFacade *-- BuildingModel
+BuildingModel *-- HealthModel
+BuildingFacade o-- BuildingConstructionLogic
+
+BuildingPlacementController --> BuildingPlacementSelectionService
+BuildingPlacementController --> BuildingPlacementService
+BuildingPlacementController --> BuildingCatalog
+BuildingPlacementService --> KingdomService
+BuildingPlacementService --> BuildingDefinition
+BuildingPlacementService --> BuildingFacade : Instantiate+Initialize
+
+BuildingIncomeService --> KingdomService
+BuildingIncomeService ..> BuildingFacade : reads Registry
+
+BuildingPopulationService --> KingdomService
+BuildingPopulationService ..> BuildingFacade : reads Registry
+
+BuildingDefinition --> BuildingUpgradeDefinition : AvailableUpgrades
+BuildingModel *-- QueueModel : UpgradeQueue
+BuildingFacade o-- QueueLogic~...~ : upgrades ticking
+BuildingUpgradeService --> KingdomService
+BuildingUpgradeService ..> HeroSpawnService
+BuildingUpgradeService ..> BuildingFacade : mutate model
+BuildingUpgradeDefinition --> BuildingUpgradeEffect
+BuildingUpgradeEffect --> BuildingUpgradeContext
+SpawnHeroEffect --|> BuildingUpgradeEffect
+SpawnHeroEffect --> HeroDefinition
+```

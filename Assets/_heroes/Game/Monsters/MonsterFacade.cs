@@ -154,7 +154,7 @@ namespace Heroes.Game.Monsters
 
             if (RaidMode && _state == State.Wander)
             {
-                // In raid mode, still prefer fighting heroes if any are in aggro range.
+                                                                                        
                 if (TryAcquireHeroTarget(out var heroTarget))
                 {
                     _target = heroTarget;
@@ -162,7 +162,7 @@ namespace Heroes.Game.Monsters
                 }
                 else
                 {
-                    // Otherwise, don't idle: move towards the closest (preferably castle) building.
+                                                                                                    
                     if (AcquireBuildingTarget())
                     {
                         _state = State.Chase;
@@ -319,7 +319,7 @@ namespace Heroes.Game.Monsters
                 return;
             }
 
-            // Prefer heroes over buildings if a hero is in aggro range.
+                                                                        
             if (RaidMode && _target.TryGetComponent<BuildingFacade>(out var _))
             {
                 if (TryAcquireHeroTarget(out var heroTarget))
@@ -431,7 +431,7 @@ namespace Heroes.Game.Monsters
                 return;
             }
 
-            // In raid mode, if we were attacking a building and a hero shows up, switch to the hero.
+                                                                                                     
             if (RaidMode && _target.TryGetComponent<BuildingFacade>(out var _))
             {
                 if (TryAcquireHeroTarget(out var heroTarget))
@@ -757,7 +757,7 @@ namespace Heroes.Game.Monsters
                 }
             }
 
-            // Items disabled for now; monsters drop gold only.
+                                                               
         }
     }
 }

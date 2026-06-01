@@ -224,7 +224,7 @@ namespace Heroes.Game.AI
 
             if (!string.IsNullOrWhiteSpace(guildId))
             {
-                // Guild is currently not a functional destination; avoid it as a generic move step.
+                                                                                                    
             }
 
             if (!string.IsNullOrWhiteSpace(marketId))
@@ -844,7 +844,7 @@ namespace Heroes.Game.AI
                 .WithEffect(ctx =>
                     ctx.state.Clone().Mutate((ref AgentState s) =>
                     {
-                        // Use the closest known location marker, not the current simulated position.
+                                                                                                     
                         if (ctx.world.Locations.TryGetClosest(locationId, ctx.state.Location, out var pos))
                         {
                             s.SetLocation(pos);

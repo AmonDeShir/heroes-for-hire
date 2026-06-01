@@ -172,7 +172,7 @@ namespace Heroes.GOAP.Core
 
                 if (!plan.StartNextStep(context, agent))
                 {
-                    // Avoid hot-loop replanning if a step cannot start (eg. implementation returned null).
+                                                                                                           
                     _lastFailedWorldVersion = snapshot.Version;
                     _nextIdlePlanAttemptAt = now + IdlePlanCooldownSeconds;
                     AbortPlan();
