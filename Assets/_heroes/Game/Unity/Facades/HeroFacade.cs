@@ -5,6 +5,7 @@ using Heroes.Game.AI;
 using Heroes.Game.Buildings;
 using Heroes.Game.Core.Events;
 using Heroes.Game.Core.Health;
+using Heroes.Game.Monsters;
 using Heroes.Game.Runtime;
 using Heroes.Game.Combat;
 using Registry;
@@ -26,6 +27,8 @@ namespace Heroes.Game.Heroes
         private DamageLogic _damageLogic;
         private HealLogic _healLogic;
         private TimedEffectRunner _timedEffects;
+        private HeroCombatController _combatController;
+        private bool _wasAlive;
 
         private float _regenCarry;
 
@@ -41,6 +44,7 @@ namespace Heroes.Game.Heroes
         public bool IsAlive => Model != null && Model.IsAlive;
 
         public HeroEnemySensor EnemySensor => enemySensor;
+        public HeroCombatController CombatController => _combatController;
 
         private IDamageable _currentCombatTarget;
         public IDamageable CurrentCombatTarget => _currentCombatTarget;
@@ -55,6 +59,7 @@ namespace Heroes.Game.Heroes
 
             _timedEffects = gameObject.GetComponent<TimedEffectRunner>();
             _timedEffects.Initialize(this, _damageLogic);
+            _combatController = new HeroCombatController(this, navMeshAgent, heroAgent != null ? heroAgent.Animator : null, CombatRuntimeConfig.Service);
 
             RefreshLifeState();
 
@@ -78,6 +83,8 @@ namespace Heroes.Game.Heroes
             {
                 navMeshAgent.speed = Mathf.Max(0.1f, Definition.Speed + Model.EquipmentSpeed + Model.TimedSpeed);
             }
+
+            _combatController?.Tick(Time.deltaTime);
 
             TickRegeneration();
         }
@@ -126,6 +133,16 @@ namespace Heroes.Game.Heroes
 
         public void ApplyDamage(float amount)
         {
+            ApplyDamageInternal(amount, null);
+        }
+
+        public void ApplyDamageFrom(MonsterFacade attacker, float amount)
+        {
+            ApplyDamageInternal(amount, attacker);
+        }
+
+        private void ApplyDamageInternal(float amount, MonsterFacade attacker)
+        {
             if (Model == null || !Model.IsAlive || Model.IsInHome)
             {
                 return;
@@ -142,6 +159,8 @@ namespace Heroes.Game.Heroes
 
             if (amount > 0f)
             {
+                heroAgent?.NotifyThreat(attacker);
+
                 EventBus<HeroAttackedEvent>.Invoke(new HeroAttackedEvent
                 {
                     HeroInstanceId = Model.InstanceId,
@@ -185,6 +204,11 @@ namespace Heroes.Game.Heroes
 
             RefreshLifeState();
             EventBus<HealthChangedEvent>.Invoke(new HealthChangedEvent { Id = Model.InstanceId, Value = hp });
+
+            if (heroAgent != null)
+            {
+                heroAgent.Animator?.ResetToLocomotion();
+            }
         }
 
         public void SetCombatTarget(IDamageable target)
@@ -229,7 +253,21 @@ namespace Heroes.Game.Heroes
         private void RefreshLifeState()
         {
             var isAlive = Model != null && Model.IsAlive;
-            if (!isAlive)
+            if (isAlive != _wasAlive)
+            {
+                if (!isAlive)
+                {
+                    Model.SetInHome(false);
+                    _combatController?.NotifyDeath();
+                }
+                else
+                {
+                    _combatController?.NotifyRevive();
+                }
+
+                _wasAlive = isAlive;
+            }
+            else if (!isAlive)
             {
                 Model.SetInHome(false);
             }

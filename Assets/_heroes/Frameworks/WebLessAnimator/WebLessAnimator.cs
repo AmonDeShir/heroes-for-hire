@@ -10,9 +10,10 @@ namespace WebLess
         protected Animator _animator;
         protected Timer _timer;
 
-        private readonly Dictionary<int, float> _lengthByHash = new();
+        private readonly Dictionary<int, float> _animationLengths = new();
         private int _activeTimedClipHash;
-        private int _activeTimedExitHash;
+        private int _activeExitClipHash;
+        private bool _freezeOnTimeout;
 
         protected void Awake()
         {
@@ -26,20 +27,13 @@ namespace WebLess
         
         protected void PlayAnimationUsingTimer(int clipHash, int exitHash)
         {
-            if (_timer != null && !_timer.Stopped && _activeTimedClipHash == clipHash && _activeTimedExitHash == exitHash)
+            if (_timer != null && !_timer.Stopped && _activeTimedClipHash == clipHash && _activeExitClipHash == exitHash)
             {
                 return;
             }
 
-            if (_animator == null)
-            {
-                return;
-            }
-
-            if (!_animator.HasState(0, clipHash))
-            {
-                return;
-            }
+            StopTimedAnimation();
+            _animator.speed = 1f;
 
             var length = GetAnimationLength(clipHash);
             if (length <= 0f)
@@ -48,24 +42,19 @@ namespace WebLess
             }
 
             _activeTimedClipHash = clipHash;
-            _activeTimedExitHash = exitHash;
+            _activeExitClipHash = exitHash;
+            _freezeOnTimeout = false;
             _timer = new Timer(length, oneShoot: true);
             _timer.OnStart += () => _animator.CrossFade(clipHash, _crossfadeDuration);
             _timer.OnTimeOut += () =>
             {
-                var resolvedExit = exitHash;
-                if (!_animator.HasState(0, resolvedExit))
+                if (_freezeOnTimeout)
                 {
-                    var current = _animator.GetCurrentAnimatorStateInfo(0).shortNameHash;
-                    if (_animator.HasState(0, current) && current != clipHash)
-                    {
-                        resolvedExit = current;
-                    }
+                    _animator.speed = 0f;
                 }
-
-                if (_animator.HasState(0, resolvedExit))
+                else
                 {
-                    _animator.CrossFade(resolvedExit, _crossfadeDuration);
+                    _animator.CrossFade(exitHash, _crossfadeDuration);
                 }
             };
             _timer.Start();
@@ -73,16 +62,57 @@ namespace WebLess
         
         protected void PlayAnimation(int clipHash)
         {
-            if (_animator == null || !_animator.HasState(0, clipHash))
+            StopTimedAnimation();
+            _animator.speed = 1f;
+            _animator.CrossFade(clipHash, _crossfadeDuration);
+        }
+
+        protected void PlayAnimationAndFreeze(int clipHash)
+        {
+            if (_timer != null && !_timer.Stopped && _activeTimedClipHash == clipHash && _freezeOnTimeout)
             {
                 return;
             }
-            _animator.CrossFade(clipHash, _crossfadeDuration);
+
+            StopTimedAnimation();
+            _animator.speed = 1f;
+
+            var length = GetAnimationLength(clipHash);
+            if (length <= 0f)
+            {
+                length = 0.1f;
+            }
+
+            _activeTimedClipHash = clipHash;
+            _activeExitClipHash = 0;
+            _freezeOnTimeout = true;
+            _timer = new Timer(length, oneShoot: true);
+            _timer.OnStart += () => _animator.CrossFade(clipHash, _crossfadeDuration);
+            _timer.OnTimeOut += () => _animator.speed = 0f;
+            _timer.Start();
+        }
+
+        protected void StopTimedAnimation()
+        {
+            _timer = null;
+            _activeTimedClipHash = 0;
+            _activeExitClipHash = 0;
+            _freezeOnTimeout = false;
+        }
+
+        public void ResumeAnimator()
+        {
+            StopTimedAnimation();
+
+            if (_animator != null)
+            {
+                _animator.speed = 1f;
+            }
         }
 
         public float GetAnimationLength(int hash)
         {
-            if (_lengthByHash.TryGetValue(hash, out var cached) && cached > 0f)
+            if (_animationLengths.TryGetValue(hash, out var cached) && cached > 0f)
             {
                 return cached;
             }
@@ -91,8 +121,8 @@ namespace WebLess
             {
                 if (Animator.StringToHash(clip.name) == hash)
                 {
-                    _lengthByHash[hash] = clip.length;
-                    return _lengthByHash[hash];
+                    _animationLengths[hash] = clip.length;
+                    return clip.length;
                 }
             }
 
@@ -102,4 +132,3 @@ namespace WebLess
         }
     }
 }
-

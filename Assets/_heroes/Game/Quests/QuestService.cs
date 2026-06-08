@@ -26,6 +26,7 @@ namespace Heroes.Game.Quests
         public bool TryGetByTarget(string targetInstanceId, out QuestInstance quest)
         {
             quest = null;
+            
             if (string.IsNullOrWhiteSpace(targetInstanceId))
             {
                 return false;
@@ -44,6 +45,7 @@ namespace Heroes.Game.Quests
         {
             questId = string.Empty;
             baseGold = Mathf.Max(0, baseGold);
+            
             if (baseGold <= 0 || string.IsNullOrWhiteSpace(targetInstanceId) || _kingdom == null)
             {
                 return false;
@@ -61,8 +63,10 @@ namespace Heroes.Game.Quests
 
             questId = Guid.NewGuid().ToString();
             var q = new QuestInstance(questId, QuestType.Combat, kind, targetInstanceId, baseGold, Time.unscaledTime);
+           
             _byId[questId] = q;
             _questIdByTarget[targetInstanceId] = questId;
+            
             EventBus<QuestCreatedEvent>.Invoke(new QuestCreatedEvent { Value = questId });
             return true;
         }
@@ -70,6 +74,7 @@ namespace Heroes.Game.Quests
         public bool TryIncreaseOffer(string questId, int deltaGold)
         {
             deltaGold = Mathf.Max(0, deltaGold);
+            
             if (deltaGold <= 0 || _kingdom == null)
             {
                 return false;
@@ -86,6 +91,7 @@ namespace Heroes.Game.Quests
             }
 
             q.PoolGold += deltaGold;
+            
             EventBus<QuestUpdatedEvent>.Invoke(new QuestUpdatedEvent { Value = questId });
             return true;
         }
@@ -109,6 +115,7 @@ namespace Heroes.Game.Quests
 
             EventBus<QuestAcceptedEvent>.Invoke(new QuestAcceptedEvent { QuestId = questId, HeroId = heroInstanceId });
             EventBus<QuestUpdatedEvent>.Invoke(new QuestUpdatedEvent { Value = questId });
+            
             return true;
         }
 

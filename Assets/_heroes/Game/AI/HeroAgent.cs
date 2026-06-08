@@ -1,6 +1,7 @@
 using Heroes.GOAP;
 using Heroes.GOAP.Core;
 using Heroes.GOAP.Core.Debug;
+using Heroes.Game.Combat;
 using Heroes.Game.Heroes;
 using EventBus;
 using Heroes.Game.Core.Events;
@@ -26,7 +27,6 @@ namespace Heroes.Game.AI
         private EventBinding<BuildingDestroyedEvent> _buildingDestroyed;
         private EventBinding<UnlockedBuildingsChangedEvent> _unlockedBuildingsChanged;
         private EventBinding<BuildingAttackedEvent> _buildingAttacked;
-        private EventBinding<HeroAttackedEvent> _heroAttacked;
         private EventBinding<QuestCreatedEvent> _questCreated;
         private EventBinding<QuestUpdatedEvent> _questUpdated;
         private EventBinding<QuestCompletedEvent> _questCompleted;
@@ -125,6 +125,7 @@ namespace Heroes.Game.AI
             {
                 _fallback.Stop();
                 _fallback = null;
+                RequestImmediateReplan();
             }
 
             return true;
@@ -137,11 +138,7 @@ namespace Heroes.Game.AI
 
         private void SyncCombatLockFromPlan()
         {
-            var stepName = PlanExecutor != null && PlanExecutor.CurrentPlan != null && PlanExecutor.CurrentPlan.Step != null
-                ? PlanExecutor.CurrentPlan.Step.Name
-                : string.Empty;
-
-            _inCombat = stepName == "Fight Monster" || stepName == "Hunt Monster";
+            _inCombat = _hero != null && _hero.CombatController != null && _hero.CombatController.IsLocked;
         }
 
         public bool IsInsideHome()
@@ -176,10 +173,12 @@ namespace Heroes.Game.AI
             var bestExists = best.Exists;
             var bestScore = 0f;
             var bestShare = 0f;
+            
             if (bestExists)
             {
                 var dps = Mathf.Max(0.1f, (_hero.Definition != null ? _hero.Definition.Attack : 1f) + _hero.Model.EquipmentAttack + _hero.Model.TimedAttack);
                 var seconds = best.TargetHp > 0.01f ? best.TargetHp / dps : 0.01f;
+                
                 bestShare = (float)best.PoolGold / (best.Participants + 1);
                 bestScore = bestShare / Mathf.Max(0.01f, seconds);
             }
@@ -187,6 +186,7 @@ namespace Heroes.Game.AI
             var hasActiveQuest = !string.IsNullOrWhiteSpace(_hero.Model.ActiveQuestId) && !string.IsNullOrWhiteSpace(_hero.Model.ActiveQuestTargetInstanceId);
             var qx = 0f;
             var qz = 0f;
+            
             if (hasActiveQuest && QuestRuntimeConfig.Service != null)
             {
                 if (QuestRuntimeConfig.Service.TryGetById(_hero.Model.ActiveQuestId, out var q) && q != null)
@@ -217,6 +217,7 @@ namespace Heroes.Game.AI
             var defendActive = !string.IsNullOrWhiteSpace(_hero.Model.DefendBuildingInstanceId) && now <= _hero.Model.DefendBuildingUntilTime;
             var defendX = 0f;
             var defendZ = 0f;
+            
             if (defendActive && _worldStateManager != null && _worldStateManager.State != null)
             {
                 var snap = _worldStateManager.State.CreateSnapshot();
@@ -232,7 +233,9 @@ namespace Heroes.Game.AI
                 state.SetLocation(transform.position);
                 state.SetBelieve(Consts.GOLD, _hero.Model.Gold);
                 state.SetBelieve(Consts.HEALTH, _hero.Model.Health.Current);
+                
                 var maxHp = _hero.Model.Health.Max;
+                
                 state.SetBelieve(Consts.HEALTH_PCT, maxHp > 0.001f ? _hero.Model.Health.Current / maxHp : 1f);
                 state.SetBelieve(Consts.ENEMIES_NEARBY, enemiesNearby);
                 state.SetBelieve(Consts.CONSUMABLES, consumables);
@@ -274,7 +277,6 @@ namespace Heroes.Game.AI
             _buildingDestroyed = new EventBinding<BuildingDestroyedEvent>(_ => RequestDeferredReplan());
             _unlockedBuildingsChanged = new EventBinding<UnlockedBuildingsChangedEvent>(_ => RequestDeferredReplan());
             _buildingAttacked = new EventBinding<BuildingAttackedEvent>(OnBuildingAttacked);
-            _heroAttacked = new EventBinding<HeroAttackedEvent>(OnHeroAttacked);
             _questCreated = new EventBinding<QuestCreatedEvent>(_ => RequestDeferredReplan());
             _questUpdated = new EventBinding<QuestUpdatedEvent>(_ => RequestDeferredReplan());
             _questCompleted = new EventBinding<QuestCompletedEvent>(OnQuestCompleted);
@@ -285,7 +287,6 @@ namespace Heroes.Game.AI
             EventBus<BuildingDestroyedEvent>.Register(_buildingDestroyed);
             EventBus<UnlockedBuildingsChangedEvent>.Register(_unlockedBuildingsChanged);
             EventBus<BuildingAttackedEvent>.Register(_buildingAttacked);
-            EventBus<HeroAttackedEvent>.Register(_heroAttacked);
             EventBus<QuestCreatedEvent>.Register(_questCreated);
             EventBus<QuestUpdatedEvent>.Register(_questUpdated);
             EventBus<QuestCompletedEvent>.Register(_questCompleted);
@@ -306,7 +307,6 @@ namespace Heroes.Game.AI
             EventBus<BuildingDestroyedEvent>.Unregister(_buildingDestroyed);
             EventBus<UnlockedBuildingsChangedEvent>.Unregister(_unlockedBuildingsChanged);
             EventBus<BuildingAttackedEvent>.Unregister(_buildingAttacked);
-            EventBus<HeroAttackedEvent>.Unregister(_heroAttacked);
             EventBus<QuestCreatedEvent>.Unregister(_questCreated);
             EventBus<QuestUpdatedEvent>.Unregister(_questUpdated);
             EventBus<QuestCompletedEvent>.Unregister(_questCompleted);
@@ -374,30 +374,29 @@ namespace Heroes.Game.AI
             _lastGold = e.Value;
         }
 
-        private void OnHeroAttacked(HeroAttackedEvent e)
+        public void NotifyThreat(MonsterFacade attacker)
         {
-            if (_hero?.Model == null)
+            if (_hero?.Model == null || attacker == null || !attacker.IsAlive)
             {
                 return;
             }
 
-            if (_inCombat)
+            var controller = _hero.CombatController;
+            if (controller == null)
             {
                 return;
             }
 
-            if (e.HeroInstanceId != _hero.Model.InstanceId)
+            var response = controller.HandleThreat(attacker);
+            if (response == HeroCombatController.ThreatResponse.None)
             {
                 return;
             }
 
-            if (HasNoPlan())
+            if (response == HeroCombatController.ThreatResponse.StartedNewCombat)
             {
-                TryStartFallbackFight();
-                return;
+                StartCombatFallback();
             }
-
-            RequestImmediateReplan();
         }
 
         private void OnBuildingAttacked(BuildingAttackedEvent e)
@@ -448,13 +447,8 @@ namespace Heroes.Game.AI
                 return;
             }
 
-            if (executor is not PlanExecutor<Agent<GameWorldSnapshot, HeroAnimationController>, GameWorldSnapshot> pe)
-            {
-                return;
-            }
-
-            _fallback = new FightMonsterStrategy(this, pe.Context, monster, null);
-            _fallback.Start();
+            _hero.CombatController?.StartCombat(monster, HeroCombatIntent.SelfDefense);
+            StartCombatFallback();
         }
 
         private void TryStartFallbackDefend()
@@ -482,6 +476,17 @@ namespace Heroes.Game.AI
             }
 
             _fallback = new DefendBuildingStrategy(this, pe.Context, building);
+            _fallback.Start();
+        }
+
+        private void StartCombatFallback()
+        {
+            if (_fallback != null || _hero?.CombatController == null || !_hero.CombatController.IsActive)
+            {
+                return;
+            }
+
+            _fallback = new ActiveCombatStrategy(_hero);
             _fallback.Start();
         }
 

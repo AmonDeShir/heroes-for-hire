@@ -52,6 +52,9 @@ namespace Heroes.Game.Monsters
 
         private float _nextAttackAt;
         private Transform _target;
+        private bool _attackHitPending;
+        private float _attackHitAt;
+        private float _pendingAttackDamage;
 
         public Transform CurrentTarget => _target;
 
@@ -102,6 +105,9 @@ namespace Heroes.Game.Monsters
             _nextWanderRerollAt = 0f;
             _lastWanderProgressAt = 0f;
             _lastWanderRemaining = float.MaxValue;
+            _attackHitPending = false;
+            _attackHitAt = 0f;
+            _pendingAttackDamage = 0f;
             Registry<MonsterFacade>.TryAdd(this);
         }
 
@@ -239,6 +245,8 @@ namespace Heroes.Game.Monsters
             }
 
             _state = State.Dead;
+            _attackHitPending = false;
+            _pendingAttackDamage = 0f;
 
             if (animator != null)
             {
@@ -342,14 +350,19 @@ namespace Heroes.Game.Monsters
                 return;
             }
 
-            if (dist <= Definition.AttackRange)
+            if (dist <= GetAttackStartRange())
             {
+                if (navMeshAgent != null)
+                {
+                    navMeshAgent.ResetPath();
+                }
                 _state = State.Attack;
                 return;
             }
 
             if (navMeshAgent != null)
             {
+                navMeshAgent.stoppingDistance = Mathf.Max(0.1f, GetAttackStartRange() - 0.05f);
                 navMeshAgent.SetDestination(targetPos);
             }
         }
@@ -427,6 +440,7 @@ namespace Heroes.Game.Monsters
         {
             if (_target == null)
             {
+                _attackHitPending = false;
                 _state = State.Wander;
                 return;
             }
@@ -444,6 +458,7 @@ namespace Heroes.Game.Monsters
 
             if (_target.TryGetComponent<IDamageable>(out var targetDmg) && !targetDmg.IsAlive)
             {
+                _attackHitPending = false;
                 _target = null;
                 _state = State.Wander;
                 return;
@@ -454,6 +469,8 @@ namespace Heroes.Game.Monsters
                 _nextAttackStateLogAt = Time.unscaledTime + 1.0f;
                 Debug.Log($"[Monster] {Name} entering ATTACK vs {FormatTarget(_target)}", this);
             }
+
+            ResolvePendingAttackHit();
 
             var targetPos = _target.position;
             if (_target.TryGetComponent<BuildingFacade>(out var b) && b != null)
@@ -470,33 +487,79 @@ namespace Heroes.Game.Monsters
             }
 
             var dist = Vector3.Distance(transform.position, targetPos);
-            if (dist > Definition.AttackRange * 1.2f)
+            if (dist > GetAttackKeepRange())
             {
                 _state = State.Chase;
                 return;
             }
 
-            if (Time.unscaledTime < _nextAttackAt)
+            if (_attackHitPending || Time.unscaledTime < _nextAttackAt)
             {
                 return;
             }
 
-            _nextAttackAt = Time.unscaledTime + Mathf.Max(0.1f, Definition.AttackIntervalSeconds);
+            var attackDuration = animator != null ? animator.GetAttackDuration() : 0f;
+            var cadence = Mathf.Max(0.1f, Definition.AttackIntervalSeconds, attackDuration);
+            _nextAttackAt = Time.unscaledTime + cadence;
+            _attackHitPending = true;
+            _attackHitAt = Time.unscaledTime + Mathf.Max(0.05f, cadence * 0.45f);
+            _pendingAttackDamage = Mathf.Max(0.1f, Definition.AttackDamage);
 
             if (animator != null)
             {
                 animator.PlayAttack();
             }
+        }
 
-            if (_target.TryGetComponent<IDamageable>(out var dmg) && dmg.IsAlive)
+        private void ResolvePendingAttackHit()
+        {
+            if (!_attackHitPending || Time.unscaledTime < _attackHitAt)
             {
-                if (Time.unscaledTime >= _nextAttackLogAt)
-                {
-                    _nextAttackLogAt = Time.unscaledTime + 0.5f;
-                    Debug.Log($"[Monster] {Name} attacking {FormatTarget(_target)} dmg={Mathf.Max(0.1f, Definition.AttackDamage):0.##}", this);
-                }
-                dmg.ApplyDamage(Mathf.Max(0.1f, Definition.AttackDamage));
+                return;
             }
+
+            _attackHitPending = false;
+
+            if (_target == null || !_target.TryGetComponent<IDamageable>(out var dmg) || !dmg.IsAlive)
+            {
+                return;
+            }
+
+            var targetPos = _target.position;
+            if (_target.TryGetComponent<BuildingFacade>(out var building) && building != null)
+            {
+                targetPos = building.DoorWorldPosition;
+            }
+
+            if (Vector3.Distance(transform.position, targetPos) > GetAttackKeepRange() + 0.15f)
+            {
+                return;
+            }
+
+            if (Time.unscaledTime >= _nextAttackLogAt)
+            {
+                _nextAttackLogAt = Time.unscaledTime + 0.5f;
+                Debug.Log($"[Monster] {Name} attacking {FormatTarget(_target)} dmg={_pendingAttackDamage:0.##}", this);
+            }
+
+            if (dmg is HeroFacade heroTarget)
+            {
+                heroTarget.ApplyDamageFrom(this, _pendingAttackDamage);
+            }
+            else
+            {
+                dmg.ApplyDamage(_pendingAttackDamage);
+            }
+        }
+
+        private float GetAttackStartRange()
+        {
+            return Mathf.Max(1f, Definition != null ? Definition.AttackRange + 0.25f : 2.25f);
+        }
+
+        private float GetAttackKeepRange()
+        {
+            return Mathf.Max(GetAttackStartRange(), Definition != null ? Definition.AttackRange + 0.5f : 2.5f);
         }
 
         private string FormatTarget(Transform t)
