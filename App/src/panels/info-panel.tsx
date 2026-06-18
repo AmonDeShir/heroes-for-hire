@@ -16,7 +16,7 @@ const GOAP_ICON = Resources.Load("Icons/all/lorc/brain") as Texture2D
 const SHOP_ICON = Resources.Load("Icons/coin") as Texture2D
 const COMBAT_ICON = Resources.Load("Icons/all/lorc/crossed-swords") as Texture2D
 const CHAPEL_ICON = Resources.Load("Icons/all/lorc/ankh") as Texture2D
-const QUEST_ICON = (Resources.Load("Icons/all/lorc/contract") as Texture2D) || INFO_ICON
+const QUEST_ICON = (Resources.Load("Icons/all/lorc/compass") as Texture2D)
 
 type Mode = "info" | "combat" | "quest" | "shop" | "goap" | "upgrades" | "chapel"
 

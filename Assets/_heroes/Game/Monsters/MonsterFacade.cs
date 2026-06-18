@@ -498,17 +498,17 @@ namespace Heroes.Game.Monsters
                 return;
             }
 
+            if (animator != null)
+            {
+                animator.PlayAttack();
+            }
+
             var attackDuration = animator != null ? animator.GetAttackDuration() : 0f;
             var cadence = Mathf.Max(0.1f, Definition.AttackIntervalSeconds, attackDuration);
             _nextAttackAt = Time.unscaledTime + cadence;
             _attackHitPending = true;
             _attackHitAt = Time.unscaledTime + Mathf.Max(0.05f, cadence * 0.45f);
             _pendingAttackDamage = Mathf.Max(0.1f, Definition.AttackDamage);
-
-            if (animator != null)
-            {
-                animator.PlayAttack();
-            }
         }
 
         private void ResolvePendingAttackHit()

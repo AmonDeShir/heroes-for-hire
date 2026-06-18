@@ -167,6 +167,7 @@ namespace Heroes.Game.Combat
             }
 
             CleanupTargets();
+            
             if (CurrentTarget == null)
             {
                 if (State != HeroCombatState.Idle)
@@ -177,6 +178,7 @@ namespace Heroes.Game.Combat
             }
 
             var hpPct = _hero.Model.Health.Max > 0.001f ? _hero.Model.Health.Current / _hero.Model.Health.Max : 1f;
+            
             if (State != HeroCombatState.TryHeal && State != HeroCombatState.TryBoostBeforeFlee && State != HeroCombatState.Flee)
             {
                 if (hpPct <= HealThresholdPct && Time.unscaledTime >= _nextHealAt)
@@ -386,7 +388,9 @@ namespace Heroes.Game.Combat
 
         private float GetAttackCadenceSeconds()
         {
-            var fromAnimation = _animator != null ? _animator.GetAttackDuration() : 0f;
+            var fromAnimation = _animator != null ? _animator.GetAttackDuration() : 1.5f;
+            
+            
             return Mathf.Max(MinAttackCadence, fromAnimation);
         }
 

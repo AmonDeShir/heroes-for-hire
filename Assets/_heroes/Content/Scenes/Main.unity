@@ -119,6 +119,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!4 &5 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1753556577673154334, guid: 91f977ea227a9da45b0920057cd51ea3, type: 3}
+  m_PrefabInstance: {fileID: 951727804}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5271022
 GameObject:
   m_ObjectHideFlags: 0
@@ -1794,11 +1799,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 720569098419918688, guid: 91f977ea227a9da45b0920057cd51ea3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 88.23301
+      value: 105.910675
       objectReference: {fileID: 0}
     - target: {fileID: 720569098419918688, guid: 91f977ea227a9da45b0920057cd51ea3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -78.63301
+      value: -96.31068
       objectReference: {fileID: 0}
     - target: {fileID: 1753556577673154334, guid: 91f977ea227a9da45b0920057cd51ea3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1890,11 +1895,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2716895824287226475, guid: 91f977ea227a9da45b0920057cd51ea3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 88.23301
+      value: 105.910675
       objectReference: {fileID: 0}
     - target: {fileID: 2716895824287226475, guid: 91f977ea227a9da45b0920057cd51ea3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -78.63301
+      value: -96.31068
       objectReference: {fileID: 0}
     - target: {fileID: 2864653525171790330, guid: 91f977ea227a9da45b0920057cd51ea3, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
@@ -2123,11 +2128,6 @@ PrefabInstance:
       addedObject: {fileID: 821769148}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 91f977ea227a9da45b0920057cd51ea3, type: 3}
---- !u!4 &951727805 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1753556577673154334, guid: 91f977ea227a9da45b0920057cd51ea3, type: 3}
-  m_PrefabInstance: {fileID: 951727804}
-  m_PrefabAsset: {fileID: 0}
 --- !u!20 &951727806 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 7645114331201778905, guid: 91f977ea227a9da45b0920057cd51ea3, type: 3}
@@ -3083,8 +3083,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 951727805}
   - {fileID: 813241587}
+  - {fileID: 5}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1692527353

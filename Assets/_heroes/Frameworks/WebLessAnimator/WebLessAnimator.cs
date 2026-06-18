@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 namespace WebLess
 {
@@ -10,7 +9,6 @@ namespace WebLess
         protected Animator _animator;
         protected Timer _timer;
 
-        private readonly Dictionary<int, float> _animationLengths = new();
         private int _activeTimedClipHash;
         private int _activeExitClipHash;
         private bool _freezeOnTimeout;
@@ -35,7 +33,10 @@ namespace WebLess
             StopTimedAnimation();
             _animator.speed = 1f;
 
+            _animator.CrossFade(clipHash, _crossfadeDuration);
+
             var length = GetAnimationLength(clipHash);
+            
             if (length <= 0f)
             {
                 length = 0.1f;
@@ -45,7 +46,7 @@ namespace WebLess
             _activeExitClipHash = exitHash;
             _freezeOnTimeout = false;
             _timer = new Timer(length, oneShoot: true);
-            _timer.OnStart += () => _animator.CrossFade(clipHash, _crossfadeDuration);
+            
             _timer.OnTimeOut += () =>
             {
                 if (_freezeOnTimeout)
@@ -57,12 +58,14 @@ namespace WebLess
                     _animator.CrossFade(exitHash, _crossfadeDuration);
                 }
             };
+            
             _timer.Start();
         }
         
         protected void PlayAnimation(int clipHash)
         {
             StopTimedAnimation();
+            
             _animator.speed = 1f;
             _animator.CrossFade(clipHash, _crossfadeDuration);
         }
@@ -77,6 +80,8 @@ namespace WebLess
             StopTimedAnimation();
             _animator.speed = 1f;
 
+            _animator.CrossFade(clipHash, _crossfadeDuration);
+
             var length = GetAnimationLength(clipHash);
             if (length <= 0f)
             {
@@ -87,7 +92,6 @@ namespace WebLess
             _activeExitClipHash = 0;
             _freezeOnTimeout = true;
             _timer = new Timer(length, oneShoot: true);
-            _timer.OnStart += () => _animator.CrossFade(clipHash, _crossfadeDuration);
             _timer.OnTimeOut += () => _animator.speed = 0f;
             _timer.Start();
         }
@@ -112,23 +116,17 @@ namespace WebLess
 
         public float GetAnimationLength(int hash)
         {
-            if (_animationLengths.TryGetValue(hash, out var cached) && cached > 0f)
-            {
-                return cached;
-            }
-
             foreach (AnimationClip clip in _animator.runtimeAnimatorController.animationClips)
             {
                 if (Animator.StringToHash(clip.name) == hash)
                 {
-                    _animationLengths[hash] = clip.length;
                     return clip.length;
                 }
             }
 
             Debug.LogWarning($"Animation clip not found for hash {hash} on {name}.");
 
-            return -1f;
+            return 1.5f;
         }
     }
 }

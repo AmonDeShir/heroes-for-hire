@@ -12,8 +12,8 @@ namespace WebLess
         
         public void SetSpeed(float speed) => _animator.SetFloat(SpeedHash, speed);
 
-        public void PlayAttack() => PlayAnimationUsingTimer(AttackClip);
-        public void PlayBuy() => PlayAnimationUsingTimer(BuyClip);
+        public void PlayAttack() => PlayAnimationUsingTimer(AttackClip, LocomotionClip);
+        public void PlayBuy() => PlayAnimationUsingTimer(BuyClip, LocomotionClip);
         public void PlayDeath() => PlayAnimationAndFreeze(DeathClip);
         public float GetAttackDuration() => GetAnimationLength(AttackClip);
         public float GetDeathDuration() => GetAnimationLength(DeathClip);
